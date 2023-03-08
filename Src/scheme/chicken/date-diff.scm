@@ -1,16 +1,16 @@
 (module date-diff ()
   
-(import (scheme))
+(import scheme)
 (import (chicken base))
 
 (import (chicken process-context))
 (import (chicken port))
 
-(import (args))
-(import (bindings))
-(import (srfi-19))
-(import (loop))
-(import (format))
+(import args)
+(import bindings)
+(import srfi-19)
+(import loop)
+(import format)
 (import (chicken irregex))
 
 (import tkurtbond

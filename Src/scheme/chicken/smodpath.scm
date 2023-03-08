@@ -29,16 +29,8 @@
   (import (chicken platform))
   (import (chicken string))
 
-  (define (warn . args)
-    (unless ignore-flag
-      (format (current-error-port) "~A: warning: " (program-name))
-      (apply format (cons (current-error-port) args))
-      (format (current-error-port) "\n")))
-  (define (die status . args)
-    (format (current-error-port) "~A: fatal error: " (program-name))
-    (apply format (cons (current-error-port) args))
-    (format (current-error-port) "\n")
-    (exit status))
+  (import tkurtbond)
+
   (define (print-version)	; Not a fatal error, so don't use die.
     (format (current-error-port) "version 1.1 2019-11-01~%")
     (exit 1))
@@ -68,9 +60,9 @@
 	  (set-path path)
 	  (if warn-flag 
 	      (begin 
-		(warn "unable to get path from environment variable: ~A" var)
+		(warn "unable to get path from environment variable: ~A~%" var)
 		(set-path ""))
-	      (die 3 "unable to get path from environment variable: ~A" var)))))
+	      (die 3 "unable to get path from environment variable: ~A~%" var)))))
   (define (set-path-and-var-from-var var)
     (set! path-var var)
     (set-path-from-var var))

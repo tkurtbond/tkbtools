@@ -1,22 +1,12 @@
 ;;;; rstsection.scm - Generate an reStructuredText section header.
 (module rstsection ()
-(import (scheme))
+(import scheme)
 (import (chicken base))
 (import (chicken process-context))
-(import (matchable))
-(import (fmt))
+(import matchable)
+(import format)
 (import (srfi 152))
-
-(define (die status . args)
-  (fmt (current-error-port) (program-name) ": ")
-  (apply fmt (cons (current-error-port) args))
-  (fmt (current-error-port) "\n")
-  (exit status))
-
-;; (define (die status . args)
-;;   (apply fmt (cons (current-error-port) args))
-;;   (fmt (current-error-port) "\n")
-;;   (exit status))
+(import tkurtbond)
 
 (define (one-char? s)
   (and (string? s)
@@ -28,19 +18,19 @@
       (? string? section-title) . others)
      (let* ((len (string-length section-title))
            (underline (make-string len (string-ref underliner 0))))
-       (fmt #t section-title nl underline nl nl))
+       (format #t "~a~%~a~%~%" section-title underline))
      (parse others))
     (())                                ;exit
-    (x (die 127 "incorrect arguments: " (wrt x)))
+    (x (die 127 "incorrect arguments: ~s~%" x))
     ))
 
 (define (main)
   (let* ((args (command-line-arguments))
          (len (length args)))
     (when (or (= len 0) (odd? len))
-      (die 127 "Usage: " (program-name)
-           " underliner section-title [underliner section-title]..." nl nl
-           "You must specify an even positive number of arguments."))
+      (die 127 "Usage: ~a underliner section-title [underliner section-title]...
+
+You must specify an even positive number of arguments.~%" (program-name)))
     (parse args)))
 
 ;; Only invoke main if this has been compiled.  That way we can load the

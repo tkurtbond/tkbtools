@@ -12,7 +12,10 @@
           format
           tkurtbond)
 
-  (begin 
+  (begin
+    ;; RFC 3339 Date and Time on the Internet: Timestamps --
+    ;;     https://www.rfc-editor.org/info/rfc3339
+
     (define *english-list*                  ; Format is hairy, but useful.
       "~{~#[~;~a~;~a and ~a~:;~@{~a~#[~;, and ~:;, ~]~}~]~}")
 

@@ -6,12 +6,7 @@
   (import (chicken process-context))
   (import format)
   (import loop)
-
-  (define (die status . args)
-    (format (current-error-port) "~A: fatal error: " (program-name))
-    (apply format (cons (current-error-port) args))
-    (format (current-error-port) "\n")
-    (exit status))
+  (import tkurtbond)
   
   (define (celsius-to-kelvin celsius)
     (+ celsius 273.15))
@@ -72,9 +67,14 @@
                    (kelvin-to-celsius temperature)))
           (else (die 2 "unable to tell what to do with ~s~%" convert-from))))
 
+  (define (checked-string->number s)
+    (let ((n (string->number s)))
+      (unless n
+        (die 127 "unable to convert ~s to a number~%" s))
+      n))
+
   (receive (options operands)
       (args:parse (command-line-arguments) +command-line-options+)
-    (format #t "operands: ~s~%" operands)
     (loop for temperature in operands
-          do (convert-temperature (string->number temperature))))
+          do (convert-temperature (checked-string->number temperature))))
   )
