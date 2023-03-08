@@ -1,0 +1,12 @@
+(import (chicken io))
+(import (chicken port))
+(import (html-parser))
+(import (sxpath))
+(import (http-client))
+
+(define url "http://eggs.call-cc.org/5/")
+(define eggs-page (with-input-from-request url #f read-string))
+(define eggs-sxml (with-input-from-string eggs-page html->sxml))
+(define eggs-urls ((sxpath '(// td a @ href *text*)) eggs-sxml))
+(display (length eggs-urls))
+(newline)

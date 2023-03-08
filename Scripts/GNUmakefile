@@ -89,6 +89,7 @@ SCRIPTS= \
 	kpsave \
 	latex-depends \
 	list-fixed-fonts.sh \
+	list-imports \
 	list-my-macports \
 	lnhere \
 	logf \
