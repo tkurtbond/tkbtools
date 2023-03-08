@@ -1,0 +1,14 @@
+#! /usr/bin/env bash
+
+for file in $@
+do
+    for egg in $(cat $file)
+    do
+        if [[ -z $(chicken-status $egg) ]]; then
+            printf "Installing %s\n" $egg
+            chicken-install $egg
+        else
+            printf "NOT Installing %s\n" $egg
+        fi
+    done
+done

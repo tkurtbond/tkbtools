@@ -1,0 +1,16 @@
+# this works:
+  for (i = 1
+       y = 1;
+       i .le. 10;
+       i = i + 1
+       y = y + 1)
+    write sys$output "i: ", i, "y: ", y
+
+# this doesn't:
+  for (i = 1, y = 1;
+       i .le. 10;
+       i = i + 1, y = y + 1)
+    write sys$output "i: ", i, "y: ", y
+
+# The latter would require understanding DCL syntax?  
+# Why doesn't parser.c:initialize() count parens?

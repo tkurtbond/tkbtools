@@ -1,0 +1,17 @@
+#! /usr/bin/env bash
+
+FONTTYPE="$1"
+
+[ $FONTTYPE != "" ] || {
+    echo "Need to know what type of file, either .otf or .ttf"
+    exit 1
+}
+
+ls | while read fn
+do
+    bn=$(basename $fn $FONTTYPE)
+    IFS=- read name type <<<$fn
+    echo $name/$type
+    [ -d $name ] || mkdir $name
+    mv -v $fn $name
+done

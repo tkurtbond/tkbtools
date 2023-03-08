@@ -1,0 +1,9 @@
+(lang dune 2.7)
+
+(package
+ (name randomtk)
+ (synopsis "TKB's random LablTk programs."))
+ 
+ 
+
+

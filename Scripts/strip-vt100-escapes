@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+# http://www.perlmonks.org/?node_id=132997
+perl -lp -e 's/(\e[\[\(][\d,;\s?!]*[A-Za-z]|\e>|\e=)//g'

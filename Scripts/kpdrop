@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+#cp -v ~/KeePass/tkurtbond.kdbx  ~/Dropbox/tkurtbond-mobile.kdbx
+cp -v ~/KeePass/tkurtbond.kdbx ~/Library/CloudStorage/Dropbox/

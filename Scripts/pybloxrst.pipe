@@ -1,0 +1,68 @@
+#! /usr/bin/env python
+#!> pybloxrst - convert pybloxsom rst posts to plain rst.
+
+import os, sys, subprocess
+
+assert len (sys.argv) <= 3, "usage: pybloxrst [infile [outfile]]"
+
+outfilename = None
+
+if len (sys.argv) > 1:
+    filename = sys.argv[1]
+    infile = open (filename, 'rb')
+else:
+    infile = sys.stdin
+
+if len (sys.argv) == 3:
+    assert sys.argv[1] != sys.argv[2], ("input %s is same as output %s" %
+                                        (sys.argv[1], sys.argv[2]))
+    outfilename = sys.argv[2]
+    outfile = open (outfilename, 'wb')
+else:
+    outfile = sys.stdout
+
+pipe = subprocess.Popen (['rstfrag'], shell=True,
+                         stdin=subprocess.PIPE, stdout=outfile)
+homedir = os.path.expanduser('~')
+# xfilename = os.path.join (homedir, 'tmp/x.rst')
+# xfile = open (xfilename, 'wb')
+    
+
+lineno = 0
+for line in infile:
+    lineno += 1
+    # xfile.write ('%d: %s' % (lineno, line))
+    if lineno == 1:
+        underline = '=' * len (line)
+        pipe.stdin.write ("%s\n" % underline)
+        pipe.stdin.write ("%s" % line)
+        pipe.stdin.write ("%s\n" % underline)
+    elif lineno == 2 and line[:10] == '#published':
+        line = line[10:].strip ()
+        pipe.stdin.write (":Date: %s\n" % line)
+    elif lineno == 3 and line[:5] == '#tags':
+        line = ':Tags: ' + line[5:].strip ()
+        pipe.stdin.write ("%s\n" % line)
+    else:
+        pipe.stdin.write ("%s" % line)
+
+if infile != sys.stdin:   infile.close ()
+pipe.stdin.close ()
+if outfile != sys.stdout: outfile.close ()
+ret = pipe.wait ()
+
+exit ()
+
+r""" Originally this was an awk script
+grep -v "^#" "$@" | awk '
+BEGIN { x = 0; } 
+FNR == 1 { 
+  x = length($0)
+  print
+  for (i = 0; i < x; i++)
+    printf "="
+  printf "\n"
+}
+FNR != 1 { print; }
+'
+"""

@@ -1,0 +1,8 @@
+#! /usr/bin/env bash
+# https://superuser.com/a/185404
+# usage: devolvepdf input.pdf output.pdf
+
+gs                         \
+  -sDEVICE=pdfwrite        \
+  -dCompatibilityLevel=1.4 \
+  -o "$1" "$2"

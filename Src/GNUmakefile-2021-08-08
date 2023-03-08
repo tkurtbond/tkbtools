@@ -1,0 +1,320 @@
+##############################################################################
+#### GNUmakefile -- makefile for my tools.  
+##############################################################################
+### 
+### The executables in $(HOME)/bin are made from sources in this directory
+### and installed in $(HOME)/bin by this Makefile.
+### 
+### Note: If you want to build MingW with Cygwin, use
+### 	  make CC='gcc -mno-cygwin'
+###
+### Note: This Makefile is not (yet?) recursive.  Do the Makefiles
+### in the subdirectory by hand.
+##############################################################################
+
+OS=$(shell uname)
+include .what-sys.dat
+
+# 2020-12-22:
+#CUSTOM=-custom
+
+CP=cp
+RM=rm
+
+CC=gcc
+CXX=c++
+CFLAGS=-g
+CXXFLAGS=-g
+
+NATIVE=true
+ifdef NATIVE
+OCAMLC=ocamlopt
+CMO=cmx
+CMA=cmxa
+CUSTOM=
+else
+OCAMLC=ocamlc
+CMO=cmo
+CMA=cma
+endif
+# Set OCAMLDEBUG on the command line or in the environment to get debugging.
+OCAMLCFLAGS=$(OCAMLDEBUG)
+LIBSTR=#-cclib -lstr
+LIBUNIX=#-cclib -lunix
+
+## The things that differ from Unix to Windows NT.
+#OPSYS=unix
+ifeq ($(OPSYS),UNIX)
+EXE=
+OBJ=o
+else
+EXE=.exe
+# Warning: using gcc!
+OBJ=o
+endif
+
+BINDIR=$(HOME)/local/bin
+ifeq ($(OPVAR),CYGWIN)
+VARIANT_BINDIR=$(HOME)/local/cygwin/bin
+endif
+ifeq ($(OPVAR),MINGW32)
+VARIANT_BINDIR=$(HOME)/local/mingw32/bin
+endif
+ifeq ($(OPVAR),UNIX)
+VARIANT_BINDIR=$(HOME)/local/unix/bin
+endif
+
+.PHONY: clean tidy realclean zipit install install-normal install-variant variantclean
+
+$(BINDIR)/% : %
+	[ -d $(BINDIR) ] || (mkdir -p $(BINDIR) && echo built $(BINDIR))
+	$(CP) $< $@
+
+ifdef VARIANT_BINDIR
+$(VARIANT_BINDIR)/% : %
+	[ -d $(VARIANT_BINDIR) ] || (mkdir -p $(VARIANT_BINDIR) && echo built $(VARIANT_BINDIR))
+	$(CP) $< $@
+endif
+
+%.$(CMO): %.ml
+	$(OCAMLC) $(OCAMLCFLAGS) -c $<
+
+%.cmi: %.mli
+	$(OCAMLC) $(OCAMLCFLAGS) -c $<
+
+%.ml: %.mll
+	ocamllex $<
+
+%$(EXE):: %.c
+	$(CC) $(CFLAGS) -o $@ $<
+
+# 2009-01-27: gack: match-anything-rules restrictions.
+%$(EXE):: %.ml
+	$(OCAMLC) $(OCAMLCFLAGS) -o $@ $<
+
+
+
+EXES=	\
+	changecase$(EXE) \
+	chopext$(EXE) \
+	datetime$(EXE) \
+	filldisk$(EXE) \
+	fromunits$(EXE) \
+	gethostnames$(EXE) \
+	grepgroup$(EXE) \
+	increment$(EXE) \
+	iso8601$(EXE) \
+	md5tree$(EXE) \
+	nicepath$(EXE) \
+	nospaces$(EXE) \
+	ocaml_su$(EXE) \
+	printerr$(EXE) \
+	randomn$(EXE) \
+	randomline$(EXE) \
+	snooze$(EXE) \
+	timer$(EXE) \
+	tkbsetup$(EXE) \
+	topath$(EXE) \
+	tounits$(EXE) \
+	unixtime$(EXE) \
+	wipe$(EXE) \
+	words$(EXE)
+
+OBSOLETE_EXES= \
+	nxt$(EXE)
+
+
+# Programs that require a non-MSWoe runtime.
+NONMSWOE_EXES=\
+	pad$(EXE) \
+	re$(EXE) \
+	re2$(EXE) \
+	split$(EXE) \
+	spwn$(EXE) \
+	truncfile$(EXE) \
+	# end
+
+
+# Programs that need to have different behaviour under Cygwin and MinGW.
+VARIANT_EXES=\
+	cygmodpath$(EXE)\
+	modpath$(EXE) \
+	what-sys$(EXE) \
+	where$(EXE)
+
+BUILD_EXES=$(EXES)
+
+ifneq ($(OPVAR),MSVC)
+ifneq ($(OPVAR),MINGW32)
+BUILD_EXES += $(NONMSWOE_EXES)
+endif
+endif
+
+#ifeq ($(OPSYS),WNT)
+VARIANT_BUILD_EXES += $(VARIANT_EXES)
+#endif
+
+ifneq ($(OPVAR),MSVC)
+ifneq ($(OPVAR),MINGW32)
+NONMSWOE_BUILD_EXES += $(NONMSWOE_EXES)
+endif
+endif
+
+# TEST_EXES=re$(EXE) re2$(EXE)
+
+ALL_EXES=$(BUILD_EXES) $(VARIANT_BUILD_EXES)
+
+NOTSRC=words.ml
+
+#tmp: 
+#	@echo OPSYS=$(OPSYS) OPVAR=$(OPVAR) >x.1 QQQ=$(QQQ)
+#	@echo NEQMSVC=$(NEQMSVC) NEQMINGW32=$(NEQMINGW32) >x.2
+#	@echo MINGSYS=$(MINGSYS) MSVCSYS=$(MSVCSYS) >x.3
+#ifeq (X,X)
+#	@echo X,X is equal
+#endif
+#ifneq (X,Y)
+#	@echo X,Y is not equal
+#endif
+
+all: $(ALL_EXES)
+
+test_exes: $(TEST_EXES)
+
+tounits$(EXE): LDLIBS+=-lm
+
+tounits$(EXE): tounits.o
+	$(CC) -g -o $@ $(LDLIBS) $<
+
+changecase$(EXE): changecase.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@  $<
+
+
+cygmodpath$(EXE): cygmodpath.$(OBJ)
+	$(CXX) $(CXXFLAGS) -o $@ $<
+
+gethostnames$(EXE): gethostnames.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o gethostnames$(EXE)  \
+		unix.$(CMA) gethostnames.$(CMO) $(LIBUNIX)
+
+grepgroup$(EXE): grepgroup.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@ str.$(CMA) $<
+
+increment$(EXE): increment.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o increment$(EXE)  \
+		unix.$(CMA) increment.$(CMO) $(LIBUNIX)
+
+modpath$(EXE):  modpath.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o modpath$(EXE)  \
+		str.$(CMA) modpath.$(CMO) $(LIBSTR)
+
+md5tree$(EXE): md5tree.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o md5tree$(EXE)  \
+		unix.$(CMA) md5tree.$(CMO) $(LIBUNIX)
+
+nicepath$(EXE):  nicepath.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o nicepath$(EXE)  \
+		str.$(CMA) nicepath.$(CMO) $(LIBSTR)
+
+nxt$(EXE):  nxt.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@ unix.$(CMA) str.$(CMA)  \
+		nxt.$(CMO) $(LIBUNIX) $(LIBSTR)
+
+nospaces$(EXE):  nospaces.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@ unix.$(CMA) str.$(CMA)  \
+		nospaces.$(CMO) $(LIBUNIX) $(LIBSTR)
+
+# This is always bytecode.
+ocaml_su$(EXE):
+	ocamlmktop $(CUSTOM) -o $@ unix.cma str.cma -cclib -lunix
+
+pad$(EXE): pad.$(OBJ)
+	$(CC) -o $@ $<
+
+randomn$(EXE): randomn.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) -o $@ $<
+
+randomline$(EXE): randomline.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) -o $@ $<
+
+spawn$(EXE): spawn.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) -o $@ unix.$(CMA) $<
+
+split$(EXE): split.$(OBJ)
+	$(CC) -o $@ $<
+
+spwn$(EXE): spwn.$(OBJ)
+	$(CC) -o $@ $<
+
+timer$(EXE):  timer.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@  unix.$(CMA) str.$(CMA) \
+		timer.$(CMO) $(LIBUNIX) $(LIBSTR)
+
+tkbsetup$(EXE): tkbsetup.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@ str.$(CMA) unix.$(CMA) $< \
+		$(LIBSTR) $(LIBUNIX)
+
+topath$(EXE):  topath.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o topath$(EXE)  \
+		str.$(CMA) topath.$(CMO) $(LIBSTR)
+
+# truncate is not implemented under windows.
+#truncfile$(EXE):  truncfile.$(CMO)
+#	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o truncfile$(EXE)  \
+#		unix.$(CMA) truncfile.$(CMO) $(LIBSTR)
+
+unixtime$(EXE):  unixtime.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o unixtime$(EXE)  \
+		unix.$(CMA) unixtime.$(CMO) $(LIBSTR)
+
+# MingW Sys.getenv doesn't pick up Cygwin environment variables of course,
+# so this is variant.
+where$(EXE):  where.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o where$(EXE)  \
+		str.$(CMA) where.$(CMO) $(LIBSTR)
+
+wipe$(EXE):  wipe.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@  unix.$(CMA) wipe.$(CMO) \
+		$(LIBUNIX)
+
+words$(EXE):  words.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o words$(EXE)  str.$(CMA) \
+		words.$(CMO) $(LIBSTR)
+
+
+
+install: install-normal install-variant install-nonmswoe
+install-normal: $(foreach e,$(EXES),$(BINDIR)/$(e)) 
+install-variant: $(foreach e,$(VARIANT_BUILD_EXES),$(VARIANT_BINDIR)/$(e))
+install-nonmswoe: $(foreach e,$(NONMSWOE_BUILD_EXES),$(BINDIR)/$(e))
+
+
+
+clean:
+	-$(RM) *.cmo $(wildcard *.cmx) *.cmi *.$(OBJ) $(NOTSRC)
+
+variantclean:
+	-$(RM) $(VARIANT_EXES) $(VARIANT_EXES:.exe=.o) what-sys$(EXE) .what-sys.dat
+
+tidy:
+	-$(RM) camlprim0.ob
+
+realclean: clean tidy
+	-$(RM) $(ALL_EXES) $(TEST_EXES) *~ .depend .what-sys.dat what-sys$(EXE)
+	-$(RM) *.cmi *.cmo *.cmxa *.cmx
+
+ignores: 
+	mkignores $(ALL_EXES) >.ignores
+
+.depend: $(filter-out \*.mli,$(wildcard *.mli)) *.ml
+	ocamldep $(filter-out \*.mli,$(wildcard *.mli)) *.ml >.depend
+include .depend
+
+.what-sys.dat: what-sys
+	./what-sys $@
+# Should I add an export target to create a tar file of the current version
+# of the project?  With the project version???
+
+print-%: ; @echo $*=$($*)
+
+# End of Makefile

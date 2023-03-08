@@ -1,0 +1,11 @@
+#! /usr/bin/env bash
+
+echo Starting in "$(pwd)"
+name="$(basename "$(pwd)")"
+echo name: "$name"
+(cd ..
+ echo Tarring in "$(pwd)"
+ tarname="$(incf $(cleanname "$name") .tar.xz)"
+ echo "$name"
+ gtar -cvJf $tarname "$name"
+)

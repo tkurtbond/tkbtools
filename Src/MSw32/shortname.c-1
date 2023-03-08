@@ -1,0 +1,88 @@
+/* shortname.c -- convert from MS Windows long name to MS-DOS short name */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <windows.h>
+#include <string.h>
+
+void
+usage ()
+{
+  fprintf (stderr, "\nusage: shortname [options] file [...]\n\n\
+  -?      this message\n\
+");
+  exit (2);
+}
+
+int 
+main (int argc, char **argv)
+{
+  int success = 0;
+  extern char *optarg;
+  extern int optind, opterr, optopt;
+  int ch;
+  int errflg = 0;
+  int i;
+
+  while ((ch = getopt (argc, argv, "?")) != EOF)
+    {
+      switch (ch)
+        {
+        case '?':
+        default:
+          errflg++;
+          break;
+        }
+    }
+
+  if (errflg || ((argc - optind) == 0))
+    usage ();
+
+  for (i = optind; i < argc; i++)
+    {
+      DWORD len = strlen (argv[i]);
+      DWORD tmp_len = len * 2;
+      DWORD short_len;
+      DWORD err;
+      char *short_path = 0;
+      int done = 0;
+      /* Note: MS docs say the short form can be longer than the long form! */
+      while (! done)
+        {
+          short_len = tmp_len + 1;
+          short_path = malloc (tmp_len);
+          SetLastError (NO_ERROR);
+          short_len = GetShortPathName (argv[i], short_path, tmp_len);
+//          fprintf (stderr, "short_len: %d\n", short_len);
+          err = GetLastError ();
+//          fprintf (stderr, "last error: %d\n", err);
+          if (short_len > tmp_len)
+            {
+              free (short_path);
+              tmp_len = tmp_len * 2;
+            }
+          else
+            done = 1;
+        }
+      if (err)
+        {
+          LPVOID lpMsgBuf;
+          FormatMessage ((FORMAT_MESSAGE_ALLOCATE_BUFFER
+                          | FORMAT_MESSAGE_FROM_SYSTEM
+                          | FORMAT_MESSAGE_IGNORE_INSERTS),
+                         NULL,
+                         err,
+                         MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                         (LPTSTR) &lpMsgBuf,
+                         0,
+                         NULL);
+
+          fprintf (stderr, "shortname: %s: %s", argv[i], (LPCTSTR) lpMsgBuf);
+          LocalFree (lpMsgBuf); 
+        }
+      else
+        printf ("%s\n", short_path);
+      free (short_path);
+    }
+  exit (success);
+}

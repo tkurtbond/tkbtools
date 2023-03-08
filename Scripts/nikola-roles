@@ -1,0 +1,10 @@
+#! /usr/bin/env bash
+DIR=~/Repos/tkurtbond.github.io
+(cd $DIR &&
+     find posts pages -type f -name \*.rst -print |
+	 while read filename
+	 do
+	     grep -E -e '^\.\. role:: ([^ ]+)' $filename
+	 done |
+	 cut -d ' ' -f 3 | sort -u | tee $DIR/roles.lis
+ )

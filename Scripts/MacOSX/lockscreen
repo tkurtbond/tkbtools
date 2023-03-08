@@ -1,0 +1,3 @@
+#! /usr/bin/env bash 
+# http://www.houseofding.com/2009/01/screen-lock-keyboard-shortcut-for-you-mac/
+/System/Library/CoreServices/"Menu Extras"/User.menu/Contents/Resources/CGSession -suspend

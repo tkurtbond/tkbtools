@@ -1,0 +1,11 @@
+#! /usr/bin/env python
+
+import socket, sys
+
+for hostname in sys.argv[1:]:
+    host = socket.gethostbyname_ex (hostname)
+    print '%s: %s' % (hostname, host[0])
+    for alias in host[1]:
+        print '    %s' % alias
+    for ipaddress in host[2]:
+        print '    %s' % ipaddress

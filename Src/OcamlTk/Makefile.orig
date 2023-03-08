@@ -1,0 +1,102 @@
+##############################################################################
+#### Makefile for OcamlTk tools
+##############################################################################
+### $Id: Makefile 1.10 Mon, 02 Apr 2001 21:49:08 -0400 tkb $
+###
+### This Makefile needs to be rewritten more portably.
+##############################################################################
+
+include .what-sys.dat
+
+LABLTKDIR=+labltk
+
+#OPSYS=unix
+ifeq ($(OPSYS),UNIX)
+EXE=
+OBJ=.o
+else
+EXE=.exe
+OBJ=.obj
+endif
+
+CP=cp
+RM=rm
+
+CAMLC=ocamlc
+CAMLCOMP=ocamlc -c
+
+COMPFLAGS=-I $(LABLTKDIR) -g
+LINKFLAGS=-I $(LABLTKDIR) unix.cma str.cma labltk.cma -g
+
+.PHONY: clean realclean
+
+EXES=animgif$(EXE) animxbm$(EXE) countdown$(EXE) getsel$(EXE) \
+	startbrowser$(EXE) demo$(EXE)
+
+ALL_EXES=$(EXES)
+
+all: $(EXES)
+
+
+demo$(EXE): demo.cmo
+	$(CAMLC) $(CUSTOM) $(LINKFLAGS) \
+		-o $@ demo.cmo
+
+
+animgif$(EXE): animgif.cmo
+	$(CAMLC) $(CUSTOM) $(LINKFLAGS) \
+		-o $@ animgif.cmo
+
+
+animxbm$(EXE): animxbm.cmo
+	$(CAMLC) $(CUSTOM) $(LINKFLAGS) \
+		-o $@ animxbm.cmo 
+
+
+countdown$(EXE): countdown.cmo
+	$(CAMLC) $(CUSTOM) $(LINKFLAGS) \
+		-o $@ countdown.cmo 
+
+countdown-old$(EXE): countdown-old.cmo
+	$(CAMLC) $(CUSTOM) $(LINKFLAGS) \
+		-o $@ countdown-old.cmo 
+
+getsel$(EXE): getsel.cmo
+	$(CAMLC) $(CUSTOM) $(LINKFLAGS)  \
+		-o $@ getsel.cmo
+
+startbrowser$(EXE): startbrowser.cmo
+	$(CAMLC) $(CUSTOM) $(LINKFLAGS)  \
+		-o $@ startbrowser.cmo
+
+.SUFFIXES :
+.SUFFIXES : .mli .ml .cmi .cmo
+
+.mli.cmi:
+	$(CAMLCOMP) $(COMPFLAGS) $<
+
+.ml.cmo:
+	$(CAMLCOMP) $(COMPFLAGS) $<
+
+
+BINDIR=~/local/bin
+
+$(BINDIR)/% : %
+	$(CP) $< $@
+
+
+install: $(foreach e,$(EXES),$(BINDIR)/$(e))
+
+clean:
+	-$(RM) *.cmo *.cmi *$(OBJ)
+
+realclean: clean
+	-$(RM) $(ALL_EXES) *~ .what-sys.dat
+
+ignores: 
+	mkignores $(ALL_EXES) >.ignores
+
+.what-sys.dat: 
+	what-sys
+
+#### End of Makefile

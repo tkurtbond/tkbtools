@@ -1,0 +1,16 @@
+#! /usr/bin/env bash
+
+[ "$1" = "" ] && { echo "$0: requires at least one filename"; exit 2; }
+
+for filename in "$@"
+do
+    read dummy pages < <(pdfinfo "$filename" | grep Pages:)
+    # Each sheet of paper will hold 4 pages.  Find out how many extra
+    # pages are needed to make it evenly divided by 4.
+    ((remainder = pages % 4))
+    ((remainder != 0)) && ((signature = pages + remainder)) ||
+        ((signature = pages))
+    echo $pages $remainder $signature
+    pdfjam --paper letter --suffix book --landscape --signature $signature \
+           "$filename"
+done

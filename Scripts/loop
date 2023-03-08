@@ -1,0 +1,37 @@
+#! /usr/bin/env bash
+DEBUG=
+wait_time=1
+trap 'echo "trap hit, exiting..."; exit' SIGINT
+let errors=0
+while getopts "dw:" opt
+do
+    case "$opt" in
+    \?) let errors++ ;;
+    d) DEBUG=echo ;;
+    w) wait_time="$OPTARG" ;;
+    esac
+done
+if [ "$errors" -gt 0 ]
+then
+    cat <<EOF
+usage: loop [-d] [-w time] command
+where
+-d	Turn on debugging.
+-w time Wait time seconds between iterations.
+
+For example,
+    loop -w 10 ping -c 2 hostname
+will ping hostname twice every 10 seconds.
+
+EOF
+    exit 2
+fi
+let shift_by=OPTIND-1
+shift $shift_by
+while true 
+do
+    $DEBUG echo "$@"
+    $DEBUG "$@"
+    $DEBUG sleep $wait_time
+done
+

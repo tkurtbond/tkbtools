@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+rsync -avz "/Volumes/JTAS 01-36" \
+      /Volumes/Jotunheim/tkbdocs/bought/games/farfuture.net

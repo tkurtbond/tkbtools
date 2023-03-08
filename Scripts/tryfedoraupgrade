@@ -1,0 +1,14 @@
+#! /usr/bin/bash
+while ! dnf -y upgrade
+do
+    read -t 30 -p "Continue? (y/n) " reply
+    if (($?>128)); then
+	echo "timed out, continuing..."
+    elif [[ "$reply" =~ [Nn] ]]; then
+	echo "Exiting..."
+	exit
+    else
+	echo "Continuing..."
+    fi
+done
+    

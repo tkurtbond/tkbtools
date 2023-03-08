@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+
+time find ~/ \
+           -wholename '/Users/tkb/Applications (Parallels)' -prune \
+           -o -wholename '/Users/tkb/Library/Application Support/com.yourcompany.yourapp_137786915825662' -prune \
+           -o -perm -o=w -print0 | xargs -0 chmod -v o-w

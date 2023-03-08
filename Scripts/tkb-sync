@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+
+DESTHOST=ns1.mpl.com
+UNISONCMD=unison
+
+[ -d ~/Logs ] || mkdir ~/Logs
+
+function usage ()
+{
+    cat 1>&2 <<EOF
+
+usage: tkb-sync [options]
+-C		Use compression over ssh
+-a 		All directories
+-b		batch
+-c		clean
+-d dirlist	Directories to sync
+-g 		use unison's graphical interface
+-H desthost	Destination server
+-l clientpath   Path to unison binary on local (client) machine
+-o		clean only
+-p		Sync profile after everything else.
+-r		use unison's -rsync option
+-s		clear all_flag
+-S serverpath	Path to unison binary on the remote (server) machine
+-V version      Version number to append to unison executable
+-x		debug
+
+EOF
+}
+
+# This may be tacky, but it automatically gets this logged to a reasonable
+# place.
+(
+ clean_flag=""
+ clean_only_flag=""
+ all_flag=""
+ batch=""
+ rsync=""
+ compress=""
+ ui="-ui text"
+ servercmd=
+ versionno=
+ directories="/home/tkb/Todo /home/tkb/current /home/tkb/tkb/contacts /home/tkb/tkb/log /home/tkb/comp/tkbtools /home/tkb/comp/docdtd /home/tkb/comp/lang /home/tkb/comp/sdbformat comp/wfrpformat comp/brpformat /home/tkb/comp/sgmlsml /home/tkb/comp/tkbconfig /home/tkb/comp/tkblinks /home/tkb/comp/website /home/tkb/comp/xsl-website /home/tkb/comp/wikie /home/tkb/vm /home/tkb/News /home/tkb/tmp/m3 /home/tkb/comp/eulisp /home/tkb/job/MPL/SysAdmin/backup /home/tkb/job/MPL/timesheets /home/tkb/job/MPL/Expenses /home/tkb/job/MPL/Timesheets /home/tkb/Projects /home/tkb/.goo /home/tkb/.pekwm /home/tkb/job/ISR/DB/t /home/tkb/job/ISR/sysarch"
+ sync_profile=
+
+
+ let errors=0
+ while getopts "abCcd:gH:l:oprsS:V:x" opt
+ do
+     case $opt in
+     \?) let errors++ ;;
+     a) all_flag=true ;;
+     b) batch=-batch ;;
+     C) compress="-rshargs -C" ;;
+     c) clean_flag=true ;;
+     d) directories="$OPTARG" ;;
+     g) ui="-ui graphic" ;;
+     H) DESTHOST="$OPTARG" ;;
+     l) UNISONCMD="$OPTARG" ;;
+     o) clean_only_flag=true ;;
+     p) sync_profile=t ;;
+     r) rsync="-rsync" ;;
+     s) all_flag= ;;
+     S) servercmd="-servercmd $OPTARG" ;;
+     V) versionno="-$OPTARG" ;;
+     x) debug_flag=true
+     esac
+ done
+
+[ "$debug_flag" ] && set -x
+
+ if [ "$errors" -gt 0 ]
+ then
+     usage 
+     echo 1>&2 "tkb-sync: number of command line errors: $errors; exiting"
+     exit 2
+ fi
+
+ if [ "$clean_flag" ]
+ then
+     for i in $(find $directories -name Makefile)
+     do
+	 echo 1>&2 Cleaning $i
+	 (cd $(dirname $i) && make realclean)
+     done
+ fi
+
+ [ "$clean_only_flag" ] && exit
+
+
+ if [ "$all_flag" ]
+ then
+     paths=
+     for i in $directories
+     do
+	 paths="$paths -path ${i#/home/tkb/}"
+     done
+     $UNISONCMD$versionno $servercmd $compress $rsync $batch $ui \
+         /home/tkb ssh://$DESTHOST//home/tkb \
+	 $paths
+ else
+     for i in $directories
+     do
+	 echo '***' working on $i
+	 $UNISONCMD$versionno $servercmd  $compress $rsync $batch $ui \
+	     /home/tkb ssh://$DESTHOST//home/tkb \
+	     -path ${i#/home/tkb/}
+     done
+ fi
+
+ if [ -n "$sync_profile" ]
+ then
+     $UNISONCMD$versionno $servercmd $compress $rsync $batch $ui \
+     	 /home/tkb/.unison/default.prf \
+     	 ssh://$DESTHOST//home/tkb/.unison/default.prf
+ fi
+
+) 2>&1 | tee $(increment -- ~/Logs/tkb-sync- d - n)

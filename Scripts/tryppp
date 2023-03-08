@@ -1,0 +1,41 @@
+#!/bin/sh -x
+##############################################################################
+#### tryppp -- Keep trying to start a ppp connection until it succeeds.
+##############################################################################
+### $Id: tryppp 1.2 Fri, 04 Jun 1999 07:25:28 -0400 tkb $
+##############################################################################
+
+if [ "$1" = "bg" ]
+then
+    echo Ooops!
+    exit
+    ($0 $2 >~/tmp/Log.tryppp 2>1 &)&
+    echo tryppp started in background
+    exit
+fi
+
+# Defaults to bridgeport
+site=
+[ "$1" != "" ] && site=$1
+
+let n=0
+while true 
+do
+    if netstat -i | grep -q "^ppp"
+    then
+        [ $n -eq 0 ] && echo -n "Already "
+        echo Connected
+	dofetchmail
+	exit
+    elif [ $n -eq 0 ] 
+    then
+        echo Trying to connect
+    else
+	echo ... failed
+	sleep 15s
+    fi
+    let n=n+1
+    echo Try number $n
+    start-ppp $site
+    sleep 45s
+done

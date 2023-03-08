@@ -1,0 +1,17 @@
+#! /bin/bash
+
+#NSP_UNCLASS='\\10.0.2.161'
+NSP_UNCLASS='\\10.0.0.163'
+if [ "$1" = "common" ]
+then
+  vss_site="$NSP_UNCLASS\NS_COMMON"
+  vss_site_user='kbond'
+  vss_drive='Y:'
+else
+  vss_site="$NSP_UNCLASS\NSP_CM"
+  vss_site_user='kbond'
+  vss_drive='Z:'
+fi;
+
+read -s -p "Password: " passwd
+net use "$vss_drive" "$vss_site" "$passwd" /USER:$vss_site_user /PERSISTENT:NO

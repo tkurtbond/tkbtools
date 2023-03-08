@@ -1,0 +1,160 @@
+.TH MODPATH 1 "10 December 2001" TKB \" -*- nroff -*-
+.SH NAME
+modpath \- add, insert, delete, and eliminate duplcates in paths
+.SH SYNOPSIS
+.B modpath 
+[[
+.B option
+] .\|.\|.
+[
+.B argument
+] .\|.\|.]
+.SH DESCRIPTION
+.B modpath 
+manipulates colon (or semi-colon on MS Windows) separated paths, printing
+the result on stdout in a form appropriate for use as the value of an
+environment variable.
+Note that while this can be the
+.B PATH
+variable, it could also be 
+.B LD_LIBRARY_PATH
+or any other path-type value.
+.SH OPTIONS
+.TP
+\fB\-after\fP \fIitem\fP
+Add the next argument to the path after 
+.I item .
+.TP 
+\fB\-before\fP \fIitem\fP
+Add the next argument to the path before 
+.I item .
+.TP
+\fB\-cmd\fP
+Output NT \fBcmd.exe\fP command to set the path.
+(Not that it's actually useful, alas, 
+since there's no way to get \fBcmd.exe\fP to evaluate
+the results of a command inline like the Unix \fBsh\fP backquote and eval.)
+.TP
+\fB\-csh\fP
+Output \fBcsh\fP command to set the path.
+.TP
+\fB\-current\fP
+Add current directory to path.
+.TP
+\fB\-delete\fP \fIitem\fP
+Delete the 
+.I item 
+from the path.
+.TP
+\fB\-empty\fP
+Add an empty element to the path.
+.TP
+\fB\-end\fP
+Add the next item specified at the end of the path.
+For instance, \fB\-end\fP \fB\-current\fP adds the 
+current directory to the end of the path.
+.TP
+\fB\-exists\fP \fIitem\fP
+Add 
+.I item
+to path if it exists.
+.TP
+\fB\-insep\fP \fIsep\fP
+Set the input path separator.
+.TP
+\fB\-name\fP \fIname\fP
+Name of path for output.
+.TP
+\fB\-nice\fP
+Print the path out ``nicely'', one item to a line.
+(This is intended for humans to read.)
+.TP
+\fB\-outsep\fP \fIsep\fP
+Set the output path separator.
+.TP
+\fB\-path\fP \fIpath\fP
+Set the path to work on to the value
+.I path .
+(Defaults to the value of 
+.B PATH
+if \fB\-path\fP and \fB\-var\fP are not
+specified.)
+.TP
+\fB\-quiet\fP
+Don't print out the path.
+(This is intended for debugging, 
+to make the error and warning messages easier to find.)
+.TP
+\fB\-relative\fP
+Interpret non-absolute names as relative to the current directory.
+.TP
+\fB\-sep\fP \fIsep\fP
+Set the input and output path separators.
+.TP
+\fB\-sh\fP
+Output \fBsh\fP command to set the path.
+.TP
+\fB\-simple\fP
+Output just the new value, not a command to set the a variable to the
+value.
+.TP
+\fB\-start\fP
+Add the next item specified to the start of the path.
+For instance, \fB\-start\fP \fB\-current\fP adds the 
+current directory to the beginning of the path.
+.TP
+\fB\-unique\fP
+Eliminate duplicate directories in the path.
+.TP
+\fB\-var\fP \fIvar\fP
+Set the path from the value of the environment variable 
+\fIvar\fP.
+(It is a fatal error if 
+.I var 
+does not exist and \fB\-warn\fP was not specified.)
+.TP
+\fB\-warn\fP
+Warn about missing environment variables instead of exiting.
+.TP
+\fB\-version\fP
+Print version information and exit.
+.SH EXAMPLES
+.LP 
+Add the following to your .bashrc file or something appropriate to
+your shell to its initialization file:
+.LP
+.nf
+function repath () {
+\0\0\0\0eval $(modpath "$@")
+}
+.fi
+.LP
+Then issue a command like
+.nf
+\0\0\0\0repath -delete /usr/local/bin -start /opt/bin -end ~/bin -unique
+.fi
+to reset your \fBPATH\fP, deleting /usr/local/bin, adding /opt/bin at
+the beginning and ~/bin to the end, and deleting any duplicate
+entries.
+.SH ENVIRONMENT
+.TP
+.B PATH
+By default, 
+.B modpath
+gets the path to modify from the environment variable
+.B PATH .
+.SH "EXIT STATUS"
+.TP
+.B 0
+The path was output on stdout.
+.TP
+.B >0
+An error occured and the path was not output.
+.\" SH FILES
+.SH AUTHOR
+T. Kurt  Bond, tkurtbond@gmail.com
+.\" SH BUGS
+.\" SH COPYRIGHT
+.\" SH AVAILABILITY
+.\" SH "SEE ALSO"
+

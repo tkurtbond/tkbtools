@@ -1,0 +1,16 @@
+#! /usr/bin/env bash
+
+filename="$1"
+if [ "$filename" == "" ]; then
+    echo 1>&2 "No filename specified!"
+    exit 2
+fi
+name="$(basename $filename .rst)"
+outname=${name}.digest.ms.pdf
+
+MSVARIABLES="$2"
+
+pandoc -s -r rst -w ms --template=digest2 --variable=usegrops \
+       --variable=fontfamily=P --lua-filter=general.lua \
+       --pdf-engine-opt=-P-p8.5i,5.5i ${MSVARIABLES} \
+       --output=$outname $filename

@@ -1,0 +1,142 @@
+#!/usr/bin/env wish
+# -*- tcl -*-
+
+
+set mode time
+array set state {
+    running,a 0
+    limit,a 0
+    running,b 0
+    limit,b 0
+}
+set output ""
+
+
+proc create_gui {w} {
+    global output
+    entry $w.output -width 10 \
+	-font {Helvetica 24 bold} \
+	-justify center \
+	-textvariable output
+    grid $w.output - - -sticky ew
+    button $w.time -text Time -command {set_mode time}
+    button $w.timera -text "Timer A" -command {set_mode a}
+    button $w.timerb -text "Timer B" -command {set_mode b}
+    grid $w.time $w.timera $w.timerb -sticky ew
+    button $w.start -text Start -command { do_start }
+    button $w.stop -text Stop -command { do_stop }
+    button $w.clear -text Clear -command { do_clear }
+    grid $w.start $w.stop $w.clear -sticky ew
+}
+
+
+proc set_mode {m} {
+    global mode output state
+    set mode $m
+    #puts stderr "DBG: mode=$mode"
+
+    if { $mode != "time" } {
+	if { $state(running,$mode) != 1 } {
+	    set output ""
+	}
+    }
+}
+
+
+proc do_start {} {
+    global mode output state
+
+    if { $mode != "time" } {
+	if { $output == "" } {
+	    if { $state(limit,$mode) == "" } {
+		set state(limit,$mode) 0
+	    }
+	} else {
+	    set a [split $output :]
+
+	    switch [llength $a] {
+		1 {
+		    set h 0
+		    set m 0
+		    set s [lindex $a 0]
+		}
+		2 {
+		    set h 0
+		    set m [lindex $a 0]
+		    set s [lindex $a 1]
+		}
+		3 {
+		    set h [lindex $a 0]
+		    set m [lindex $a 1]
+		    set s [lindex $a 2]
+		}
+		default {
+		    error "Invalid format."
+		}
+	    }
+	    #puts "DBG: input=$h:$m:$s"
+	    set state(limit,$mode) [expr ((($h * 60) + $m) * 60) + $s]
+	}
+
+	set state(start,$mode) [clock seconds]
+	set state(running,$mode) 1
+    }
+}
+
+
+proc do_stop {} {
+    global mode output state
+
+    if { $mode != "time" } {
+	set state(running,$mode) 0
+    }
+}
+
+
+proc do_clear {} {
+    global mode output state
+
+    if { $mode != "time" } {
+	set output ""
+	set state(running,$mode) 0
+    }
+}
+
+
+proc do_update {} {
+    global mode output state
+
+    #puts stderr "DBG: do_update $mode"
+    if { $mode == "time" } {
+	set time [clock format [clock seconds] -format "%I:%M:%S %p"]
+	if { $output != $time } {
+	    set output $time
+	}
+    } else {
+	#puts stderr "DBG: do_update state(running,$mode) = $state(running,$mode)"
+	if $state(running,$mode) {
+	    set s [expr $state(limit,$mode) - ([clock seconds] - $state(start,$mode))]
+	    if { $s < 0 } {
+		.output configure -fg red
+	    } else {
+		.output configure -fg black
+	    }
+	    set s [expr abs($s)]
+	    set m [expr $s / 60]
+	    set s [expr $s % 60]
+	    set h [expr $m / 60]
+	    set m [expr $m % 60]
+	    set time [format "%02d:%02d:%02d" $h $m $s]
+	    if { $output != $time } {
+		set output $time
+	    }
+	}
+    }
+
+    after 300 do_update
+}
+
+
+create_gui ""
+set_mode time
+do_update

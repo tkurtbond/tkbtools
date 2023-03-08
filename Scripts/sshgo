@@ -1,0 +1,129 @@
+#! /usr/bin/env bash
+
+((go_dbg)) && set -x
+remote_user=tkb
+
+let errors=0
+while getopts "d:S:s:u:vX" opt
+do
+    echo OPTIND: $OPTIND OPTARG: "$OPTARG"
+    case "$opt" in
+	\?) let errors++                ;;
+	d)  dynamic_port="$OPTARG"      ;;
+	S)  mysql_remote_port="$OPTARG" ;;
+	s)  mysql_local_port="$OPTARG"  ;;
+	u)  remote_user="$OPTARG"       ;;
+	v)  verbose+="-v "              ;;
+	X)                              ;; # was this for disable x forward?
+    esac
+done
+
+[ "$errors" -gt 0 ] && {
+    echo "usage: $0 [-u remoteuser] desttag"
+    exit 2
+}
+
+let shift_by=$OPTIND-1
+shift $shift_by
+
+get_mysql () {
+        # ??? Need to be able to set local and remote port, and whole forwarding
+    mysql_local_port="${mysql_local_port:-3306}"
+    mysql_remote_port="${mysql_remote_port:-3306}"
+    mysql_remote_host="localhost"
+    mysql_forwarding="${mysql_forwarding:--L ${mysql_local_port}:${mysql_remote_host}:${mysql_remote_port}}"
+}
+
+get_mail () { 
+        # ??? Need to be able to set local & remote port, and whole forwarding.
+    mail_local_port="${mail_local_port:-6005}"
+    mail_remote_port="${mail_remote_port:-25}"
+    mail_forwarding="${mail_forwarding:--L ${mail_local_port}:localhost:${mail_remote_port}}"
+}
+
+get_dynamic () {
+        # ??? Need to be able to able to specify whole forwarding.
+    dynamic_port=${dynamic_port:-8118}
+    dynamic_forwarding="${dynamic_forwarding:--L ${dynamic_port}:localhost:${dynamic_port}}"
+    remote_user=${remote_user:-tkb}
+}
+
+echo "dynamic_forwarding: $dynamic_forwarding"
+
+ssh="ssh $verbose"
+
+destination=${1:-tkb}
+case $destination in
+    cobkweb)			# external
+	$ssh \
+	    -L 7000:10.36.1.152:22 \
+	    -L 7001:10.36.1.164:22 \
+	    ${remote_user}@buckhannonwv.org
+	;;
+
+    blades1)			# external
+	$ssh -p 7000 ${remote_user}@localhost
+	;;
+
+    blades1)			# external
+	$ssh -p 7001 ${remote_user}@localhost
+	;;
+
+    buck1)			# internal
+	$ssh -L 5991:localhost:5900 ${remote_user}@10.36.1.152
+	;;
+
+    buck5)			# internal
+	$ssh ${remote_user}@10.36.1.164
+	;;
+
+    host)
+	$ssh -x ${remote_user}@host.ci.buckhannon.wv.us
+	;;
+
+    rack)
+	$ssh \
+	    -L 5950:localhost:5900 \
+	    -L 5951:localhost:5901 \
+	    -L 5952:localhost:5902 \
+	    ${remote_user}@rackham.mpl.com
+	;;
+
+
+    sif)
+	$ssh \
+	    -L 5960:localhost:5900 \
+	    -L 5961:localhost:5901 \
+	    ${remote_user}@sif.mpl.com
+	;;
+
+    thor)
+	mysql_local_port=${mysql_local_port:-3307}
+	get_mysql 
+	$ssh \
+	    ${mysql_forwarding} \
+	    ${remote_user}@thor.mpl.com
+	;;
+
+    tkb)
+	get_mail
+	get_dynamic
+	$ssh \
+	    ${mail_forwarding} \
+	    ${dynamic_forwarding} \
+	    ${remote_user}@unwind-protect.org
+	;;
+
+    oldblades5)
+	$ssh ${remote_user}@10.36.1.150
+	;;
+
+    *)
+	echo '$@: ' "$@"
+	#$ssh "$@"
+	get_dynamic
+	$ssh \
+	    ${dynamic_forwarding} \
+	    ${remote_user}@$1
+	;;
+esac

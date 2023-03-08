@@ -1,0 +1,3 @@
+# REQUIRE: E F
+# PROVIDE: D
+echo D

@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+DEST=/tmp/ssh-env.tmp
+env | grep -i ssh | sed -e 's/=/="/' -e 's/$/"/' >${DEST}
+echo SSH environment variables written to ${DEST}

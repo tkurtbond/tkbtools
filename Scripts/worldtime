@@ -1,0 +1,45 @@
+#!/bin/sh
+#
+# From: https://unix.stackexchange.com/a/195911
+# 
+# Print the specified (or current) time from base time in other time zones
+# and the converse
+#
+
+# Base time zone from/to which to convert
+#TZBASE=Europe/Athens
+TZBASE=America/New_York
+
+# Time zones to display
+# See /usr/share/zoneinfo/ for more names
+TZONES='UTC America/New_York America/Chicago America/Denver America/Los_Angeles Europe/London Europe/Paris'
+
+# Display format
+#FORMAT='%H:%M (%p) %Z %a %m %b %Y'
+FORMAT='%I:%M %p %Z (%H:%M) %a %m %b %Y'
+
+if [ "$1" ] ; then
+  time="$1"
+else
+  time=`date +%T`
+fi
+
+# Show the time from the specified input time zone in the specified output
+# time zone
+showtime()
+{
+  TZIN=$1
+  TZOUT=$2
+
+  TZ=$TZOUT date --date='TZ="'$TZIN'"'" $time" +"$time $TZIN is $TZOUT $FORMAT"
+}
+
+for tz in $TZONES ; do
+  showtime $TZBASE $tz
+done
+
+echo
+
+for tz in $TZONES ; do
+  showtime $tz $TZBASE
+done

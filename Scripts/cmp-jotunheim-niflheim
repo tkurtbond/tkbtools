@@ -1,0 +1,12 @@
+#! /usr/bin/env bash
+
+(cd /Volumes/Jotunheim/tkbdocs &&
+     find bought games writings \
+	  -name .~ -prune -o \
+	  -type f ! -name .DS_Store ! -name Thumbs.db \
+	  -print |
+	 while read fn
+	 do
+	     cmp -s "$fn" "/Volumes/Niflheim/tkbdocs/$fn" || echo "Failed: $fn"
+	 done
+)

@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+launchctl stop com.apple.usbd
+launchctl start com.apple.usbd

@@ -1,0 +1,7 @@
+#! /usr/bin/env bash
+
+for W
+do
+    printf ".hy 4\n.ll 1u\n%s\n" "$W" | nroff -Wbreak | sed '/^$/d' | tr -d '\n'
+    echo
+done

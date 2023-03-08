@@ -1,0 +1,12 @@
+#! /usr/bin/env bash
+#
+# Example: tz -d "Sep 15 5pm BST"
+
+GNUDATE=$(type -p gdate)
+[ -z $GNUDATE ] && GNUDATE=date	# fall back if gdate isn't available
+
+TZ='America/Los_Angeles' $GNUDATE "$@"
+TZ='America/Edmonton' $GNUDATE "$@"
+TZ='America/Chicago' $GNUDATE "$@"
+TZ='America/New_York' $GNUDATE "$@"
+TZ='Z' $GNUDATE "$@"

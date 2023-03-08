@@ -1,0 +1,35 @@
+#! /usr/bin/env bash
+
+EXT=.html
+OPEN=0
+STYLESHEET=
+
+let errors=0
+while getopts "dhO:ops:" opt
+do
+    case $opt in
+	\?) let errors++ ;;
+	d)  set -x ;;
+	h)  EXT=html ;;
+	p)  EXT=pdf ;;
+	O)  OUTPUT="$OPTARG" ;; 
+	o)  OPEN=1 ;;
+	#s)  STYLESHEET="$OPTARG" ;; ¿¿¿FIXME???
+    esac
+done
+shift $((OPTIND-1))
+
+[[ "$OUTPUT" == "" ]] && OUTPUT=$(basename $1 .rst).$EXT
+
+case "$EXT" in 
+    html)
+	rst2html-2.7.py $1 $OUTPUT
+	;;
+    pdf)
+	make -f ~/lib/Mk/rst.mk $OUTPUT
+	;;
+esac
+
+((OPEN)) && open $OUTPUT
+    
+exit 0

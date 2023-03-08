@@ -1,0 +1,47 @@
+<HTML>
+<HEAD>
+<TITLE>y-js</TITLE>
+</HEAD>
+<BODY>
+<a href="javascript:{
+  var pattern1 = new RegExp ('^http://(tkb.mpl.com|(www.|)unwind-protect.org)');
+  var pattern2 = new RegExp ('^http:');
+  var links = document.links;
+  var i;
+  var n = links.length;
+  var h = new Array(n);
+  var t = new Array(n);
+  for (i = 0; i < n; i ++) {
+    h[i] = links[i].href;
+    t[i] = links[i].text;
+  }
+  for (i = 0; i < n; i ++) {
+      if (! (h[i].match (pattern1))) {
+          if (h[i].match (pattern2)) {
+	      var w = open (h[i]);
+	  }
+      }
+  }
+  document.close();
+}
+">Open !TKB Links</a>.<br>
+<a href="javascript:{
+  var links = document.links;
+  var i;
+  var n = links.length;
+  var h = new Array(n);
+  var t = new Array(n);
+  for (i = 0; i < n; i ++) {
+    h[i] = links[i].href;
+    t[i] = links[i].text;
+  }
+  for (i = 0; i < n; i ++) {
+      var w = open (h[i]);
+  }
+  document.close();
+}
+">Open ALL Links</a>.<br>
+
+<a href="http://www.amazon.com/">link</a>.
+</BODY>
+</HTML>

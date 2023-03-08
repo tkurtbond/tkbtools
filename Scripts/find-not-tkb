@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+time (find ~/ \
+           ! -user tkb -printf '%M %u:%g %p\n' |
+          sort -k 3 > ~/tmp/not-tkb.lis)

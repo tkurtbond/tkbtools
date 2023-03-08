@@ -1,0 +1,26 @@
+#! /usr/bin/env bash
+
+set -x
+export debug=
+export myprof=$1
+export myui=$2
+# export debug=$3
+export farroot=$4
+# if not "%3"=="" set debug=-debug all
+
+if [ "$myprof" == "" ]; then export myprof=work; fi
+# unfortunately, roots have to be both set on cmd line or both in profile.
+# if "%farroot%"=="" set farroot="-root ssh://tkb.mpl.com//home/tkb"
+
+# set UNISON=%HOME%/.unison
+export localunison=~/local/unix/rndbin/unison
+export remoteunison=/home/tkb/local/bin/unison-2.28.23
+export ui='-ui text'
+# export ui=-ui graphic
+#if [ "$myui" == "text"] ; then export ui=-ui text; fi
+
+echo myprof: $myprof myui: $myui debug: $debug
+export sshcmd=
+# export sshcmd='-sshcmd %HOME%/local/msw32/bin/uniplink.exe'
+$localunison $ui $myprof -servercmd $remoteunison $sshcmd $debug
+

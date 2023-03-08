@@ -1,0 +1,40 @@
+#! /usr/bin/env bash
+
+build_directory=""
+extension=".ms.pdf"
+
+usage () {
+    cat 1>&1 <<EOF
+usage: $0 [-h] [-d build_directory] [-e extension] files
+
+-d dir	Directory where the build files should end up.
+-e ext	Extension of the output files.
+-h	This usage message.
+EOF
+    exit 2
+}
+
+while getopts "d:e:" opt
+do
+    case "$opt" in
+    (d) build_directory="$OPTARG" ;;
+    (e) extension="$OPTARG" ;;
+    (h) usage
+    esac
+done
+
+shift $((OPTIND-1))
+
+
+for i in "$@"
+do
+    DIR="$(dirname $i)"
+    BASE="$(basename $i .rst)"
+    if [ "$DIR" == "." ]
+    then
+        PDF="$BASE$extension"
+    else
+        PDF="$DIR/$BASE$extension"
+    fi
+    echo "${build_directory}$PDF: " $(grep -E "^[ \t]*\\.\\. include::" "$i" | cut -d: -f3)
+done

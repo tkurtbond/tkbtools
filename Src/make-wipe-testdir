@@ -1,0 +1,9 @@
+#! /usr/bin/env bash
+set -x
+mkdir -p ~/tmp/wipe-test/{a/{aa,ab},b/{ba,bb},c/{ca,cb}}
+((i=0))
+for file in ~/tmp/wipe-test/{,a/,b/,c/}{1,2}.txt
+do
+    printf "Hello, world! This is file \"%s\".\n#%d\n" "$file" "$i" >$file
+    ((i++))
+done

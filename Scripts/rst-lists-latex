@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+sed -e '1,$s/^\\begin{itemize}/\\begin{itemize}\\shortlist/' \
+    -e '1,$s/^\(\\usecounter{listcnt0}\)/\1\\shortlist/'
+

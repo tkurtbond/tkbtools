@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+SUDO=""
+(($(id -u) == 0)) || SUDO=sudo 
+${SUDO} xattr -rd com.apple.quarantine "$@"

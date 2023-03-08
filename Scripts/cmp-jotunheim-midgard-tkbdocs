@@ -1,0 +1,17 @@
+#! /usr/bin/env bash
+[ "$1" == "echo" ] && ECHO=echo || ECHO=
+
+(find /Volumes/Jotunheim/tkbdocs \
+      -name .~ -prune -o \
+      -type f ! -name .DS_Store ! -name Thumbs.db ! -name ._\* \
+      -print |
+   while read fn
+   do
+     midfn="/Volumes/Midgard/tkbdocs/$(echo $fn | sed 's#^/Volumes/Jotunheim/tkbdocs/##')"
+     ${ECHO} cmp "$fn" "$midfn"
+   done
+)
+
+# Local Variables:
+# sh-basic-offset: 2
+# End:

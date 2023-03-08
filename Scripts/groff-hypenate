@@ -1,0 +1,9 @@
+#! /usr/bin/env bash
+# List-Id: <groff.gnu.org>
+# List-Archive: <http://lists.gnu.org/archive/html/groff/>
+# Date: Thu, 8 Nov 2018 10:21:07 -0500
+# From: "G. Branden Robinson" <g.branden.robinson@gmail.com>
+# Message ID	<20181108152105.6ye7zmfdlcvif5gl@crack.deadbeast.net>
+
+
+printf ".ll 1u\n$1\n" | nroff 2> /dev/null | sed '/^$/d'

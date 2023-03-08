@@ -1,0 +1,4 @@
+#! /bin/bash
+# Stupid SourceSafe.
+
+ss "$@" -Ykbond,kurt

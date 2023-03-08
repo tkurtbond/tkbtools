@@ -1,0 +1,43 @@
+#! /usr/bin/env bash
+
+# https://stackoverflow.com/a/3278427
+
+if [[ -t 0 ]]; then
+    LIGHTPURPLE='\033[1;35m'
+    LIGHTCYAN='\033[1;36m'
+    YELLOW='\033[1;33m'
+    RED='\033[1;31m'
+    NC='\033[0m' # No Color
+fi
+
+VERBOSE=
+
+((errors=0))
+while getopts "v" opt
+do
+    case $opt in
+        (\?) ((errors++)) ;;
+        (v)  VERBOSE=-v
+    esac
+done
+
+git remote $VERBOSE update >/dev/null
+
+UPSTREAM=${1:-'@{u}'}
+LOCAL=$(git rev-parse @)
+REMOTE=$(git rev-parse "$UPSTREAM")
+BASE=$(git merge-base @ "$UPSTREAM")
+LINE="$(pad -n 80 -c '=' '')"
+
+if [ $LOCAL = $REMOTE ]; then
+    echo "Up to date"
+elif [ $LOCAL = $BASE ]; then
+    # echo "$LINE"
+    echo "Need to pull"
+elif [ $REMOTE = $BASE ]; then
+    #echo "$LINE"
+    echo "Need to push"
+else
+    #echo "$LINE"
+    echo "Diverged"
+fi

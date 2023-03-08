@@ -1,0 +1,8 @@
+#! /usr/bin/env bash
+
+. ~/lib/Mk/rst-params.mk
+${RST2HTML} --no-generator --strip-comments --initial-header-level=4 $1 |
+links -html-numbered-links 1 suggestions.html \
+    -html-margin 0 -width 79 \
+    -dump 
+

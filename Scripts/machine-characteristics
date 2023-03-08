@@ -1,0 +1,16 @@
+#! /usr/bin/env bash
+
+uname -a
+
+type -p gcc 1>/dev/null 2>&1 && {
+    printf "gcc -dumpmachine: "
+    gcc -dumpmachine
+}
+
+type -p clang 1>/dev/null 2>&1 && {
+    printf "clang -dumpmachine: "
+    clang -dumpmachine
+}
+
+[[ -r /etc/lsb-release ]] && cat /etc/lsb-release
+

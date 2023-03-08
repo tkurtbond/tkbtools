@@ -1,0 +1,5 @@
+#! /bin/bash
+
+infile="$1"
+outfile="$(dirname $infile)/$(basename $infile .rst).html"
+make -f ~/lib/Mk/rst.mk "$outfile" && shell2 "$outfile"

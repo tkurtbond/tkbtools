@@ -1,0 +1,2 @@
+ocamlfind ocamlc -o animgif -linkpkg -package labltk animgif.ml
+ocamlfind ocamlopt -o countdown -linkpkg -package labltk -package str countdown.ml 

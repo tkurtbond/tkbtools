@@ -1,0 +1,11 @@
+*~
+.DS_Store
+.\#*
+.\#*
+.~
+.~*\#
+\#*\#
+\#*\#
+**/build/**
+.what-sys.dat
+.depend

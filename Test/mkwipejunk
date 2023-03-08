@@ -1,0 +1,11 @@
+#! /bin/sh
+
+mkdir -p junk/{1,2,3,4}
+for i in junk/{1,2,3,4}
+do
+    dd if=/dev/zero of=$i/37 bs=37 count=1
+    dd if=/dev/zero of=$i/127 bs=127 count=1
+    dd if=/dev/zero of=$i/1 bs=1 count=1
+    dd if=/dev/zero of=$i/10240 bs=10240 count=1
+    dd if=/dev/zero of=$i/102400 bs=102400 count=10
+done

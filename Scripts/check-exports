@@ -1,0 +1,24 @@
+#! /usr/bin/env bash
+
+cd ~/Downloads
+find writings -type f -print |
+    while read fn
+    do
+	cmp "$fn" "/Volumes/Midgard/tkbdocs/$fn" ||
+	    echo failed: "$fn"
+    done
+
+find games -type f -print |
+    while read fn
+    do
+	cmp "$fn" "/Volumes/Midgard/tkbdocs/$fn" ||
+	    echo failed: "$fn"
+    done
+
+cd ~/Documents
+find bought  -type f -print |
+    while read fn
+    do
+	cmp "$fn" "/Volumes/Midgard/tkbdocs/$fn" ||
+	    echo failed: "$fn"
+    done

@@ -1,0 +1,295 @@
+### betags.icn -- Produce an etags style TAGS file for VAX BASIC.
+
+### This is simple minded, but works for my coding style, and probably
+### for Tom Williams' :-).
+
+### Simple Usage: iconx betags file ...
+### For more detail, search for `procedure usage('.
+
+### I'm assuming the etags file has a format like this:
+###     <FF><NL>
+###     filename,size-of-text-of-tags-in-bytes<NL>
+###     name<DEL>line-no,char-no-from-beginning-of-file<NL>
+### for each file indexed.
+
+link options
+
+global version_string,
+    do_typedefs,			# include indices for type definitions
+    do_labels,				# include indices for labels
+    do_lineno,				# include indices for line numbers
+    do_defdfuns,			# include indices for DEF & DEF* funs
+    verbose,				# be noisy
+    outf_name,				# output file name, defaults to TAGS
+    listf_name,				# filename of file containing filenames
+    listf,				#   to process, and the file
+    errf_name,				# error file name
+    errf,				#   and error file
+    filenames,				# generator of file names to process
+    out_mode				# append to output or not
+
+global whitespace, basic_id_cset
+
+
+
+procedure main(args)
+    local inf_name,			# name of input file
+	  inf,				# input file
+	  outf				# output file
+
+    initial {
+	version_string := "betags v0.1"
+	whitespace := '\014 \t'
+	basic_id_cset := &letters ++ &digits ++ '._$%'
+    }
+
+    if *args = 0 then usage()		# need at least one argument
+    parse_options(args)
+
+    if outf_name == "-" then
+	outf := &output
+    else {
+	outf := open(outf_name, out_mode) |
+	    stop("can't open output file:", outf_name)
+    }
+
+    every inf_name := !filenames do {
+	inf := open(inf_name, "r") |
+	    (write(errf, "can't open ", inf_name, "\n") & next)
+	if \verbose then write(errf, inf_name, ":")
+	find_tags_in_basic_file(inf, inf_name, outf)
+	close(inf)
+    }
+
+    if outf_name ~== "-" then close(outf)
+
+end # main
+
+
+
+procedure parse_options(args)		# figure out command line options
+    local opts
+    
+    opts := options(args, "tlndvVe:o:i:a?h")
+    if errf_name := \opts["e"] then {
+	errf := open(errf_name, "w") |
+	    stop("can't open error file: ", errf_name)
+    } else
+	errf := &errout
+    
+    if \opts["?"] | \opts["h"] then usage()
+    do_typedefs := (\opts["t"] | &null)
+    do_labels := (\opts["l"] | &null)
+    do_lineno := (\opts["n"] | &null)
+    do_defdfuns := (\opts["d"] | &null)
+    verbose := (\opts["v"] | &null)
+    if \opts["V"] then write(errf, version_string)
+    outf_name := (\opts["o"] | "TAGS")
+    
+    if listf_name := \opts["i"] then {	# get list of file names from a file
+	if listf_name == "-" then	# instead of the command line
+	    listf := &input
+	else {
+	    listf := open(listf_name, "r") |
+		stop("can't open file of names: ", listf_name)
+	}
+	filenames := listf
+    } else				# Get list of file names from the
+	filenames := args		# command line.
+
+    if \opts["a"] then			# we want to append
+	out_mode := "wa"
+    else
+	out_mode := "w"
+end # parse_options
+
+
+
+record ENTRY(fun_name, fun_def, line_no, char_no)
+
+
+
+procedure find_tags_in_basic_file(inf, inf_name, outf)
+    local line,				# the current source line
+	  lline,			# current source line in lower case
+	  line_no,			# the current line number
+	  fun_name,			# the name of the function, if any
+	  char_no,			# the current character number
+	  p,				# saved position of start of fun name
+	  tags_list,			# list of function indices
+	  t,				# temp string
+	  tags_text_length,		# length of tags info for file
+	  tags_table,			# table of tags text
+	  fun_def,			# text of definition of function
+	  i				# a counter
+
+    tags_text_length := line_no := char_no := 0
+    tags_table := table("")
+    every line := !inf do {
+	## basic is case insensitive, so map line to
+	## lower case for easy matching
+	lline := map(line, &ucase, &lcase)
+	line_no +:= 1
+	lline ? {
+	    ## lines are like [<space>][<linenumber>][<space>][<definition>]
+	    tab(many(whitespace))
+	    
+	    if \do_lineno then {
+		write(&errout, "line no")
+		p := &pos
+		if fun_name := tab(many(&digits)) then {
+		    fun_def := line[1:&pos]
+		    tags_text_length +:=
+			save_entry(tags_table, ENTRY(fun_name, fun_def,
+						     line_no, char_no + p))
+		    tab(many(whitespace))
+		}
+	    } else {			# skip any line number
+		tab(many(&digits))
+		tab(many(whitespace))
+	    }
+	    
+	    if \do_labels then {
+		write(&errout, "label: ", &subject[&pos:0])
+		p := &pos
+		if (fun_name := (tab(many(basic_id_cset)) ||
+				(tab(many(whitespace)) | ""))) ||
+				=":"
+		then {
+		    write(&errout, "saw label: ", fun_name)
+                    # I used to think it was good to include the trailing colon
+                    # in the tags table, but doing that means that when you are
+                    # positioned on the label in a gosub statement M-. fails
+                    # to bring you the location of the label, since there is no
+                    # colon in the reference to the label in the gosub
+                    # statement.
+		    fun_def := line[1:&pos-1]
+		    if =":" then { # two colons means record field ref, not label
+			tab(p)     # go back
+			write(&errout, "going back")
+		    } else {
+			write(&errout, "saving label")
+			tags_text_length +:=
+			    save_entry(tags_table, ENTRY(fun_name, fun_def,
+							 line_no, char_no + p))
+			tab(many(whitespace))
+		    }
+		}
+	    } else {			# skip any label
+		tab(many(basic_id_cset)) &
+		    tab(many(whitespace)) &
+		    =":"
+		tab(many(whitespace))
+	    }
+
+	    ##by the time we get here, we *have* to have skipped all whitespace
+	    ##on the beginning of the line.
+	    if (="sub" | ="program") then {
+		## sub <subname> or program <program-name>
+		tab(many(whitespace))
+		p := &pos
+		if fun_name := tab(many(basic_id_cset)) then {
+		    move(1)		# to get following space or paren
+		    fun_def := line[1:&pos]
+		    tags_text_length +:=
+			save_entry(tags_table, ENTRY(fun_name, fun_def,
+						     line_no, char_no+p))
+		} else
+		    write(errf, inf_name, ": ", line_no,
+			  ": missing sub or program name?")
+	    } else if ="function" then {
+		## function <data-type> <function-name>
+		tab(many(whitespace))
+		tab(many(basic_id_cset))
+		tab(many(whitespace))
+		p := &pos
+		if fun_name := tab(many(basic_id_cset)) then {
+		    move(1)
+		    fun_def := line[1:&pos]
+		    tags_text_length +:=
+			save_entry(tags_table, ENTRY(fun_name, fun_def,
+						     line_no, char_no+p))
+		} else
+		    write(errf, inf_name, ": ", line_no,
+			  ": missing function name?")
+	    } else if (\do_typedefs & ="record") then {
+		write(&errout, "record")
+		## record <record-name>
+		tab(many(whitespace))
+		p := &pos
+		if fun_name := tab(many(basic_id_cset)) then {
+		    move(1)
+		    fun_def := line[1:&pos]
+		    tags_text_length +:=
+			save_entry(tags_table, ENTRY(fun_name, fun_def,
+						     line_no, char_no+p))
+		} else
+		    write(errf, inf_name, ": ", line_no,
+			  ": missing record name?")
+	    } else if (\do_defdfuns & (="def*" | ="def")) then {
+		## def <datatype> <def-name> or def <def-name>
+		tab(many(whitespace))
+		if fun_name := ((tab(many(basic_id_cset)) &
+				 tab(many(whitespace)) &
+				 (p := &pos) &
+				 tab(many(basic_id_cset))) |
+				((p := &pos) & tab(many(basic_id_cset))))
+		then {
+		    move(1)
+		    fun_def := line[1:&pos]
+		    tags_text_length +:=
+			save_entry(tags_table, ENTRY(fun_name, fun_def,
+						      line_no, char_no+p))
+		} else
+		    write(errf, inf_name, ": ", line_no,
+			  ": missing def name?")
+	    }
+	}
+	char_no +:= *line + 1		# for the newline
+    }
+
+    ## write out the tag info for this file
+    if \verbose then writes(errf, "writing tags...")
+    tags_list := sort(tags_table, 2)
+    write(outf, "\014\n", inf_name, ",", tags_text_length) # tags header
+    every t := !tags_list do
+	write(outf, t[1])
+    if \verbose then write(errf, "done")
+end # find_tags_in_basic_file
+
+
+
+procedure stringize_entry(entry)	# make etags style index
+    return entry.fun_def || "\177" || entry.line_no || "," || entry.char_no
+end # stringize_entry
+
+
+
+procedure save_entry(tags_table, entry)
+    local t
+
+    t := stringize_entry(entry)
+    ## use fun_name and line_no so sort out in line order if duplicates.
+    tags_table[t] := entry.fun_name || " " || entry.line_no
+    if \verbose then write(errf, entry.fun_name, ",", entry.line_no, ",",
+			   entry.char_no)
+    return *t + 1
+end # save_entry
+
+
+
+procedure usage()
+    stop("_
+usage: betags [-tlnvVa] [-o output-file] [-i file-of-names] file ...\n_
+\t-h    this message\n_
+\t-?    this message\n_
+\t-d    make tags for def and def* functions\n_
+\t-t    make tags for type definitions\n_
+\t-l    make tags for labels\n_
+\t-n    make tags for line numbers\n_
+\t-v    verbose mode\n_
+\t-V    print version\n_
+\t-a    append to output file\n_
+\t-o output-file    name of output file, defaults to TAGS\n_
+\t-i file-of-names    name of file to get names of input files from.")
+end # usage

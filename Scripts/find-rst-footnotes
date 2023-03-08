@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+find . -type f -name \*.rst \
+     -exec grep --color=auto -nH --null -E -e '\[(#[a-z_-]+|[0-9]+)\]_'  \{\} +

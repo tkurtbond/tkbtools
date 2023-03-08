@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+if [ $# -eq 0 ]
+then
+    cmd="mozilla -remote 'openBrowser()'"
+elif [ "$1" = "-file" ]
+then
+    shift
+    file=$1
+    case $file in
+    /*)				# absolute; do nothing
+    ;;
+    *)				# Relative; append pwd
+        file="file:$(pwd)/$file"
+    ;;
+    esac
+#    cmd="mozilla -remote 'openFile($file,new-tab)'"
+    cmd="mozilla -remote 'openURL($file,new-tab)'"
+else
+    cmd="mozilla -remote 'openURL($1,new-tab)'"
+fi
+eval $cmd
+if [ $? -ne 0 ]
+then
+    echo oops
+    mozilla &
+    sleep 5s
+    eval $cmd
+fi

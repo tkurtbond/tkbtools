@@ -1,0 +1,31 @@
+#! /usr/bin/env bash
+
+sync_mail=1
+sync_inboxes=1
+rsync_options=""
+
+let errors=0
+while getopts "miMIv" opt
+do
+    case "$opt" in
+	(\?) let errors++                                                    ;;
+	(m)  sync_mail=1                                                     ;;
+	(i)  sync_inboxes=1                                                  ;;
+	(M)  sync_mail=0                                                     ;;
+	(I)  sync_inboxes=0                                                  ;;
+	(v)  verbose="-v"                                                    ;;
+	(r)  rsync_options="$OPTARG"                                         ;;
+    esac
+done
+
+(($sync_mail)) && {
+    echo 1>&2 Mail
+    time  rsync $verbose $rsync_options -az --stats \
+	tkb@unwind-protect.org:Mail ~/Mail-tkb.mpl.com/
+}
+
+(($sync_inboxes)) && {
+    echo 1>&2 Inboxes
+    time  rsync $verbose $rsync_options -az --stats \
+	tkb@unwind-protect.org:Inboxes ~/Mail-tkb.mpl.com/
+}

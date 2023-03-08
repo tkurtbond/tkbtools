@@ -1,0 +1,20 @@
+#! /usr/bin/env bash
+[ "$1" == "echo" ] && ECHO=echo || ECHO=
+
+(find /Volumes/Jotunheim/SmiteWorks /Volumes/Jotunheim/gPodder-Downloads \
+      /Volumes/Jotunheim/tkbdocs /Volumes/Jotunheim/tkbhome  \
+      -name .~ -prune -o \
+      -type f ! -name .DS_Store ! -name Thumbs.db ! -name ._\* \
+      -print |
+   while read fn
+   do
+     other="/usr/local/mnt/helheimpool/tkb/$(echo $fn | sed 's#^/Volumes/Jotunheim/##')"
+     ${ECHO} cmp "$fn" "$other" || echo "=====> cmp failed: $fn $other"
+   done
+)
+
+# There are 252781 files as of 2021-08-07.
+
+# Local Variables:
+# sh-basic-offset: 2
+# End:

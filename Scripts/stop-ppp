@@ -1,0 +1,11 @@
+#! /bin/sh
+
+case $1 in 
+bu*)
+    /etc/sysconfig/network-scripts/ifdown \
+        /etc/sysconfig/network-scripts/ifcfg-ppp1
+;;
+*)
+    /etc/sysconfig/network-scripts/ifdown \
+        /etc/sysconfig/network-scripts/ifcfg-ppp0
+esac

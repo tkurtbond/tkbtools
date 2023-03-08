@@ -1,0 +1,194 @@
+/* shortname.c -- convert from MS Windows long name to MS-DOS short name */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <windows.h>
+#include <string.h>
+#include <getopt.h>
+
+#ifdef __CYGWIN__
+#include <sys/cygwin.h>
+#endif
+
+int cygwin_conv = 1;
+int debug_msgs = 0;
+int forward_slash = 0;
+
+void *
+xmalloc (size_t size)
+{
+  void *p = malloc (size);
+  if (! p)
+    {
+      fprintf (stderr, "shortname: error mallocing %d bytes\n", size);
+      exit (2);
+    }
+  return p;
+}
+
+void
+usage ()
+{
+  fprintf (stderr, "\nusage: shortname [options] file [...]\n\n\
+  -?      this message\n\
+  -/      use forward slashes\n\
+  -c      turn cygwin conversion off\n\
+  -d      print debug messages\n\
+  -i fn   convert and print all the filenames in 'fn'\n\
+");
+  exit (2);
+}
+
+void
+to_short_name (char *name)
+{
+  DWORD len;
+  DWORD len_allocated;
+  DWORD short_len;
+  DWORD err;
+  char *short_path = 0;
+  int done = 0;
+  int i;
+#ifdef __CYGWIN__
+  char *new_name = 0;
+#endif /* __CYGWIN__ */
+
+#ifdef __CYGWIN__
+  if (cygwin_conv)
+    {
+      new_name = xmalloc (MAX_PATH + 1);
+      cygwin_conv_to_win32_path (name, new_name);
+      if (debug_msgs)
+	{
+	  fprintf (stderr, "\
+cygwin_conv: %s\n\
+       name: %s\n", name, new_name);
+	}
+      name = new_name;
+    }
+#endif /* __CYGWIN__ */
+
+  len = strlen (name);
+  len_allocated = len * 2;
+
+  /* Note: MS docs say the short form can be longer than the long form! */
+  while (! done)
+    {
+      short_len = len_allocated + 1;
+      short_path = (char *) xmalloc (len_allocated);
+      SetLastError (NO_ERROR);
+      short_len = GetShortPathName (name, short_path, len_allocated);
+      //          fprintf (stderr, "short_len: %d\n", short_len);
+      err = GetLastError ();
+      //          fprintf (stderr, "last error: %d\n", err);
+      if (short_len > len_allocated)
+	{
+	  free (short_path);
+	  len_allocated = len_allocated * 2;
+	}
+      else
+	done = 1;
+    }
+  if (err)
+    {
+      LPVOID lpMsgBuf;
+      FormatMessage ((FORMAT_MESSAGE_ALLOCATE_BUFFER
+		      | FORMAT_MESSAGE_FROM_SYSTEM
+		      | FORMAT_MESSAGE_IGNORE_INSERTS),
+		     NULL,
+		     err,
+		     MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		     (LPTSTR) &lpMsgBuf,
+		     0,
+		     NULL);
+
+      if (debug_msgs)
+	{
+	  fprintf (stderr, "shortname: %s: %s", name, (LPCTSTR) lpMsgBuf);
+	}
+      LocalFree (lpMsgBuf); 
+    }
+  else
+    {
+      /* Should I do this here, or before the GetShortPathName??? */
+      if (forward_slash)
+	{
+	  for (i = 0; i < short_len; i++)
+	    if (short_path[i] == '\\')
+	      short_path[i] = '/';
+	}
+      printf ("%s\n", short_path);
+    }
+  free (short_path);
+#ifdef __CYGWIN__
+  if (new_name) free (new_name);
+#endif /* __CYGWIN__ */
+}
+
+void 
+process_file (FILE *f)
+{
+  
+}
+
+void 
+process_filename (char *filename)
+{
+  FILE *f = fopen (filename, "r");
+  if (! f)
+    {
+      int errnum = errno;
+      fprintf (stderr, "shortname: error opening %s: %s\n",
+	       filename, strerror (errno));
+    }
+  else
+    {
+      char buf[MAX_PATH+1];
+      
+      fclose (f);
+    }
+}
+
+int 
+main (int argc, char **argv)
+{
+  int success = 0;
+  extern char *optarg;
+  extern int optind, opterr, optopt;
+  int ch;
+  int errflg = 0;
+  int i;
+
+  while ((ch = getopt (argc, argv, "ci:/?")) != EOF)
+    {
+      switch (ch)
+        {
+	case 'c':
+	  cygwin_conv = 0;
+	  break;
+	case 'd':
+	  debug_msgs = 1;
+	  break;
+	case 'i':
+	  process_filename (optarg);
+	  break;
+	case '/':
+	  forward_slash = 1;
+	  break;
+        case '?':
+        default:
+          errflg++;
+          break;
+        }
+    }
+
+  if (errflg || ((argc - optind) == 0))
+    usage ();
+
+  for (i = optind; i < argc; i++)
+    {
+      to_short_name (argv[i]);
+    }
+
+  exit (success);
+}

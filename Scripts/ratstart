@@ -1,0 +1,18 @@
+#! /usr/bin/env bash
+(
+mrp read
+started="$(ratpoison -c 'getenv RATSTART')"
+if [[ "$started" != "yes" ]];
+then
+    ratpoison -c "exec gkrellm"
+    # Apparently emacs isn't netwm compliant?
+    ratpoison -c "fselect 0"
+    xtoolwait emacs
+    # but xterm is? But not on NetBSD?
+    ratpoison -c "fselect 1"
+    xtoolwait uxterm
+    ratpoison -c "fselect 2"
+    xtoolwait uxterm
+    ratpoison -c "setenv RATSTART yes"
+fi
+) 2>&1 | log ~/tmp/logs/ratstart

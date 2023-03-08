@@ -1,0 +1,10 @@
+#! /usr/bin/env bash
+
+case "$(uname)" in 
+    (Darwin) echo "$(sw_vers -productName), Version $(sw_vers -productVersion), Build $(sw_vers -buildVersion)" ;;
+    (Linux)
+        uname -a
+        [ -r /etc/fedora-release ] && cat /etc/fedora-release
+    ;;
+    (*) echo "Unknown OS" ;;
+esac

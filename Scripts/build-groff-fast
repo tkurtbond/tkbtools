@@ -1,0 +1,19 @@
+#! /usr/bin/env bash
+
+# Started with https://lists.gnu.org/archive/html/groff/2021-05/msg00066.html
+
+#CORES=${CORES:-4}
+
+
+test -d ./build && (cd build && make distclean)
+test -d build && rm -r build
+
+[ "$(uname)" == "Darwin" ] && export PATH="/usr/local/opt/texinfo/bin:$PATH"
+
+./bootstrap && \
+    mkdir build && \
+    cd build && \
+    ../configure --prefix=$(echo ~/sw/versions/groff/git) && \
+    make  && \
+    make check && \
+    make doc

@@ -1,0 +1,4 @@
+#! /bin/bash
+
+rdate -s time-a.nist.gov	# Set Linux time from NIST time server.
+/sbin/clock -w			# Write Linux time to CMOS clock in local time.

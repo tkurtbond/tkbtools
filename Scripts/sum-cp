@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+# Sum character points for BESM.
+
+tr '\n' ' ' | tr ',' '\n' | sed -E -e 's/.*\(([0-9]+)[ 	]*CP\).*/\1/' |
+    awk '{ sum += $1 } END { print sum }'

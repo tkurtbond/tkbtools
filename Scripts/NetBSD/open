@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+
+case $1 in 
+(*.html) firefox -new-tab $1 ;;
+(*.pdf) mupdf $1 ;;
+esac

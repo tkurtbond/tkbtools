@@ -1,0 +1,77 @@
+(* ocamlize.ml -- output binary data as text, according to Ocaml conventions *)
+
+let revision_id = "$Id: ocamlize.ml 1.2 Mon, 15 Feb 1999 22:39:46 -0500 tkb $"
+let print_revision () = Printf.printf "%s\n" revision_id; exit 0
+
+
+let do_wrap = ref false
+and filenames = ref []
+
+
+let print_escaped s pos len =
+  let t = Bytes.sub s pos len in
+  let t' = Bytes.escaped t in
+  for i = 0 to (Bytes.length t') - 1 do
+    if Bytes.get t' i = ' ' then
+      print_string "\\032"
+    else
+      print_char (Bytes.get t' i)
+  done;
+  print_char '\\';
+  print_newline ()
+
+
+let output_escaped s len =
+  let len = ref len and pos = ref 0 in
+  while !len > 16 do
+    print_escaped s !pos 16;
+    len := !len - 16;
+    pos := !pos + 16      
+  done;
+  if !len > 0 then print_escaped s !pos !len
+
+
+let buflen = 1024
+let buf = Bytes.create buflen
+let file_no = ref 0
+
+let output_file in_chnl filename =
+  let continue = ref true in
+  if !do_wrap then
+    Printf.printf "(* Created from %s *)
+let _ = 
+  let data%d = \"\\\n"
+      filename !file_no;
+  while !continue do
+    let len = input in_chnl buf 0 buflen in
+    if len = 0 then continue := false
+    else output_escaped buf len
+  done;
+  if !do_wrap then
+    Printf.printf "\" in
+for i = 0 to (String.length data%d) - 1 do 
+  print_char data%d.[i]
+done\n" !file_no !file_no;
+  incr file_no
+
+
+
+let anon_arg filename = filenames := filename :: !filenames
+
+
+let main () =
+  let specs = [
+    ("-wrap", Arg.Set do_wrap,
+     "\tWrap a simple output routine around the data");
+    ("-version", Arg.Unit print_revision, "Print version info and exit");
+  ]
+  and usage = "usage: ocamlize [options] [filename ...]"  in
+  Arg.parse specs anon_arg usage;
+  match List.rev !filenames with
+  | [] -> output_file stdin "(stdin)"
+  | filenames ->
+      List.iter (fun name -> output_file (open_in_bin name) name) filenames
+  
+
+let _ =
+  Printexc.catch main ()

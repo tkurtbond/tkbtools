@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+time tar -C /home --xz -cf $(incf /media/tkb/Midgard/backup/tkb .tar.xz) tkb \
+     2>&1 | tee /tmp/Log.tkb-backup 

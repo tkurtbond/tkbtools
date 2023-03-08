@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+
+DEST="${DEST:-$(eval echo ~/current/RPG/Mini-Six/SRD/)}"
+
+cp -v ~/.pandoc/filters/general.lua $DEST
+cp -v ~/.pandoc/templates/statement.{ms,context} $DEST

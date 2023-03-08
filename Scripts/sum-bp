@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+# Sum Bonus Points for BESM.
+
+tr '\n' ' ' | tr ',' '\n' | sed -E -e 's/.*\(([0-9]+)[ 	]*BP\).*/\1/' |
+    awk '{ sum += $1 } END { print sum }'

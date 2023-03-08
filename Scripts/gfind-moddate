@@ -1,0 +1,12 @@
+#! /usr/bin/env bash
+
+case "$(uname)" in
+FreeBSD) 
+    FIND=gfind ;;
+Linux)
+    FIND=find ;;
+*)
+    FIND=find ;;
+esac
+
+$FIND "$@" -printf "%TY-%Tm-%Td %TT %p\n" | sort -r | less

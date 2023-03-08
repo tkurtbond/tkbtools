@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+if [ -r ~/sounds/english.au ]
+then
+	cat ~/sounds/english.au >/dev/audio0
+fi
+scream

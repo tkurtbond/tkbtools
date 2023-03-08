@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Become root first.
+wsconsctl -w encoding=us.swapctrlcaps

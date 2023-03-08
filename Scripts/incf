@@ -1,0 +1,28 @@
+#! /usr/bin/env bash
+incf_local () {
+    # Construct a filename from prefix, "_YYYY-MM-DD",  _N if the filename
+    # already exists, or if a lower _N exists, and suffix.
+    # Example: "incf file .tar.gz" results in "file_2021-07-07.tar.gz", or
+    # "file_2021-07-07_N.tar.gz" if "file_2021-07-07.tar.gz" already exists,
+    # where N is 1 or greater.
+
+    # Need getopts to match python version.  But it is only for verbose, so no?
+    local prefix suffix fileprefix i testname sep1 sep2
+    prefix="$1"
+    suffix="$2"
+    sep1="_"
+    sep2="_"
+    fileprefix="${prefix}${sep1}$(date +%F)"
+    let i=0
+    # The zeroth filename doesn't have the number.
+    testname="${fileprefix}${suffix}"
+    while true
+    do
+      [ ! -e "$testname" ] && break
+      ((i++))
+      testname="${fileprefix}${sep2}${i}${suffix}"
+    done
+    echo "$testname"
+}
+
+incf_local "$@"

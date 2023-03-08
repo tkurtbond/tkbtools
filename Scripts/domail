@@ -1,0 +1,23 @@
+#! /usr/bin/bash
+
+echo this does not work: args are passed on wrong
+
+set -x
+case $(uname) in
+    (CYGWIN*)
+    SSH=$(cygpath -m --short-name 'c:/Program Files/PuTTY/plink.exe')
+    ;;
+    (*)
+    SSH=ssh
+    ;;
+esac
+
+a=("$@")
+cmd="$@"
+((i=0))
+for arg in "${a[@]}"
+do
+    ((i++))
+    echo $i: $arg
+done
+$SSH tkb@tkb.mpl.com mail "$@"

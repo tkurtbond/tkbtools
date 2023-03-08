@@ -1,0 +1,12 @@
+                                                                -*- outline -*-
+
+* modpath.ml
+1.  The `-exists' option should be a flag like `-start'.
+2.  Need a -replace and repreg (replace regexp)
+
+* nxt
+1. What about multiple sessions?
+
+* wipedir
+
+* where needs to use PATHEXT under NT.

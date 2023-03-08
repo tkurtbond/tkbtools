@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+tr ' \t\\' '\n' | sed -r '/^\s*$/d' | sort | tr '\n' ' ' | fmt -w 70 |
+    sed 's/^/\t/' | sed '$!s/$/ \\/'

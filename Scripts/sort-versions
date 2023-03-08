@@ -1,0 +1,68 @@
+#! /usr/bin/env bash
+# sort-versions -- Sort semantic versions, with things like .rc1, .rc2, .rc11 ending up in the right places.
+
+REVERSE=''
+
+let errors=0
+while getopts "?hr" opt
+do
+    case "$opt" in
+        (\?|h) let errors++ ;;
+        (r) REVERSE=-r ;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+if (($errors > 0)); then
+    cat <<EOF
+usage: sort-versions [OPTION] [file ...]
+
+Sort standard input or the specified file using semantic versioning, 
+such as 5.0.3, allowing for release candidates specified as 5.0.3.rc.
+
+Options
+
+-? -h	This message.
+-r      Reverse the sort order.
+
+Inspired by https://unix.stackexchange.com/questions/350315/how-can-i-sort-a-list-with-major-minor-patch-level-and-sometimes-rc-correctly
+especially https://unix.stackexchange.com/a/350719
+EOF
+    exit 1
+fi
+
+
+cat $@ |
+    sed -r "s/([0-9]+\.[0-9]+\.[0-9]+$)/\1\.99999/" |
+    sort -V $REVERSE | sed s/\.99999$//
+
+exit
+
+Example: the following: 
+
+release-5.0.3
+release-5.0.29
+release-5.0.0.rc1
+release-5.0.2
+release-5.0.20
+release-5.0.0.rc2
+release-5.0.0
+release-5.0.0.rc11
+release-5.0.1
+release-5.0.0.rc12
+release-5.0.10
+
+should become:
+
+release-5.0.0.rc1
+release-5.0.0.rc2
+release-5.0.0.rc11
+release-5.0.0.rc12
+release-5.0.0
+release-5.0.1
+release-5.0.2
+release-5.0.3
+release-5.0.10
+release-5.0.20
+release-5.0.29

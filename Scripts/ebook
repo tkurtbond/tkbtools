@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+exec /Applications/calibre.app/Contents/ebook-viewer.app/Contents/MacOS/ebook-viewer "$@" &

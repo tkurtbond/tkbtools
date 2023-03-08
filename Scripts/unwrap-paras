@@ -1,0 +1,7 @@
+#! /usr/bin/env bash
+
+# https://stackoverflow.com/questions/39734125/sed-to-combine-n-text-lines-separated-by-blank-lines
+
+# alternative: perl -00 -lpe 'tr/\n/ /'
+
+sed '/./{:a;N;s/\n\(.\)/ \1/;ta}' "$@"

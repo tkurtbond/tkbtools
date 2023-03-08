@@ -1,0 +1,7 @@
+#! /usr/bin/env bash
+
+GDD="$(launchctl getenv GPODDER_DOWNLOAD_DIR)"
+[[ -z "$GDD" ]] && 
+    launchctl setenv GPODDER_DOWNLOAD_DIR /Volumes/Jotunheim/gPodder-Downloads
+
+op /Applications/gPodder.app

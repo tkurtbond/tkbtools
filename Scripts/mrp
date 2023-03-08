@@ -1,0 +1,273 @@
+#! /usr/bin/env bash
+
+# Todo:
+# Usage
+# + Expand ws_write to save window information.
+# + Expand ws_read to create windows based on saved window information.
+# + Better command line handling
+# + Optionally allow argument to read and write.
+# + Make the workspace have real names
+# + Figure out how the frame configurations and groups should really interact.
+
+RP=ratpoison
+debug=""
+
+# call ratpoison with a command, stuff results in global variable RET.
+rp_call ()			
+{
+    [[ -n "$debug" ]] && echo rp_call: "$@"
+    RET="$($RP -c "$*")"
+}
+
+# call fdump, saving the list of frames in global variable RET.
+fdump ()
+{
+    rp_call fdump
+}
+
+# Initialize an individual workspace.
+ws_init_ws ()
+{
+    local num=$1 fd
+    rp_call gnew ws_name_$num
+    fdump
+    rp_call setenv ws_fdump_$num "$RET"
+}
+
+# Initialize 'num' workspaces
+ws_init ()
+{
+    local num=$1 fd i
+    fdump
+    fd="$RET"
+
+    rp_call select -
+    rp_call only
+
+    for ((i=1; i <= num; i++))
+    do
+	ws_init_ws $i
+    done
+
+    rp_call gselect default
+    rp_call setenv ws_fdump_1 "$fd"
+    rp_call setenv ws_current 1
+    rp_call frestore "$fd"
+    rp_call setenv ws_count $num
+}
+
+ws_add ()
+{
+    local current
+    rp_call getenv ws_current
+    current="$RET"
+    ((current++))
+    ws_init_ws $current
+    rp_call setenv ws_count $current
+}
+
+# Save the current workspace frames
+ws_save ()
+{
+    local ws fd
+    rp_call getenv ws_current
+    ws="$RET"
+    fdump
+    fd="$RET"
+    rp_call setenv ws_fdump_$ws "$fd"
+}
+
+# Restore the specified workspace frames
+ws_restore ()
+{
+    local which=$1
+
+    ws_save 
+
+    if [[ "$which" == "1" ]]; then
+	rp_call gselect default
+    else
+	rp_call gselect ws_name_$which
+    fi
+
+    rp_call echo Workspace "$which"
+    local last
+    rp_call getenv ws_fdump_$which
+    last="$RET"
+    rp_call frestore "$last"
+    rp_call setenv ws_current $which
+}
+
+add_alias ()
+{
+    [[ -n "$debug" ]] && echo add_alias: "$@"
+    rp_call alias mrp$1 exec $0 restore $1
+}
+
+add_aliases ()
+{
+    local n i
+    if (($# == 0)); then
+	rp_call getenv ws_count
+	((n=$RET))
+    else
+	((n=$1))
+    fi
+
+    for ((i=1; i <= n; i++))
+    do
+	add_alias $i
+    done
+}
+
+add_key ()
+{
+    rp_call definekey top M-F$1 mrp$1
+    # Something *not* involving M-Fx?
+}
+
+add_keys ()
+{
+    local n=$1 i
+    for ((i=1; i <= n; i++))
+    do
+	add_key $i
+    done
+}
+
+# Write workspace frames to save file.
+ws_write ()
+{
+    local num i outfile
+    if [[ -z "$1" ]]; then
+	savefile=~/.mrp.save
+    else
+	savefile="$1"
+    fi
+    [ -r $savefile ] && cp $savefile ${savefile}.bak
+
+    ws_save
+
+    rp_call getenv ws_count
+    num="$RET"
+    echo $num >$savefile
+    for ((i=1; i <= num; i++))
+    do
+	rp_call getenv ws_fdump_$i
+	echo "$RET" >>$savefile
+    done
+}
+
+# Read workspace frames from save file.
+ws_read ()
+{
+    local num i fd savefile
+    if [[ -z "$1" ]]; then
+	savefile=~/.mrp.save
+    else
+	savefile="$1"
+    fi
+    rp_call select -
+    rp_call only
+    (read num
+     for ((i=1; i <= num; i++))
+     do
+	 read fd
+	 rp_call gnew ws_name_$i
+	 rp_call setenv ws_fdump_$i $fd
+     done
+     rp_call gselect default
+     rp_call setenv ws_current 1
+     rp_call getenv ws_fdump_1
+     fd="$RET"
+     rp_call frestore "$fd"
+     rp_call setenv ws_count $num
+     add_aliases $num
+     add_keys $num
+    ) < $savefile
+}
+
+find_geometry () {
+    local geom
+    # Only works on VNC?
+    # geom=($(xprop -notype -root '32cc' ' $0x$1' _NET_DESKTOP_GEOMETRY))
+    geom=($(echo 'geom: WIDTH HEIGHT' | xrdb -n))
+    RET="${geom[1]}x${geom[2]}"
+}
+
+((errors=0))
+
+while (($# > 0))
+do
+    OPTIND=1
+    case "$1" in 
+	(add_keys)
+            shift
+            add_keys "$@"
+	    ;;
+	(aliases)
+            shift
+            add_aliases "$@"
+	    ;;
+	(debug)
+            shift
+	    debug="YES"
+	    ;;
+	(init)
+            shift
+	    n=4
+            while getopts "n:" opt
+	    do
+		case $opt in
+		    (n) n=$OPTARG
+		    ;;
+		esac
+	    done
+	    ws_init "$n"
+	    ;;
+	(geom*)
+	    shift
+	    find_geometry
+	    echo "Geometry: $RET"
+	    ;;
+	(read)
+            shift
+	    ws_read "$1"
+	    ;;
+	(restore)
+            shift
+            ws_restore "$1"
+	    ;;
+	(write)
+            shift
+	    ws_write "$1"
+	    ;;
+	(*)
+	    echo 1>&2 "$0: do not understand command \"$1\""
+	    ((errors++))
+	    shift
+	    ;;
+    esac
+    for ((; OPTIND > 1; OPTIND--))
+    do
+	shift
+    done
+done
+exit
+
+# primitive command line handling.
+if [[ "$1" == "init" ]]; then
+    num=$2
+    shift
+    ws_init $num
+    add_aliases $num
+    add_keys $num
+elif [[ "$1" == "write" ]]; then
+    shift
+    ws_write "$@"
+elif [[ "$1" == "read" ]]; then
+    shift 
+    ws_read "$@"
+else
+    ws_restore $1
+fi

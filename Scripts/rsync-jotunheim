@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+rsync -avz /Volumes/Jotunheim/movies/ tkb@192.168.1.135:/media/tkb/Muspelheim/movies
+rsync -avz /Volumes/Jotunheim/torrents/ tkb@192.168.1.135:/media/tkb/Muspelheim/torrents

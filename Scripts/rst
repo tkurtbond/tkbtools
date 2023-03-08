@@ -1,0 +1,69 @@
+#! /usr/bin/env bash
+
+. ~/local/Mk/rst-params.mk
+
+BLOG=0
+EXT=html
+OPEN=0
+STYLESHEET=
+MAKE_OPTIONS=
+MAKE_DEBUG=
+
+case $(uname -s) in 
+(NetBSD) MAKE=gmake ;;
+(FreeBSD) MAKE=gmake ;;
+(*) MAKE=make ;;
+esac
+
+let errors=0
+let debug=0
+while getopts "bD:dhm:O:ops:" opt
+do
+    case $opt in
+	\?) let errors++ ;;
+	b)  BLOG=1 ;;
+	d)  set -x
+	    let debug++
+	    if ((debug > 1)); then MAKE_DEBUG=-d; fi
+	    ;;
+	D)  MAKE_OPTIONS="$MAKE_OPTIONS RSTLATEX_DOCUMENTOPTIONS=$OPTARG" ;;
+	h)  EXT=html ;;
+	m)  MAKE_OPTIONS="$MAKE_OPTIONS $OPTARG" ;;
+	O)  OUTPUT="$OPTARG" ;; 
+	o)  OPEN=1 ;;
+	p)  EXT=pdf ;;
+	s)  STYLESHEET="$OPTARG" ;;
+    esac
+done
+shift $((OPTIND-1))
+
+(($# == 1)) || { echo "usage: $0 [options] filename (1 arg, not $#)" 1>&2; exit 2; }
+
+[[ "$OUTPUT" == "" ]] && {
+    DNAME="$(dirname $1)"
+    BNAME="$(basename $1 .rst)"
+    OUTPUT=$DNAME/${BNAME}.$EXT
+}
+
+case "$EXT" in 
+    html)
+	${RST2HTML} $1 $OUTPUT
+	STATUS=$?
+	((OPEN)) && op $OUTPUT
+	;;
+    pdf)
+        # ¿¿¿FIXME: replace with general mechanism for preprocessing.???
+	((BLOG)) && {
+	    echo $1
+	    INPUT=~/tmp/$(basename $1)
+	    pybloxrst $1 $INPUT
+	    (cd ~/tmp && $MAKE -f ~/lib/Mk/rst.mk $OUTPUT)
+	    ((OPEN)) && op ~/tmp/$OUTPUT
+	} || {
+	    $MAKE $MAKE_DEBUG $MAKE_OPTIONS $STYLESHEET -f ~/lib/Mk/rst.mk $OUTPUT
+	    ((OPEN)) && op $OUTPUT
+	}
+	;;
+esac
+    
+exit 0

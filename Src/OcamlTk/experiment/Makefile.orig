@@ -1,0 +1,67 @@
+##############################################################################
+#### Makefile for OcamlTk tools
+##############################################################################
+### $Id: Makefile 1.10 Mon, 02 Apr 2001 21:49:08 -0400 tkb $
+###
+### This Makefile needs to be rewritten more portably.
+##############################################################################
+
+LABLTKDIR=+labltk
+
+OPSYS=unix
+ifeq ($(OPSYS),unix)
+EXE=
+OBJ=.o
+else
+EXE=.exe
+OBJ=.obj
+endif
+
+CP=cp
+RM=rm
+
+CAMLC=ocamlc
+CAMLCOMP=ocamlc -c
+
+COMPFLAGS=-I $(LABLTKDIR) -g
+LINKFLAGS=-I $(LABLTKDIR) unix.cma str.cma labltk.cma -g
+
+.PHONY: clean realclean
+
+EXES=getfilename$(EXE)
+
+ALL_EXES=$(EXES)
+
+all: $(EXES)
+
+
+getfilename$(EXE): getfilename.cmo
+	$(CAMLC) -custom $(LINKFLAGS)  \
+		-o $@ getfilename.cmo
+
+.SUFFIXES :
+.SUFFIXES : .mli .ml .cmi .cmo
+
+.mli.cmi:
+	$(CAMLCOMP) $(COMPFLAGS) $<
+
+.ml.cmo:
+	$(CAMLCOMP) $(COMPFLAGS) $<
+
+
+BINDIR=~/bin
+
+$(BINDIR)/% : %
+	$(CP) $< $@
+
+
+install: $(foreach e,$(EXES),$(BINDIR)/$(e))
+
+clean:
+	-$(RM) *.cmo *.cmi *.$(OBJ)
+
+realclean: clean
+	-$(RM) $(ALL_EXES) *~
+
+ignores: 
+	mkignores $(ALL_EXES) >.ignores

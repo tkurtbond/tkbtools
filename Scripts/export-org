@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+
+echo "=== exporting to ~/DropBox/Org"
+(cd ~/Repos/tkb-org && find . -name \*.org | tar -cf - -T -| tar -xvf - -C ~/Dropbox/Org/)
+echo "=== exporting to ~/DropBox/Apps/MobileOrg"
+(cd ~/Repos/tkb-org && find . -name \*.org | tar -cf - -T -| tar -xvf - -C ~/Dropbox/Apps/MobileOrg/)

@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+Nope! rsync -azv /media/tkb/Muspelheim/ /media/tkb/Midgard/tkb

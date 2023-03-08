@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+TO_LISTEN=~/Repos/tkb-notes/Music/to-listen.org
+echo Artists listed: $(grep "^*" <$TO_LISTEN | wc -l)
+echo Artists checked off: $(grep "^*[ 	]✓" <$TO_LISTEN | wc -l)
+echo Artists really liked: $(grep "^*.*!" <$TO_LISTEN | wc -l)

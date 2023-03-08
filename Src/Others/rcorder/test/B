@@ -1,0 +1,3 @@
+# REQUIRE: A
+# PROVIDE: B
+echo B

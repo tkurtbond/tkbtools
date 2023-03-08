@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+if (($#)) 
+then
+    s=$1
+else
+    s=$(pwd)
+fi
+# Transform slashes to dashes and get rid of the leading slash.
+echo "$s" | sed -e 's#/#-#g' -e 's#^-##g'

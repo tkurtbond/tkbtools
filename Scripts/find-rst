@@ -1,0 +1,18 @@
+#! /usr/bin/env bash
+
+find . \
+	-wholename ./sw -prune -o \
+	-wholename ./code -prune -o \
+	-wholename ./Library -prune -o \
+	-wholename ./new -prune -o \
+	-wholename ./nikola/tkurtbond.github.io/output -prune -o \
+	-wholename ./Downloads -prune -o \
+	-wholename ./.\* -prune -o \
+	-wholename ./current/website-ReST -prune -o \
+	-wholename ./current/website -prune -o \
+	-wholename ./current/blogger -prune -o \
+	-wholename ./job/MPL/StatusReports -prune -o \
+	-wholename ./tmp -prune -o \
+	-wholename ./quicklisp -prune -o \
+	-wholename ./myblog -prune -o \
+	-name \*.rst -print 2>&1 | tee ~/tmp/rst.where && wc -l ~/tmp/rst.where

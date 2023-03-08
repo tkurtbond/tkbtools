@@ -1,0 +1,27 @@
+#! /usr/bin/env bash
+
+# I'm not sure this is useful enough to actually install.
+
+for i in "$@"
+do
+    echo $i
+    case "$i" in 
+        (*.scm)
+            MODNAME="$(basename "$i" .scm)"
+            echo "module name is $MODNAME"
+            break
+            ;;
+    esac
+done
+
+[[ -z $MODNAME ]] && { echo $0: no scheme module found; exit 2; }
+
+EPIFILE="$(mktemp -t --suffix=.scm epifile.XXXXXX)"
+
+echo epifile is $EPIFILE
+
+echo >$EPIFILE "($MODNAME#main)"
+
+csc "$@" -epilogue $EPIFILE
+
+rm $EPIFILE

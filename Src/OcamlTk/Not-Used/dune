@@ -1,0 +1,38 @@
+(env
+ (dev
+  (flags (:standard -w -27))))
+
+(executable
+ (name animgif)
+ (public_name animgif)
+ (modules animgif)
+ (libraries labltk))
+
+(executable
+ (name animxbm)
+ (public_name animxbm)
+ (modules animxbm)
+ (libraries labltk))
+
+(executable
+ (name countdown)
+ (public_name countdown)
+ (modules countdown)
+ (libraries str labltk))
+
+(executable
+ (name demo)
+ (modules demo)
+ (libraries labltk))
+
+(executable
+ (name getsel)
+ (public_name getsel)
+ (modules getsel)
+ (libraries labltk))
+
+(executable
+ (modules startbrowser)
+ (public_name startbrowser)
+ (name startbrowser)
+ (libraries labltk))

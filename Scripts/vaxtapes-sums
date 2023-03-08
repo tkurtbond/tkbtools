@@ -1,0 +1,11 @@
+#! /usr/bin/env bash
+
+# Mount MPLHQNAS and Padlock first.
+cd /Volumes/home
+time for f in *-07-00.vtape
+do
+    echo $f
+    sha512sum $f >/tmp/$f.sha512sum
+    (cd /Volumes/Padlock/vaxtapes && sha512sum $f >/tmp/padlock.$f.sha512sum)
+    diff /tmp/$f.sha512sum /tmp/padlock.$f.sha512sum
+done

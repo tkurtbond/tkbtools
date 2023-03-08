@@ -1,0 +1,7 @@
+#! /usr/bin/env bash
+
+time (find ~/ \
+           -wholename '/Users/tkb/Applications (Parallels)' -prune \
+           -o -wholename '/Users/tkb/Library/Application Support/com.yourcompany.yourapp_137786915825662' -prune \
+           -o -perm -g=w ! -type l -printf '%M %u:%g %p\n' |
+          sort -k 3 > ~/tmp/g-w.lis)

@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+cd ~/myblog/static-rendered &&
+tar -cf - . | (cd ~/public_html/blog && tar -xvf -)

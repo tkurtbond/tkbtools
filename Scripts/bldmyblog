@@ -1,0 +1,24 @@
+#! /usr/bin/env bash
+
+INCREMENTAL=''
+
+while getopts "i" opt
+do
+    case "$opt" in
+    (\?) let errors++ ;;
+    (i) INCREMENTAL=incremental ;;
+    esac
+done
+let shift_by=OPTIND-1
+shift $shift_by
+
+rm -rfv ~/myblog/static-rendered/*
+mkdir ~/myblog/static-rendered/styles/
+cp -v ~/myblog/styles/halfcooked.css ~/myblog/static-rendered/styles/
+PATH=$PATH:~/code/pyblosxom-1.4.3/bin \
+PYTHONPATH=~/code/pyblosxom-1.4.3 \
+pyblcmd  \
+    --config ~/public_html/cgi-bin/config.py \
+    --static ${INCREMENTAL}
+
+

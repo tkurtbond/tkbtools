@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+
+for i in "$@"
+do
+    echo "$i: " $(grep -E "^\\.m?so" "$i" | cut -d' ' -f2-)
+done

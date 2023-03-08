@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+let LEN=${#HOME}+1
+TARGET=falcon
+
+OPT=
+EXCLUDE=
+MODE=:
+while [[ $# -gt 0 ]]
+do
+    case "$1" in
+	-k) EXCLUDE=; shift;;
+	-g) MODE=get; shift;;
+	-p) MODE=put; shift;;
+	-t) TARGET=$2; shift 2;;
+        -d) OPT="$OPT --delete"; shift;;
+        -n) OPT="$OPT --dry-run"; shift;;
+  	-F) TARGET=falcon; shift;;
+	*) break;
+    esac
+done
+
+
+
+case "$MODE" in
+    get)
+	echo DBG: $TARGET:${PWD:$LEN}/
+	echo DBG: $PWD
+	time rsync \
+	     $* \
+	     --checksum \
+	     --backup \
+	     --itemize-changes \
+	     --verbose \
+	     --compress \
+	     --recursive \
+	     --links \
+	     --perms \
+	     --times \
+	     --exclude '*~' \
+             $OPT \
+	     $EXCLUDE \
+	     $TARGET:${PWD:$LEN}/ \
+	     $PWD
+	;;
+    put)
+	ssh $TARGET mkdir -p ${PWD:$LEN}/
+	time rsync \
+	     $* \
+	     --checksum \
+	     --backup \
+	     --itemize-changes \
+	     --verbose \
+	     --compress \
+	     --recursive \
+	     --links \
+	     --perms \
+	     --times \
+	     --exclude '*~' \
+             $OPT \
+	     $EXCLUDE \
+	     $PWD/ \
+	     $TARGET:${PWD:$LEN}
+	;;
+    *)
+	echo "$0: Missing mode, specify -g or -p for get or put mode."
+	;;
+esac

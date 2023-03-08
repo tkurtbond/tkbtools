@@ -1,0 +1,45 @@
+#! /usr/bin/env bash
+
+# On macOS, the -n (new instance) option is very helpful when you want
+# to look at two different parts of the document at the same time.
+# xdg-open doesn't have any useful options.
+
+USE_OKULAR=
+let errors=0
+while getopts "o" opt
+do
+    case "$opt" in
+    \?) let errors++ ;;
+    o) USE_OKULAR=true ;;
+    w) wait_time="$OPTARG" ;;
+    esac
+done
+if [ "$errors" -gt 0 ]
+then
+    cat <<EOF
+usage: $0 [-o] file ...
+where
+-o	Open with Okular
+
+EOF
+    exit 2
+fi
+let shift_by=OPTIND-1
+shift $shift_by
+
+
+case "$(uname -s)" in
+    (Linux)
+        for i in "$@"
+        do
+            if [[ -z "$USE_OKULAR" ]]; then
+                spwn xdg-open "$i"
+            else
+                spwn okular "$i"
+            fi
+        done
+        ;;
+    (Darwin)
+        open "$@"
+        ;;
+esac

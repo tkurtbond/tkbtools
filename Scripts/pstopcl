@@ -1,0 +1,35 @@
+#! /bin/bash
+
+# Just pipe this through lp to print.
+
+if [ $# -gt 2 ]
+then 
+    echo 'usage: [input-file [output-file]]' 1>&2
+    exit 2
+fi
+
+if [ -z "$1" ]
+then 
+    infile=-
+else
+    infile="$1"
+fi
+if [ -z "$2" ]
+then
+    outfile=-
+else
+    outfile="$2"
+fi
+
+# Color
+DEVICE="-sDEVICE=cdj500 -dBitsPerPixel=24"
+# Mono
+#DEVICE=-sDEVICE=cdj500 -dBitsPerPixel=1
+
+gs  -q \
+    -dBATCH \
+    $DEVICE \
+    -dNOPAUSE \
+    -sOutputFile="$outfile" \
+    "$infile" \
+    -c quit

@@ -1,0 +1,28 @@
+#! /usr/bin/env bash
+CURRENT_YEAR="$(date '+%Y')"
+YEAR=$CURRENT_YEAR
+
+if [[ -n "$1" ]]; then YEAR="$1"; fi
+
+books_read=$(count-books-read -y $YEAR)
+
+if (($YEAR == $CURRENT_YEAR)); then
+    HEADER="$(date +%F) - "
+    days_of_year=$(ordinalday)
+else
+    HEADER="$YEAR - "
+    # Was it a leap year?
+    if (($YEAR % 400 == 0)); then
+        days_of_year=366
+    elif (($YEAR % 100 == 0)); then
+        days_of_year=365
+    elif (($YEAR % 4 == 0)); then
+        days_of_year=366
+    else
+        days_of_year=365
+    fi
+fi
+(echo -n "$HEADER"
+ echo '(format #t "~3,3F~%" (/ '$books_read.0' '$days_of_year'))' |
+     csi -q -R format | head -1) |
+    tee -a ~/Repos/tkb-notes/Books/books-per-day.text

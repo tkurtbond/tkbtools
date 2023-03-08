@@ -1,0 +1,40 @@
+#! /usr/bin/env bash
+# testing:
+#    collapse 1 #=> 1
+#    collapse 13 1 10 11 12 15 20 21 22 80 #=> 1,10-13,15,20-22,80
+#    echo 1 | collapse #=> 1
+#    echo 13 1 10 11 12 15 20 21 22 80 | tr " " "\n" |
+#        collapse #=> 1,10-13,15,20-22,80
+
+function add_to_s () {
+    ((${#s})) && s+=",$1" || s="$1"
+}
+
+function printoldrange () {
+    ((n > 1)) && {
+        ((rlo == rhi)) && add_to_s $rlo || add_to_s "$rlo-$rhi"
+    }
+    ((rlo = rhi = i))
+}
+
+function inner () {
+    ((n++))
+    ((n == 1)) && ((rlo = rhi = i))
+    ((i <= rhi + 1)) && ((rhi = i))
+    ((i > rhi + 1)) && printoldrange
+}
+
+((n = rlo = rhi = 0))
+{
+    (($#)) && (IFS=$'\n'; echo "$*") || cat
+} | sort -u -n | 
+{
+    while read i
+    do
+        #echo \$i: $i
+        inner
+    done
+    ((n == 1)) && ((n = 2))
+    printoldrange
+    echo $s
+}

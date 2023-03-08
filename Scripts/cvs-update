@@ -1,0 +1,6 @@
+#! /bin/sh
+# -P prune empty directories
+# -d create any directory missing
+# -C Overwrite locally modified files with clean copies,
+#    save the modified file.
+cvs -z3 update -P -d -C

@@ -1,0 +1,73 @@
+#!/usr/bin/env python
+# http://code.activestate.com/recipes/437932/
+
+# updated 2005.07.21, thanks to Jacob Oscarson
+# updated 2006.03.30, thanks to Mark Eichin
+
+# Here are a couple examples:
+#
+# Print out the first 20 characters of every line in the tail of my
+# Apache access log:
+#
+# tail access_log | pyline "line[:20]"
+#
+# Print just the URLs in the access log (the seventh "word" in the
+# line):
+#
+# tail access_log | pyline "words[6]"
+#
+# Here's a tricker one, showing how to do an import. List the current
+# directory, showing only files that are larger than 1 kilobyte:
+#
+#     ls | pyline -m os "os.path.isfile(line) and os.stat(line).st_size > 1024 and line"
+#
+# I didn't say it was pretty. ;-) The "-m a,b,c" option will import
+# modules a, b and c for use in the subsequent expression. The "isfile
+# and stat and line" form shows how to do filtering: if an expression
+# returns a False or None value, then no line is sent to stdout.
+#
+# This last tricky example re-implements the 'md5sum' command, to
+# return the MD5 digest values of all the .py files in the current
+# directory.
+#
+# ls *.py | pyline -m md5 "'%s %s' % (md5.new(file(line).read()).hexdigest(), line)"
+#
+# Hopefully you get the idea. I've found it to be an invaluable
+# addition to my command-line toolkit.
+#
+# Windows users: it works under Windows, but name it "pyline.py"
+# instead of "pyline", and call it via a batch file so that the piping
+# works properly.
+
+import sys
+import re
+import getopt
+
+# parse options for module imports
+opts, args = getopt.getopt(sys.argv[1:], 'm:')
+opts = dict(opts)
+if '-m' in opts:
+    for imp in opts['-m'].split(','):
+        locals()[imp] = __import__(imp.strip())
+
+cmd = ' '.join(args)
+if not cmd.strip():
+    cmd = 'line'                        # no-op
+    
+codeobj = compile(cmd, 'command', 'eval')
+write = sys.stdout.write
+
+for numz, line in enumerate(sys.stdin):
+    line = line[:-1]
+    num = numz + 1
+    words = [w for w in line.strip().split(' ') if len(w)]
+    result =  eval(codeobj, globals(), locals())
+    if result is None or result is False:
+        continue
+    elif isinstance(result, list) or isinstance(result, tuple):
+        result = ' '.join(map(str, result))
+    else:
+        result = str(result)
+    write(result)
+    if not result.endswith('\n'):
+        write('\n')

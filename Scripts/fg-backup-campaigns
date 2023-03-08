@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+cd ~/SmiteWorks/Fantasy\ Grounds &&
+    gtar --xz -cvf $(incf ~/Backups/fgu-campaigns .txz) campaigns

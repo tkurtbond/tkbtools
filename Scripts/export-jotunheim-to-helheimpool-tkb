@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+rsync -azv \
+      /Volumes/Jotunheim/SmiteWorks /Volumes/Jotunheim/gPodder-Downloads \
+      /Volumes/Jotunheim/tkbdocs /Volumes/Jotunheim/tkbhome \
+      /usr/local/mnt/helheimpool/tkb

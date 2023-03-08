@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# https://unix.stackexchange.com/questions/6910/there-must-be-a-better-way-to-replace-single-newlines-only/6913#6913
+
+awk ' /^$/ { print "\n"; } /./ { printf("%s ", $0); } END { print ""; } ' "$@"

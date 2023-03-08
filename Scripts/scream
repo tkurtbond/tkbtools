@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Ought to add a -c option that just does it continuously.
+let x=0
+while [ "$x" -lt 5 ]
+do
+  echo -n 
+  sleep 1
+  let x=x+1
+done

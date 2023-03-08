@@ -1,0 +1,9 @@
+#! /usr/bin/env bash
+
+for mp4file in "$@"
+do
+    dirname="$(dirname "$mp4file")"
+    mp3file="$(basename "$mp4file" .mp4).mp3"
+    newname="$dirname/$mp3file"
+    [ -r "$newname" ] || ffmpeg -i "$mp4file" "$newname"
+done

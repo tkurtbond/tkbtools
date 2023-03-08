@@ -1,0 +1,24 @@
+#! /usr/bin/env bash
+
+if [[ -n "$1" ]]; then
+    EXTENSION="$1"
+else
+    EXTENSION=".adb"
+fi
+
+programs_built=$(mktemp --suffix=programs_built)
+illegal_programs=$(mktemp --suffix=illegal_programs)
+existing=$(mktemp --suffix=existing)
+non_illegal_programs=$(mktemp --suffix=non_illegal_programs)
+sed -n '/^PROGRAMS=/,/^$/p' <GNUmakefile | tail -n +2 |
+    sed -E -e '/^[ 	]*$/d' -e 's/\\$//' -e 's/^[ 	]+//' |
+    sort >$programs_built
+sed -n '/^ILLEGAL_PROGRAMS=/,/^$/p' <GNUmakefile | tail -n +2 |
+    sed -E -e '/^[ 	]*$/d' -e 's/\\$//' -e 's/^[ 	]+//' |
+    sort >$illegal_programs
+find . -type f ! -name b~\* -name \*${EXTENSION} -maxdepth 1 |
+    sed -e 's#^\./##' -e "s/\\${EXTENSION}$//" | sort >$existing
+
+comm -23 $existing $illegal_programs >$non_illegal_programs
+comm -13 $programs_built $non_illegal_programs
+rm $programs_built $illegal_programs $existing $non_illegal_programs

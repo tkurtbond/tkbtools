@@ -1,0 +1,35 @@
+#!/usr/bin/expect 
+# -*- tcl -*- #################################################################
+# webramp -- Set Webramp ISP account information automatically using w3m.
+#
+# $Id: webramp 1.1 Thu, 13 Jul 2000 00:24:06 -0400 tkb $
+###############################################################################
+
+if {[lindex $argv 0] == "off"} {
+    set username ""
+    set password ""
+} else {
+    send_user "username:\ "
+    expect_user -re "(.*)\n"
+    set username "$expect_out(1,string)"
+    send_user "password:\ "
+    stty -echo
+    expect_user -re "(.*)\n"
+    stty echo
+    set password "$expect_out(1,string)"
+}
+spawn w3m http://192.168.0.46/ispacnt1.htm
+#expect "TKB"			# important!
+# send "v\t\r"
+# expect "ISP"
+expect "User"
+send "/User\r\t"
+send "\r\025$username\r\t"
+send "\r\025$password\r\t"
+send "\r\025$password\r\t"
+send "/Apply settings\r\r"
+expect "ISP 1"
+expect "Viewing"
+send_user "Goodbye\n"
+
+# end of webramp

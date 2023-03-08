@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+. ~/lib/Mk/rst-params.mk
+${RST2HTML} --no-generator --strip-comments --initial-header-level=4 $1 $(chopext $1 ${RSTEXT}).html

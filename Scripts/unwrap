@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+paste -s -d ' '
+
+# An alternative would be: tr '\n' ' ' < afile.txt | sed '$s/ $/\n/'

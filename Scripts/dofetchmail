@@ -1,0 +1,20 @@
+#!/bin/sh
+
+echo \*\*\* $(date '+%Y/%M/%d %H:%M') >>~/tmp/Log.fetchmail
+ls -l $MAIL >~/tmp/Log.fetchmail
+fetchmail --daemon 900 --logfile ~/tmp/Log.fetchmail
+
+#  if [ "x$1" = "x" ]
+#  then 
+#      dofetchmail -r >~/tmp/Log.fetchmail 2>&1 &
+#      exit 0
+#  fi 
+ 
+#  while true
+#  do
+#      fetchmail
+#      ls -l /var/spool/mail/tkb
+#      echo Ended: $(date +"%Y-%m-%d %l:%M %p %Z")
+#      sleep 30m
+#  done
+				   

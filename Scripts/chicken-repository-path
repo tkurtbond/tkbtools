@@ -1,0 +1,7 @@
+#! /bin/sh
+#|
+exec csi -s "$0" "$@"
+|#
+;;; -*- scheme -*-
+(import (chicken platform))
+(for-each (lambda (path) (display path) (newline)) (repository-path))

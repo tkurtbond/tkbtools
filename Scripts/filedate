@@ -1,0 +1,4 @@
+#!/bin/sh
+# See https://www.w3.org/TR/NOTE-datetime
+
+date '+%Y-%m-%d'

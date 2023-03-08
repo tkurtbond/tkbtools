@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+if ps -ef | grep [c]hickadee | grep -v run-chickadee  >/dev/null
+then
+    echo "chickadee is running"
+else
+    echo "Starting chickadee on port 7001!"
+    chickadee serve -A - -p 7001 2>&1 >/tmp/chickadee.log &
+fi
+op http://localhost:7001/

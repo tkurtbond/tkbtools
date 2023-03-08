@@ -1,0 +1,8 @@
+#! /bin/bash
+
+ns_common_site='\\10.0.2.161\NS_COMMON'
+ns_common_site_user='Administrator'
+
+read -s -p "Password: " passwd
+net use Y: "$ns_common_site" "$passwd" \
+    /USER:$ns_common_site_user /PERSISTENT:NO

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+file=$1
+case $file in
+/*)				# absolute; do nothing
+;;
+*)				# Relative; append pwd
+    file="$(pwd)/$file"
+;;
+esac
+cmd="netscape -noraise -remote 'openFile($file,new-window)'"
+eval $cmd
+if [ $? -ne 0 ]
+then
+    echo oops
+    netscape &
+    sleep 5s
+    eval $cmd
+fi

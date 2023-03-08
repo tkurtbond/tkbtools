@@ -1,0 +1,54 @@
+#! /usr/bin/env bash
+################################################################################
+# The org-mode file in which I keep track of what books I'm reading
+# and have read looks like this:
+#-------------------------------------------------------------------------------
+# * 2022
+# ** Read
+# *** : Title of Book I Haven't Finished Reading -- https://www.amazon.com/amazon-link-if-it-exists
+# ...
+# *** 2022-05-21: Title of Book I **Have** Finished Reading -- https://www.amazon.com/amazon-link-if-it-exists
+# ...
+# ** Did not finish
+# *** : Title of Book I Won't Finish Reading -- https://www.amazon.com/amazon-link-if-it-exists
+# ...
+# * 2021
+# ...
+# * Previously read, sometime
+# ** Title of Book I Finished Reading at some indeterminate date in the past -- https://www.amazon.com/amazon-link-if-it-exists
+# ...
+#-------------------------------------------------------------------------------
+PROG_NAME="$0"
+READ_FILE=~/Repos/tkb-notes/Books/read.org
+YEAR=$(date '+%Y')
+
+let errors=0
+while getopts "y:" opt
+do
+    case $opt in
+        (\?) let errors++ ;;
+        (y) YEAR="$OPTARG" ;;
+    esac
+done
+
+let shift_by=OPTIND-1
+shift $shift_by
+
+((errors > 0)) && {
+    cat <<EOF
+usage: $PROG_NAME [-y YYYY] [file]
+where
+-y YYYY   Year number to calculate for.
+EOF
+    exit 2
+}
+
+if [[ -n "$1" ]]; then READ_FILE="$1"; fi
+LAST_YEAR=$((YEAR - 1))
+
+sed -E -n "/^\* $YEAR/,/^(\*\* Did not finish|\* $LAST_YEAR)/p" $READ_FILE |
+    sed -e "/^* $YEAR/d" -e "/^** Read/d" \
+        -e "/^(\*\* Did not finish|\* $LAST_YEAR)/d" |
+    sed -E -n "/^\*\*\*[ \t]+[0-9]/p" |
+    wc -l
+#    cat; exit

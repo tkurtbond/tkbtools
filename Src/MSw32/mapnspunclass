@@ -1,0 +1,52 @@
+#! /bin/bash
+progname="$0"
+
+
+function usage {
+    echo 1>&2 "${progname}: $1"
+    cat 1>&2 <<EOF
+usage: ${progname} [-d] drive sharename
+-d	Turn on debugging
+EOF
+    [ $# -gt 1 ] && exit $2
+    exit 2
+}
+
+DEBUG=
+let errors=0
+
+while getopts "d" opt
+do 
+  case "$opt" in
+  \?) let errors++ ;;
+  d) DEBUG=echo ;;
+  esac
+done
+
+let shift_by=OPTIND-1
+shift $shift_by
+
+[ "$errors" -gt 0 ] && usage "incorrect options"
+[ $# -eq 2 ] || usage "wrong number of arguments"
+
+if [ -z "$DEBUG" ]
+then
+    function dbg {
+	:
+    }
+else
+    function dbg {
+	echo 1>&2 "dbg: $@"
+    }
+fi
+
+drive="$1"
+NSP_UNCLASS='\\10.0.0.163\'
+site="$NSP_UNCLASS$2"
+site_user='kbond'
+
+dbg site: "$site" user: $site_user drive: $drive
+read -s -p "Password: " passwd
+echo
+
+$DEBUG net use "$drive" "$site" "$passwd" /USER:$site_user /PERSISTENT:NO

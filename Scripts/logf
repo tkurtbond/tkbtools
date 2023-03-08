@@ -1,0 +1,12 @@
+#! /usr/bin/env bash
+
+logf_local () {
+    local dn bn fn
+    dn="$(dirname "$1")"
+    bn="Log.$(basename "$1")"
+    fn="$(incf "$dn/$bn")"
+    echo $fn
+}
+
+
+logf_local "$@"

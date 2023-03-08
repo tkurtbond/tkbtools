@@ -1,0 +1,11 @@
+#! /usr/bin/env bash
+DIR=~/Repos/tkurtbond.github.io
+(cd $DIR &&
+     find posts pages -type f -name \*.rst -print |
+	 while read filename
+	 do
+	     grep -E -e '^\.\. tags: ([^ ]+)' $filename
+	 done |
+	 cut -d ':' -f 2 | tr ',' '\n' | sed -E 's/^[ \t]+//' |
+         sed -E '/^[ \t]*$/d' | sort -u | tee $DIR/tags.lis
+ )

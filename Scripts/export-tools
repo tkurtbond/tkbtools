@@ -1,0 +1,17 @@
+#!/bin/sh -x
+
+function abort () {
+    echo "$@" 1>&2
+    exit 1
+}
+[ -r /tmp/export-tools ] && rm -rfv /tmp/export-tools
+mkdir /tmp/export-tools || abort Error creating /tmp/export/tools
+
+cd /tmp/export-tools
+for i in SGMLSpy contacts tkblinks tkbtools docdtd ocamldoc
+do 
+    (mkdir $i && cd $i && prcs checkout $i)
+done
+
+(i=sgmlsml; mkdir $i && cd $i && prcs checkout -rpre1-0 $i)
+ 

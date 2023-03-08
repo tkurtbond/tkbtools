@@ -1,0 +1,4 @@
+#! /usr/bin/bash
+
+lp -o print-quality=5 -o sides=two-sided-long-edge -o orientation-requested=4 \
+   "$@"

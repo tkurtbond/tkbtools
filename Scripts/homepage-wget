@@ -1,0 +1,9 @@
+#! /bin/bash
+wget \
+    --mirror \
+    --output-file=Log.wget \
+    --wait=10 \
+    --timestamping \
+    --reject 'tkb-links-*.html' \
+    -X '/~tkb/data/links' \
+    http://access.mountain.net/~tkb/

@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+port -qv installed > ~/Notes/Macintosh/myports.lis

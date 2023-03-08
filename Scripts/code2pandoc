@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+
+# Adapted from https://gist.github.com/3945964
+
+sed -E -e 's/^/    /g' -e 's/^    --- ?//g' | \
+    pandoc -w ${OUTPUT_FORMAT:=rst} -o ${OUTPUT_FILE:=-} -

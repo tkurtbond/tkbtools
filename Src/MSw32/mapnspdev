@@ -1,0 +1,3 @@
+#!/bin/bash
+mapnspunclass t: downloads
+mapnspunclass q: svn

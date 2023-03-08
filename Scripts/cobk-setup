@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+# You actually need to source this, not execute it.
+
+export http_proxy=localhost:8118
+export ftp_proxy=localhost:8118

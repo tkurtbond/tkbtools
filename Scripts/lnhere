@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+if [ $# != 1 ]
+then
+    echo 1>&2 usage: lnhere pathname
+    exit 2
+fi
+pathname="$1"
+filename="$(basename $1)"
+ln -s "$pathname" "$filename"

@@ -1,0 +1,39 @@
+#!/usr/bin/env perl
+# http://blog.plover.com/prog/accumulate.html
+# accumulate reads an input of this form:
+#
+#        k1 v1
+#        k1 v2
+#        k2 v3
+#        k1 v4
+#        k2 v5
+#        k3 v6
+#
+# and writes it out in this format:
+#
+#        k1 v1 v2 v4
+#        k2 v3 v5
+#        k3 v6
+#
+# I wanted it this time because I had a bunch of files that included
+# some duplicates, and wanted to get rid of the duplicates. So:
+#
+#        md5sum * | accumulate | perl -lane 'unlink @F[2..$#F]'
+#
+
+use Getopt::Std;
+my %opt = (k => 1, v => 2);
+getopts('k:v:', \%opt) or usage();
+for (qw(k v)) {
+    $opt{$_} -= 1 if $opt{$_} > 0;
+}
+
+while (<>) {
+    chomp;
+    my @F = split;
+    push @{$K{$F[$opt{k}]}}, $F[$opt{v}];
+}
+
+for my $k (keys %K) {
+    print "$k @{$K{$k}}\n";
+}
