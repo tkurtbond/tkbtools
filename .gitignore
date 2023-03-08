@@ -9,3 +9,9 @@
 **/build/**
 .what-sys.dat
 .depend
+*.o
+*.build.sh
+*.install.sh
+*.import.scm
+*.so
+*.link
