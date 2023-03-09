@@ -332,7 +332,7 @@ ign.ores:
 	ocamldep $(filter-out \*.mli,$(wildcard *.mli)) *.ml >.depend
 include .depend
 
-.what-sys.dat: build/what-sys
+.what-sys.dat: build build/what-sys
 	./build/what-sys $@
 
 # Should I add an export target to create a tar file of the current version
