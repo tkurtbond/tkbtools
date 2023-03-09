@@ -19,9 +19,9 @@ endif
 BINDIR=$(HOME)/local/bin
 
 INSTALL_PROGRAMS=\
-	date-diff droller extension kcf list-chicken-imports longestline \
-	parse-eggs-list rstsection smodpath snewver strip-extension swipe \
-	yaml2scm
+	date-diff droller extension json2scm kcf list-chicken-imports \
+	longestline parse-eggs-list rstsection smodpath snewver \
+	strip-extension swipe yaml2scm
 
 PROGRAMS=$(INSTALL_PROGRAMS:%=build/%$(EXE))
 
