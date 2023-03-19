@@ -1,3 +1,4 @@
+;;; -*- geiser-scheme-implementation: chicken -*-
 (module date-diff ()
   
 (import scheme)
@@ -77,8 +78,10 @@ Examples:
      (define diff1 (date-difference d2 d1))
      (define diff2 (date-difference d3 d2))
      (define diff3 (date-difference d1 d1))
+     (define diff4 (date-difference d1 d2))
      (format #t "diff1: ~a~%" (duration->string diff1))
      (format #t "diff2: ~a~%" (duration->string diff2))
-     (format #t "diff3: ~a~%" (duration->string diff3)))))
+     (format #t "diff3: ~a~%" (duration->string diff3))
+     (format #t "diff4: ~a~%" (duration->string diff4)))))
 
 )
