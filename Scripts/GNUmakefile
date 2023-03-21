@@ -70,6 +70,7 @@ SCRIPTS= \
 	gensite.sh \
 	getremotemail.sh \
 	gfind-moddate \
+	git-main \
 	git-needs-checkin \
 	git-outofdate \
 	git-state \
