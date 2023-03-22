@@ -42,7 +42,7 @@ $(BINDIR)/% : build/%
 	cp $< $@
 
 
-install: $(foreach e,$(PROGRAMS:%=%$(EXE)),$(BINDIR)/$(notdir $(e)))
+install: build $(foreach e,$(PROGRAMS:%=%$(EXE)),$(BINDIR)/$(notdir $(e)))
 
 clean: 
 	-rm build/*.so build/*.link $(PROGRAMS:%=%$(EXE)) build/*.out
