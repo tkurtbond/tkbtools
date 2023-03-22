@@ -70,9 +70,9 @@
   (define mode 'mode-end)
   (define (check-mode mode)
     (match mode
-      (('mode-after item) (warn "unprocessed --after ~A" item))
-      (('mode-before item) (warn "unprocessed --before ~A" item))
-      ('mode-start (warn "unprocessed --start"))
+      (('mode-after item) (warn "unprocessed --after ~A~%" item))
+      (('mode-before item) (warn "unprocessed --before ~A~%" item))
+      ('mode-start (warn "unprocessed --start~%"))
       ('mode-end))
 					;(values)
     'nothing-to-see-here)
@@ -110,7 +110,7 @@
     (define (iter acc rest)
       (match rest
 	(()
-	 (warn "~A is not in path to add ~A after it; adding at end" 
+	 (warn "~A is not in path to add ~A after it; adding at end~%" 
 	       after item)
 	 (append acc (list item)))
 	((part . rest)
@@ -123,7 +123,7 @@
     (define (iter acc rest)
       (match rest
 	(()
-	 (warn "~A is not in path to add ~A before it; adding at start"
+	 (warn "~A is not in path to add ~A before it; adding at start~%"
 	       before item)
 	 (cons item acc))
 	((part . rest)
@@ -136,7 +136,7 @@
     (define (iter acc rest found)
       (match rest
 	(()
-	 (if (not found) (warn "~A is not in path" item))
+	 (if (not found) (warn "~A is not in path~%" item))
 	 acc)
 	((part . rest)
 	 (if (string=? item part)
@@ -159,7 +159,7 @@
 	      (('mode-before before) (add-before before operand))
 	      ('mode-start (add-start operand))
 	      ('mode-end (add-end operand))))
-	  (warn "pathname does not exist: ~A" operand)))
+	  (warn "pathname does not exist: ~A~%" operand)))
     (set! exists-flag #f)
     (set! mode 'mode-end)
     (values options operands))
