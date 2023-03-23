@@ -1,6 +1,6 @@
 ;; -*- geiser-scheme-implementation: chicken -*-
 (define-library (tkurtbond)
-  (export ignore-warnings warn increase-verbosity info err die)
+  (export ignore-warnings warn increase-verbosity info err die usage-msg)
   (import scheme
           (chicken base)
           (chicken process-context)
@@ -33,4 +33,9 @@
     (define (die status . args)
       (format (current-error-port) "~a: " (program-name))
       (apply format (cons (current-error-port) args))
+      (exit status))
+
+    (define (usage-msg status . args)
+      (format (current-output-port) "usage: ~a " (program-name))
+      (apply format (cons (current-output-port) args))
       (exit status))))
