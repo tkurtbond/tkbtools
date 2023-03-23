@@ -21,7 +21,7 @@ do
     esac
 done
 
-git remote $VERBOSE update >/dev/null
+git remote $VERBOSE update 2>/dev/null # 2> to make it quieter
 
 UPSTREAM=${1:-'@{u}'}
 LOCAL=$(git rev-parse @)
