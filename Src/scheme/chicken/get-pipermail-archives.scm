@@ -59,7 +59,7 @@
   (receive (options operands) (args:parse (command-line-arguments)
                                           +command-line-options+)
     (when (< (length operands) 1)
-      (usage "\nSpecify at least one file!\n\n"))
+      (usage "\nerror: Specify at least one file!\n\n"))
     (when *output-directory*
       (cond ((directory-exists? *output-directory*)
              (change-directory *output-directory*))
