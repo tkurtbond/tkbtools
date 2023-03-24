@@ -1,8 +1,17 @@
-;; -*- geiser-scheme-implementation: chicken -*-
-;; droller.scm -- dice roller.
-;; [num-rolls*][num-dice]d[num-sides][(l|h)keep-n][(+|-)operand]
-;; Ex: 2d6, 6*3d6, 4d3-8
-;;     4d6h3 -- 4d6, keep highest 3
+;;; -*- geiser-scheme-implementation: chicken -*-
+;;; droller.scm -- dice roller.
+;;; This is what it implements currently (things in angle brackets are the
+;;; names of numbers):
+;;;     [<num-rolls>*][<num-dice>]d<num-sides>[(l|h)<keep-n>][(+|-|*)<operand>]
+;;; 
+;;; Ex: 2d6, 6*3d6, 4d3-8
+;;;     4d6h3 -- 4d6, keep highest 3
+;;;
+;;; PCRE tranlation:
+;;;     "((?:(?<num-rolls>[]+)\\*))?(?<num-dice>[]+)?d(?<num-sides>[]+)((?:(?<keep>(?:l|h))(?<keep-n>[]+)))?((?:(?<operation>[])(?<operand>[]+)))?"
+;;;
+;;; This is what I want it to implement:
+;;;     [<num-rolls>*][<num-dice>]d<num-sides>[(m|f|o)|(l|h)<keep-n>)][(+|-|/|*)<operand>]
 (module droller ()
 
 
