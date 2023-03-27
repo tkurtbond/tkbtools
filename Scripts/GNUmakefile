@@ -117,6 +117,7 @@ SCRIPTS= \
 	pddigest \
 	prefix \
 	print_vars.sh \
+	printduplex \
 	printlongest \
 	pslp \
 	pstopcl \
