@@ -21,15 +21,16 @@
 (import sxpath)
 (import uri-common)
 
+(define (get-hrefs sxml)
+  ((sxpath '(// (td 3) a @ href *text*)) sxml))
+
 (define (get-pipermail-archives top-url)
   (define top-uri (uri-reference top-url))
-
   (define top-html (with-input-from-request top-url #f read-string))
   (define top-sxml (with-input-from-string top-html html->sxml))
+  (define urls (get-hrefs top-sxml))
 
-  (define urls ((sxpath "//td[3]/a/@href") top-sxml))
-
-  (loop for url in urls do (download-archive (cadr url) top-uri)))
+  (loop for url in urls do (download-archive url top-uri)))
 
 (define (download-archive relative-url top-uri)
   (format #t "relative-url: ~s~%" relative-url) (flush-output)
@@ -73,4 +74,9 @@
 (cond-expand
   (compiling
    (main))
-  (else)))
+  (else                                 ; Stuff for debugging
+   (define archive-url "https://mailman.common-lisp.net/pipermail/ecl-devel/")
+   (define archive-sxml (with-input-from-request archive-url #f html->sxml))
+   (define archive-hrefs (get-hrefs archive-sxml))
+   (define x ((sxpath '(// (td 3) a @ href *text*)) archive-sxml))
+   )))
