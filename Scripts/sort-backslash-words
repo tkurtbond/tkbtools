@@ -1,4 +1,19 @@
 #! /usr/bin/env bash
 
-tr ' \t\\' '\n' | sed -r '/^\s*$/d' | sort | tr '\n' ' ' | fmt -w 70 |
-    sed 's/^/\t/' | sed '$!s/$/ \\/'
+INDENT=8
+WIDTH=78
+((errors=0))
+while getopts "i:w:" opt
+do
+    case $opt in
+        (\?) ((errors++)) ;;
+        (i) INDENT="$OPTARG" ;;
+        (w) WIDTH="$OPTARG" ;;
+    esac
+done
+
+INDENT_STRING="$(printf '%*s' $INDENT ' ' | unexpand)"
+
+tr ' \t\\' '\n' | sed -r '/^\s*$/d' | sort | tr '\n' ' ' |
+    fmt -w $((WIDTH - INDENT)) |
+    sed "s/^/$INDENT_STRING/" | sed '$!s/$/ \\/'
