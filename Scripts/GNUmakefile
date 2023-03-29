@@ -51,6 +51,7 @@ SCRIPTS= \
 	books-per-day \
 	code2pandoc \
 	collapse \
+	combine-dicts \
 	context-depends \
 	copy-to-minimal \
 	count-books-read \

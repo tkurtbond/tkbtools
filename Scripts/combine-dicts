@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+(sed -n '2,$p' ~/.aspell.en.pws; cat ~/.config/enchant/en_US.dic) |
+    sort -u >~/tmp/en_US.dic
