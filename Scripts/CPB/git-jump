@@ -1,0 +1,103 @@
+#!/usr/bin/env python3
+# Jump from the current line, to the same place in github.  Only tested in my work env.
+
+'''
+(defun cpb-git-jump ()
+  (interactive)
+  (let ((cmd (format "git-jump %s:%d" buffer-file-name (line-number-at-pos))))
+    (message cmd)
+    (shell-command cmd)))
+'''
+
+import argparse
+import configparser
+import os
+import re
+import subprocess
+import sys
+
+
+def browser_show(url):
+    if sys.platform == 'win32':
+        os.startfile(url)
+    elif sys.platform == 'darwin':
+        subprocess.Popen(['open', url])
+    else:
+        try:
+            subprocess.Popen(['xdg-open', url])
+        except OSError:
+            print('Please open a browser on: ' + url)
+
+
+def error(message):
+    name = os.path.split(sys.argv[0])[1]
+    print(name + ': ' + message, file=sys.stderr)
+    sys.exit(1)
+
+
+def get_branch(path):
+    return subprocess.check_output(['git', '-C', path, 'branch', '--show-current'], encoding='UTF-8') \
+                     .strip().replace('/', '%252F')
+
+
+def get_project_dir(path):
+    while not os.path.exists(os.path.join(path, '.git')):
+        if path == '/':
+            return None
+        path = os.path.split(path)[0]
+    return path
+
+
+remote_pat = re.compile(r'git@([^:]+):(.+)[.]git$')
+
+def get_remote_origin(path):
+    config = configparser.ConfigParser()
+    config.read(os.path.join(path, '.git/config'))
+    url = config['remote "origin"']['url']
+    assert url
+    m = remote_pat.match(url)
+    assert m
+
+    return f'https://{m.group(1)}/{m.group(2)}'
+
+
+line_pat = re.compile('(.+):([0-9]+)$')
+
+def make_url(path):
+    line = ''
+    m = line_pat.match(path)
+    if m:
+        path = m.group(1)
+        line = "#L" + m.group(2)
+
+    path = os.path.abspath(path)
+    assert os.path.exists(path)
+    is_dir = os.path.isdir(path)
+
+    project = get_project_dir(path)
+    path = path[len(project)+1:]
+
+    remote = get_remote_origin(project)
+    branch = get_branch(project)
+
+    if is_dir:
+        return f'{remote}/tree/{branch}/{path}'
+    
+    return f'{remote}/blob/{branch}/{path}{line}'
+    
+
+def main():
+    parser = argparse.ArgumentParser(description='Jump to github')
+    parser.add_argument('--debug', '-d', action='store_true')
+    parser.add_argument('path', nargs='?', default='.')
+
+    args = parser.parse_args()
+    url = make_url(args.path)
+    if args.debug:
+        print('DBG: url', url)
+    else:
+        browser_show(url)
+
+
+if __name__ == "__main__":
+    main()
