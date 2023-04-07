@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+CONTRACTOR_URL='http://mhst.wvlink.com/mhstContractor/MHSTContractorJump.nsf/LoadUser?OpenPage&Login'
+
