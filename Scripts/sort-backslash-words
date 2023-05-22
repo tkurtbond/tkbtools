@@ -12,6 +12,11 @@ do
     esac
 done
 
+((errors > 0)) &&
+    { echo 1>&2 "Error: usage: $0 [-iINDENT] [-wWIDTH]"
+      exit 127
+    }
+
 INDENT_STRING="$(printf '%*s' $INDENT ' ' | unexpand)"
 
 tr ' \t\\' '\n' | sed -r '/^\s*$/d' | sort | tr '\n' ' ' |
