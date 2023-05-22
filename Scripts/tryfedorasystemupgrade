@@ -4,7 +4,7 @@
 # it since dnf caught the SIGINT and the loop started the dnf command over
 # again before I could C-c the shell.  This way there is a prompt and an
 # option to quit, before it times out and continues.
-while ! dnf -y system-upgrade download --refresh --releasever=37
+while ! dnf -y system-upgrade download --refresh --releasever=38
 do
     date +"%F %R:%S"
     read -t 30 -p "Continue? (y/n) " reply
