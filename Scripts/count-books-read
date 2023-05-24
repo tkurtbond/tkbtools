@@ -55,7 +55,7 @@ if [[ -n "$1" ]]; then READ_FILE="$1"; fi
 LAST_YEAR=$((YEAR - 1))
 
 sed -E -n "/^\* $YEAR/,/^(\*\* Did not finish|\* $LAST_YEAR)/p" $READ_FILE |
-    $F1 | sed -e "/^* $YEAR/d" -e "/^** Read/d" \
+    $F1 | sed -e "/^* $YEAR/,/^** Read/d" \
               -e "/^(\*\* Did not finish|\* $LAST_YEAR)/d" |
     $F2 | sed -E -n "/^\*\*\*[ \t]+[0-9]/p" |
     $F3 | wc -l
