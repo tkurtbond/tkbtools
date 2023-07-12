@@ -1,20 +1,15 @@
 #! /usr/bin/env bash
 
 REPOS=(
-    #~/Repos/filetap
-    #~/Repos/sdcl
-    #~/Repos/sstg
-    #~/job/MPL/MHST/SIS-data
-    #~/job/MPL/MHST/dmsfields
-    #~/job/MPL/MHST/dmstosqldb
-    /usr/local/sw/src/Oberon/tkb/voc
-    ~/Repos/RPG/Centauri-Knights
-    ~/Repos/RPG/Red-Planet-Blue-Helmets
+    ~/comp/tkbtools
+    ~/lib/emacs/arrows
+    ~/lib/emacs/tkb
     ~/Repos/microblog
     ~/Repos/tkb-notes
     ~/Repos/tkurtbond.github.io
     ~/Repos/VTIL
-    ~/comp/tkbtools
+    ~/Repos/RPG/Centauri-Knights
+    ~/Repos/RPG/Red-Planet-Blue-Helmets
     ~/current/RPG/Kids/Mini-Six/Middle-Sea
     ~/current/RPG/Kids/OVA/The-Lost-Worlds
     ~/current/RPG/Mini-Six/SRD
@@ -22,8 +17,13 @@ REPOS=(
     ~/current/RPG/Tools/BESM
     ~/current/RPG/Tools/Generators
     ~/current/tnolang
-    ~/lib/emacs/arrows
-    ~/lib/emacs/tkb
+    #~/Repos/filetap
+    #~/Repos/sdcl
+    #~/Repos/sstg
+    #~/job/MPL/MHST/SIS-data
+    #~/job/MPL/MHST/dmsfields
+    #~/job/MPL/MHST/dmstosqldb
+    /usr/local/sw/src/Oberon/tkb/voc
 )
 
 for i in ${REPOS[@]}; do echo $i; done
