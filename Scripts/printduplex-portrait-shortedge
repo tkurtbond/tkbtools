@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+lp -o print-quality=5 \
+   -o sides=two-sided-short-edge \
+   "$@"
