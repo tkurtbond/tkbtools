@@ -118,7 +118,10 @@ SCRIPTS= \
 	pddigest \
 	prefix \
 	print_vars.sh \
-	printduplex \
+	printduplex-landscape-longedge \
+	printduplex-landscape-shortedge \
+	printduplex-portrait-longedge \
+	printduplex-portrait-shortedge \
 	printlongest \
 	pslp \
 	pstopcl \
