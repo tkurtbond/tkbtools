@@ -18,7 +18,9 @@
          (date (current-date))
          (date-string (date->string date "-~Y-~m-~d")))
     (let loop ((i 0))
-      (let ((newname (string-append pathbase date-string (numeric-part i)
+      (let ((newname (string-append pathbase date-string
+                                    (if *label* (string-append "-" *label*) "")
+                                    (numeric-part i)
                                     (if extension (string-append "." extension)
                                         ""))))
         (cond ((file-exists? newname)
@@ -44,11 +46,14 @@ with that name already exists.")
   (exit 1))
 
 (define *dry-run* #f)
+(define *label* #f)
 
 (define +command-line-options+
-  (list (args:make-option (h help)      #:none     "Display this text"
+  (list (args:make-option (h help)    #:none      "Display this text"
 			  (usage))
-        (args:make-option (n dry-run) #:none "Don't actually do anything"
+        (args:make-option (l label)   #:required  "Label to add after the date."
+                          (set! *label* arg))
+        (args:make-option (n dry-run) #:none      "Don't actually do anything"
                           (set! *dry-run* #t))))
 
 (receive (options operands) (args:parse (command-line-arguments)
