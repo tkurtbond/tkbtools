@@ -32,6 +32,9 @@ $(BINDIR)/% : %
 $(BINDIR)/% : NetBSD/%
 	$(CP) $< $@
 
+$(BINDIR)/% : Linux/%
+	$(CP) $< $@
+
 %.cmo: %.ml
 	$(OCAMLC) $(OCAMLCFLAGS) -c $<
 
@@ -189,6 +192,10 @@ NETBSD_SCRIPTS=\
 	NetBSD/open \
 	# Nothing here
 
+LINUX_SCRIPTS=\
+	Linux/linux-capabilities \
+	# Nothing here
+
 EXES=
 TEST_EXES=
 NOTSRC=
@@ -205,6 +212,7 @@ install: $(foreach e,$(SCRIPTS) $(EXES),$(BINDIR)/$(e))
 install-home: $(foreach e,$(HOME_SCRIPTS),$(BINDIR)/$(e))
 install-old: $(foreach e,$(OLD_SCRIPTS),$(BINDIR)/$(e))
 install-netbsd: $(foreach e,$(NETBSD_SCRIPTS),$(BINDIR)/$(notdir $(e)))
+install-linux: $(foreach e,$(LINUX_SCRIPTS),$(BINDIR)/$(notdir $(e)))
 
 
 
