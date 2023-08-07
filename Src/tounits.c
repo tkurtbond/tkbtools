@@ -117,14 +117,15 @@ int
 main (int argc, char **argv)
 {
   char buf[BUFSIZE];
-  char ch;
+  int ch;
   
   prog_name = argv[0];
 
-  while ((ch = getopt (argc, argv, "ps")) != EOF)
+  while ((ch = getopt (argc, argv, "hps")) != EOF)
     {
       switch (ch)
         {
+        case 'h': errflg++; break;
         case 'p': print_prefixes (); break;
         case 's': binary = false; break;
         default: errflg++; break;

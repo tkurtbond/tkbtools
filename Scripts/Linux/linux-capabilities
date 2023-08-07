@@ -1,0 +1,13 @@
+#! /usr/bin/env bash
+
+(
+    { echo '* lscpu'
+      lscpu | sed 's/^/  /'
+    }
+    { echo '* memory'
+      echo $(( 1024 * $(grep MemTotal /proc/meminfo  | gawk '{ print $2; }') )) | tounits | sed 's/^/  /'
+    }
+    { echo '* disks'
+      lsblk | sed 's/^/  /'
+    }
+) | tee ~/Repos/tkb-notes/Computer/$(hostname)-capabilities.org
