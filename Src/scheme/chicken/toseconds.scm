@@ -20,7 +20,8 @@
         miscmacros
         tkurtbond)
 
-(define sre '(seq (? (seq (=> years (+ (/ #\0 #\9))) #\y))
+(define sre '(seq (? (seq (=> centuries (+ (/ #\0 #\9))) #\c))
+                  (? (seq (=> years (+ (/ #\0 #\9))) #\y))
                   (? (seq (=> months (+ (/ #\0 #\9))) #\M))
                   (? (seq (=> days (+ (/ #\0 #\9))) #\d))
                   (? (seq (=> hours (+ (/ #\0 #\9))) #\h))
@@ -41,6 +42,7 @@
         0))
   (define seconds
     (-> 0
+        (+ (* 100 12 30 24 60 60 (v 'centuries)))
         (+ (* 12 30 24 60 60 (v 'years)))
         (+ (* 30 24 60 60 (v 'months)))
         (+ (* 24 60 60 (v 'days)))
@@ -52,7 +54,6 @@
   (format #t "~d~%" seconds))
 
 (define (process-port port)
-  ;; Should I split the line on whitespace and do each part???
   (loop for line = (read-line) while (not (eof-object? line)) do
         (loop for part in (string-split line) do (process-deltatime part))))
 
