@@ -41,23 +41,22 @@ with that name already exists.")
       (newline)
       (print "Usage: " (program-name) " [options...] [files...]")
       (newline)
-      (print (args:usage +command-line-options+))
-      (format (current-error-port) "Current argv: ~s~%" (argv))))
+      (print (args:usage +options+))
+      (format #t "Current argv: ~s~%" (argv))))
   (exit 1))
 
 (define *dry-run* #f)
 (define *label* #f)
 
-(define +command-line-options+
+(define +options+
   (list (args:make-option (h help)    #:none      "Display this text"
-			  (usage))
-        (args:make-option (l label)   #:required  "Label to add after the date."
-                          (set! *label* arg))
+	  (usage))
+        (args:make-option (l label)   #:required  "Label to add after the date"
+          (set! *label* arg))
         (args:make-option (n dry-run) #:none      "Don't actually do anything"
-                          (set! *dry-run* #t))))
+          (set! *dry-run* #t))))
 
-(receive (options operands) (args:parse (command-line-arguments)
-                                        +command-line-options+)
+(receive (options operands) (args:parse (command-line-arguments) +options+)
   (for-each process-pathname operands))
 
   
