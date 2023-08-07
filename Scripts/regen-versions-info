@@ -1,0 +1,23 @@
+#! /usr/bin/env bash
+VERSIONS=/usr/local/sw/versions
+
+[[ -d $VERSIONS/info ]] || mkdir $VERSIONS/info
+type -p install-info 2>/dev/null || {
+    echo "$0: error: Unable to find install-info, exiting..."
+    exit 2
+}
+
+find $(find $VERSIONS \
+            -type d \( -path $VERSIONS/info -o -name .git \) -prune \
+            -o -name info -type d -print) \
+     -type f -name \*.info |
+    while read TARGET
+    do
+        echo $TARGET
+        BASE=$(basename $TARGET)
+        echo basename: $BASE
+        LINKNAME=$VERSIONS/info/$BASE
+        [[ -e $LINKNAME ]] || ln -s $TARGET $LINKNAME
+        install-info --dir-file=$VERSIONS/info/dir $LINKNAME
+    done
+    
