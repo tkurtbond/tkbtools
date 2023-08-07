@@ -1,3 +1,4 @@
+;;; -*- geiser-scheme-implementation: chicken -*-
 ;;;!> toseconds.scm -- convert delta time to seconds.
 ;;; Delta times are [YEARSy][MONTHSM][DAYSd][HOURSh][MINUTESm][SECONDSs].
 ;;;
@@ -15,7 +16,9 @@
         (clojurian syntax)
         format
         (chicken irregex)
-        loop)
+        loop
+        miscmacros
+        tkurtbond)
 
 (define sre '(seq (? (seq (=> years (+ (/ #\0 #\9))) #\y))
                   (? (seq (=> months (+ (/ #\0 #\9))) #\M))
@@ -28,9 +31,13 @@
 ;; (process-deltatime "10y5M3d8h50m30s")
 (define (process-deltatime deltatime)
   (define m (irregex-match irx deltatime))
+  (define parts-converted 0)
   (define (v group)
-    (if (irregex-match-substring m group)
-        (string->number (irregex-match-substring m group))
+    (if m
+        (let ((s (irregex-match-substring m group)))
+          (cond (s (inc! parts-converted)
+                   (string->number s))
+                (else 0)))
         0))
   (define seconds
     (-> 0
@@ -40,6 +47,8 @@
         (+ (* 60 60 (v 'hours)))
         (+ (* 60 (v 'minutes)))
         (+ (v 'seconds))))
+  (if (zero? parts-converted)
+      (die 2 "unable to decode delta time ~A~%" deltatime))
   (format #t "~d~%" seconds))
 
 (define (process-port port)
