@@ -22,7 +22,7 @@
     (lambda ()
       (format #t "Usage: ~a [options...] [older-time younger-time]...~%"
               (program-name))
-      (format #t "~a~%" (args:usage +command-line-options+))
+      (format #t "~a~%" (args:usage +options+))
       (format #t "arguments: ~s~%~%" (command-line-arguments))
       (format #t "\
 Dates are specified in mostly RFC 3339/ISO 8601 style, YYYY-MM-DD,
@@ -47,7 +47,7 @@ Examples:
 
 (define *verbose* #f)
 
-(define +command-line-options+
+(define +options+
   (list (args:make-option
          (h help) #:none "Display a help message and exit."
          (usage))
@@ -57,10 +57,12 @@ Examples:
 
 (define (main)
   (receive (options operands) (args:parse (command-line-arguments)
-                                          +command-line-options+)
-    (when (not (= 0 (modulo (length operands) 2)))
+                                          +options+)
+    (when (zero? (length operands))
+      (die 2 "you must specify at least one pair of dates!~%"))
+    (when (not (zero? (modulo (length operands) 2)))
       (die 127 "~a~%args: ~s~%"
-              "You must specify pairs of YYYY-MM-DD dates to take the difference."
+           "You must specify pairs of dates to take their differences!"
               (command-line-arguments)))
     (diff-dates operands *verbose*)))
 
