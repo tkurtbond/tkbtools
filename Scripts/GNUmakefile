@@ -170,6 +170,7 @@ SCRIPTS= \
 	unwrap \
 	unwrap-paras \
 	usatime \
+	winbox-in-wine \
 	worldtime \
 	# Nothing Here
 
