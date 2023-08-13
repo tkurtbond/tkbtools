@@ -255,75 +255,75 @@ let main () =
     prerr_endline (!progname ^ ": warning: unable to get value of "
 		   ^ !path_var ^ " for default path."));
   let argdefs = [
-    ("-after", Arg.String set_add_after_mode,
+    ("--after", Arg.String set_add_after_mode,
      "item\tAdd next argument to the path after item");
     ("-a", Arg.String set_add_after_mode,
      "item\tAdd next argument to the path after item");
-    ("-before", Arg.String set_add_before_mode,
+    ("--before", Arg.String set_add_before_mode,
      "item\tAdd the next argument to the path before item");
     ("-b", Arg.String set_add_before_mode,
      "item\tAdd the next argument to the path before item");
-    ("-cmd", Arg.Unit (set_output Out_cmd),
+    ("--cmd", Arg.Unit (set_output Out_cmd),
      "\t\tOutput NT cmd.exe command to set path (not useful, alas)");
-    ("-csh", Arg.Unit (set_output Out_csh),
+    ("--csh", Arg.Unit (set_output Out_csh),
      "\t\tOutput csh command to set the path");
-    ("-current", Arg.Unit add_current,
+    ("--current", Arg.Unit add_current,
      "\tAdd current directory to path");
-    ("-delete", Arg.String delete,
+    ("--delete", Arg.String delete,
      "item\tDelete all occurances of item in path");
     ("-d", Arg.String delete,
      "item\tDelete all occurances of item in path");
-    ("-empty", Arg.Unit add_empty,
+    ("--empty", Arg.Unit add_empty,
      "\tAdd an empty element to the path");
-    ("-end", Arg.Unit set_add_end_mode,
+    ("--end", Arg.Unit set_add_end_mode,
      "\t\tAdd next argument to the end of the path");
     ("-e", Arg.Unit set_add_end_mode,
      "\t\tAdd next argument to the end of the path");
-    ("-exists", Arg.Set exists_flag,
+    ("--exists", Arg.Set exists_flag,
      "item\tAdd next item only if it exists");
-    ("-insep", Arg.String ((:=) in_path_sep),
+    ("--insep", Arg.String ((:=) in_path_sep),
      "sep\tSet the input path separator");
-    ("-msys", Arg.Set msys_style,
+    ("--msys", Arg.Set msys_style,
      "\tOutput in msys style");
-    ("-name", Arg.String ((:=) path_var),
+    ("--name", Arg.String ((:=) path_var),
      "name\tName of path for output");
     ("-n", Arg.String ((:=) path_var),
      "name\tName of path for output");
-    ("-nice", Arg.Unit (set_output Out_nice),
+    ("--nice", Arg.Unit (set_output Out_nice),
      "\tPrint the path out \"nicely\", one item per line");
-    ("-outsep", Arg.String ((:=) out_path_sep),
+    ("--outsep", Arg.String ((:=) out_path_sep),
      "sep\tSet the output path separator");
-    ("-path", Arg.String set_path,
+    ("--path", Arg.String set_path,
      "path\tSet the path to work on (defaults to the value of PATH without\n"^
      "\t\t-path or -var)");
     ("-p", Arg.String set_path,
      "path\tSet the path to work on (defaults to the value of PATH without\n"^
      "\t\t-path or -var)");
-    ("-quiet", Arg.Unit (set_output Out_quiet),
+    ("--quiet", Arg.Unit (set_output Out_quiet),
      "\tDon't print out the path");
-    ("-relative", Arg.Set relative_flag,
+    ("--relative", Arg.Set relative_flag,
      "\tInterpret non-absolute names as relative to the current\n"^
      "\t\tdirectory");
-    ("-sep", Arg.String set_sep,
+    ("--sep", Arg.String set_sep,
      "sep\tSet the input and output path separators");
-    ("-sh", Arg.Unit (set_output Out_sh),
+    ("--sh", Arg.Unit (set_output Out_sh),
      "\t\tOutput sh command to set the path");
-    ("-simple", Arg.Unit (set_output Out_simple),
+    ("--simple", Arg.Unit (set_output Out_simple),
      "\tOutput just the new value");
-    ("-start", Arg.Unit set_add_start_mode,
+    ("--start", Arg.Unit set_add_start_mode,
      "\tAdd next argument to the start of the path");
     ("-s", Arg.Unit set_add_start_mode,
      "\t\tAdd next argument to the start of the path");
-    ("-unique", Arg.Unit unique,
+    ("--unique", Arg.Unit unique,
      "\tEliminate duplicate items");
-    ("-var", Arg.String set_path_from_var,
+    ("--var", Arg.String set_path_from_var,
      "var\tSet the path from the environment variable var");
     ("-v", Arg.String set_path_from_var,
      "var\tSet the path from the environment variable var");
-    ("-warn", Arg.Set warn_flag,
+    ("--warn", Arg.Set warn_flag,
      ("\tWarn about missing environment variables instead of exiting \n"^
       "\t\twith an error"));
-    ("-version", Arg.Unit print_revision,
+    ("--version", Arg.Unit print_revision,
      "\tPrint version info and exit");
   ] in
   Arg.parse argdefs anonymous_arg
