@@ -7,7 +7,7 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include <sys/errno.h>
+#include <errno.h>
 #include <limits.h>
 #include <fcntl.h>
 
