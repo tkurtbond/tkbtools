@@ -264,9 +264,9 @@ let main () =
     ("-b", Arg.String set_add_before_mode,
      "item\tAdd the next argument to the path before item");
     ("--cmd", Arg.Unit (set_output Out_cmd),
-     "\t\tOutput NT cmd.exe command to set path (not useful, alas)");
+     "\tOutput NT cmd.exe command to set path (not useful, alas)");
     ("--csh", Arg.Unit (set_output Out_csh),
-     "\t\tOutput csh command to set the path");
+     "\tOutput csh command to set the path");
     ("--current", Arg.Unit add_current,
      "\tAdd current directory to path");
     ("--delete", Arg.String delete,
@@ -328,8 +328,13 @@ let main () =
   ] in
   Arg.parse argdefs anonymous_arg
     ("\nusage: " ^ !progname ^ " [[options] [items] ...]\n"^
-     "\n\tAdds items to the end of the path, which defaults to"^
-     "\n\tthe value of the PATH environment variable.\n");
+     "\nAdds items to the path, which defaults to the value of the PATH"^
+     "\nenvironment variable, in positions specified by the user.\n"^
+     "\nUse it with something like\n"^
+     "\tfunction repath {\n"^
+     "\t    eval $(modpath \"$@\" --unique)\n"^
+     "\t}\nin your .bashrc or equivalent and always execute repath.\n"
+    );
   begin match !mode with
   | Mode_after item ->
       prerr_endline (!progname ^ ": warning: no item to add -after " ^ item)

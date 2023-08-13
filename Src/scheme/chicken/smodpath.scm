@@ -213,7 +213,7 @@
 			    (set-path arg))
 	  (args:make-option (quiet) #:none "Don't print out the path"
 			    (set! output 'out-quiet))
-	  (args:make-option (relative) #:none "Interpret non-absolute paths as relative to the current directory"
+	  (args:make-option (relative) #:none "Interpret non-absolute paths as relative to\n                          the current directory"
 			    (set! relative-flag #t))
 	  (args:make-option (sep) #:required "Set the input and output path separators"
 			    (set-sep arg))
@@ -225,9 +225,9 @@
 			    (set-add-start-mode))
 	  (args:make-option (u unique) #:none "Eliminate duplicate items"
 			    (unique))
-	  (args:make-option (v var) #:required "Set the path from the enivornment variable ARG, and make ARG be the name of the output environment variable"
+	  (args:make-option (v var) #:required "Set the path from the enivornment variable ARG,\n                          and make ARG be the name of the output environment\n                          variable"
 			    (set-path-and-var-from-var arg))
-	  (args:make-option (warn) #:none "Warn about missing environment variables instead of exiting with an error"
+	  (args:make-option (warn) #:none "Warn about missing environment variables instead of\n                          exiting with an error"
 			    (set! warn-flag #t))
 	  (args:make-option (V version) #:none "Print version info and exit"
 			    (print-version))))
@@ -238,6 +238,17 @@
       (lambda ()
 	(print "Usage: " (program-name) " [options...] [files...]")
 	(newline)
+        (print "\
+Prints a new version of the path, which defaults to the value of the PATH
+environment variable, adding or deleting path elements in positions specified
+by the user.")
+        (newline)
+        (print "Use it with something like:
+        function srepath {
+            eval $(smodpath \"$@\" --unique)
+        }
+in your .bashrc or its equivalent and always execute srepath.")
+        (newline)
 	(print (args:usage +command-line-options+))
 	(format (current-error-port) "Current argv: ~s~%" (argv))))
     (exit 1))
