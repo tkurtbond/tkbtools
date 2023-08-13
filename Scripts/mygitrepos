@@ -17,6 +17,7 @@ REPOS=(
     ~/current/RPG/Mini-Six/m6charcost
     ~/current/RPG/Tools/BESM
     ~/current/RPG/Tools/Generators
+    ~/current/RPG/Tools/TFT
     ~/current/tnolang
     #~/Repos/filetap
     #~/Repos/sdcl
