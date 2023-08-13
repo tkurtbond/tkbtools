@@ -14,7 +14,7 @@ if [[ -t 0 ]]; then
     NC='\033[0m'                # No Color.
 fi
 
-mygitrepos | while read REPO
+mygitrepos --directories | while read REPO
 do
     [[ -d $REPO ]] || {
         printf "===> ${MAGENTA}%20s ${CYAN}Repo $REPO$NC\n" "Does not exist!"
