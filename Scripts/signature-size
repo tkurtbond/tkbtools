@@ -1,0 +1,10 @@
+#! /usr/bin/env bash
+
+num_pages=$(pdfinfo $1  | grep Pages: | awk '{ print $2; }')
+((quotient=$num_pages / 4, remainder=$num_pages % 4))
+
+if [[ $num_pages > 4 && $remainder != 0 ]]; then
+    ((num_pages=$num_pages+(4 - $remainder)))
+fi
+
+echo $num_pages

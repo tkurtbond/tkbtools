@@ -141,6 +141,7 @@ SCRIPTS= \
 	run-chickadee \
 	scream \
 	setup-gerbil \
+	signature-size \
 	sgpod \
 	showtzs \
 	sort-backslash-words \
