@@ -74,6 +74,7 @@ SCRIPTS= \
 	gensite.sh \
 	getremotemail.sh \
 	gfind-moddate \
+	git-check-unison \
 	git-main \
 	git-needs-checkin \
 	git-outofdate \

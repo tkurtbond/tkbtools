@@ -1,0 +1,12 @@
+#! /usr/bin/env bash
+
+echo $0
+
+mygitrepos --directories | while read dir; do
+    if [[ $dir =~ ^/([^/]+)/tkb/(.+)$ ]]; then
+        repodir=${BASH_REMATCH[2]}
+        if ! [[ $repodir =~ ^Repos ]]; then
+            ! grep -q $repodir ~/.unison/general-ignore.prf  && echo $repodir
+        fi
+    fi;
+done
