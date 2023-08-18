@@ -78,6 +78,7 @@ SCRIPTS= \
 	git-main \
 	git-needs-checkin \
 	git-outofdate \
+	git-setup-repos \
 	git-state \
 	git-undo-last-commit \
 	git-uptodate \
