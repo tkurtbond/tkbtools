@@ -7,6 +7,7 @@ REPOS=(
     y ~/lib/emacs/tkb                                     git@github.com:tkurtbond/emacs-lisp.git
     y ~/Repos/microblog                                   git@github.com:tkurtbond/microblog.git
     y ~/Repos/tkb-notes                                   git@gitlab.com:t-kurt-bond/tkb-notes.git
+    y ~/Notes                                             git@github.com:tkurtbond/general-notes.git
     y ~/Repos/tkurtbond.github.io                         git@github.com:tkurtbond/tkurtbond.github.io.git
     y ~/Repos/VTIL                                        git@github.com:tkurtbond/VTIL.git
     y ~/Repos/VTIL-pictures                               git@github.com:tkurtbond/VTIL-pictures.git
