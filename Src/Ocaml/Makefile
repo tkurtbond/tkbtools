@@ -66,7 +66,7 @@ $(BINDIR)/% : %
 install: $(foreach e,$(EXES),$(BINDIR)/$(e))
 
 clean:
-	-$(RM) *.cmo *.cmi *$(OBJ)
+	-$(RM) *.cmo *.cmi *$(OBJ) $(EXES)
 
 realclean: clean
 	-$(RM) $(EXES) *~ .what-sys.dat

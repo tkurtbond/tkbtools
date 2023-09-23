@@ -19,6 +19,9 @@ Src/Ocaml/binmod.cmo
 Src/Ocaml/ocamlize
 Src/Ocaml/ocamlize.cmi
 Src/Ocaml/ocamlize.cmo
+Src/Ocaml/xpmtoocaml.cmo
+Src/Ocaml/xpmtoocaml.cmi
+Src/Ocaml/xpmtoocaml
 Src/OcamlTk/animgif
 Src/OcamlTk/animgif.cmi
 Src/OcamlTk/animgif.cmx
