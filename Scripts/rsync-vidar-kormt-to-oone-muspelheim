@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+rsync -av --exclude=.DS_Store --exclude=.Spotlight-V100 --exclude=._\* --exclude=.Trashes --exclude=.DocumentRevisions-V100 --exclude=.TemporaryItems Kormt tkb@oone:/var/run/media/tkb/Muspelheim/xyzzy
