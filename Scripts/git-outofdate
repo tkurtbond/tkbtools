@@ -14,6 +14,7 @@ if [[ -t 0 ]]; then
     NC='\033[0m'                # No Color.
 fi
 
+echo "Start: $(date +'%F %H:%M:%S')"
 mygitrepos --directories | while read REPO
 do
     [[ -d $REPO ]] || {
@@ -49,3 +50,5 @@ do
     }
     
 done
+echo "Stop:  $(date +'%F %H:%M:%S')"
+
