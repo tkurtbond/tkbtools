@@ -14,41 +14,41 @@ if [[ -t 0 ]]; then
     NC='\033[0m'                # No Color.
 fi
 
-echo "Start: $(date +'%F %H:%M:%S')"
-mygitrepos --directories | while read REPO
-do
-    [[ -d $REPO ]] || {
-        printf "===> ${MAGENTA}%20s ${CYAN}Repo $REPO$NC\n" "Does not exist!"
-        continue
-    }
-    [[ -d $REPO/.git ]] || {
-        printf "===> ${MAGENTA}%20s ${CYAN}Repo $REPO$NC\n" "Not a git repo!"
-        continue
-    }
-    STATUS=$(cd $REPO && git-uptodate)
-    case "$STATUS" in
-        "Up to date")
-            STATCOLOR="$GREEN"
-            ;;
-        "Need to pull")
-            STATCOLOR="$BLUE"
-            ;;
-        "Need to push")
-            STATCOLOR="$BRIGHTBLUE"
-            ;;
-        "Diverged")
-            STATCOLOR="$BRIGHTYELLOW"
-            ;;
-        *)
-            STATCOLOR="$BRIGHTWHITE"
-            ;;
-    esac
-    printf "===> $STATCOLOR%20s ${CYAN}Repo $REPO$NC\n" "$STATUS"
-    STATUS=$(cd $REPO && git status --short)
-    [[ -n "$STATUS" ]] && {
-        printf "===> ${RED}%20s ${CYAN}Repo $REPO $NC\n" "May need checkin!"
-    }
-    
-done
-echo "Stop:  $(date +'%F %H:%M:%S')"
-
+time (echo "Start: $(date +'%F %H:%M:%S')"
+      mygitrepos --directories | while read REPO
+      do
+          [[ -d $REPO ]] || {
+              printf "===> ${MAGENTA}%20s ${CYAN}Repo $REPO$NC\n" "Does not exist!"
+              continue
+          }
+          [[ -d $REPO/.git ]] || {
+              printf "===> ${MAGENTA}%20s ${CYAN}Repo $REPO$NC\n" "Not a git repo!"
+              continue
+          }
+          STATUS=$(cd $REPO && git-uptodate)
+          case "$STATUS" in
+              "Up to date")
+                  STATCOLOR="$GREEN"
+                  ;;
+              "Need to pull")
+                  STATCOLOR="$BLUE"
+                  ;;
+              "Need to push")
+                  STATCOLOR="$BRIGHTBLUE"
+                  ;;
+              "Diverged")
+                  STATCOLOR="$BRIGHTYELLOW"
+                  ;;
+              *)
+                  STATCOLOR="$BRIGHTWHITE"
+                  ;;
+          esac
+          printf "===> $STATCOLOR%20s ${CYAN}Repo $REPO$NC\n" "$STATUS"
+          STATUS=$(cd $REPO && git status --short)
+          [[ -n "$STATUS" ]] && {
+              printf "===> ${RED}%20s ${CYAN}Repo $REPO $NC\n" "May need checkin!"
+          }
+          
+      done
+      echo "Stop:  $(date +'%F %H:%M:%S')"
+     )
