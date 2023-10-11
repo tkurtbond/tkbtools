@@ -1,73 +1,92 @@
 #! /usr/bin/env bash
 
-COLUMNS=3
+# Offsets into the row for each of the fields.
+PRI_OFF=0                       # Priority
+INC_OFF=1                       # Include
+DIR_OFF=2                       # Directory
+REP_OFF=3                       # Repository
+
+NUMCOLUMNS=4
 REPOS=(
-    y ~/comp/tkbtools                                     git@github.com:tkurtbond/tkbtools.git
-    y ~/lib/emacs/arrows                                  git@github.com:tkurtbond/arrow-macros-for-emacs.git
-    y ~/lib/emacs/tkb                                     git@github.com:tkurtbond/emacs-lisp.git
-    y ~/Repos/microblog                                   git@github.com:tkurtbond/microblog.git
-    y ~/Repos/tkb-notes                                   git@gitlab.com:t-kurt-bond/tkb-notes.git
-    y ~/Notes                                             git@github.com:tkurtbond/general-notes.git
-    y ~/Repos/tkurtbond.github.io                         git@github.com:tkurtbond/tkurtbond.github.io.git
-    y ~/Repos/VTIL                                        git@github.com:tkurtbond/VTIL.git
-    y ~/Repos/VTIL-pictures                               git@github.com:tkurtbond/VTIL-pictures.git
-    y ~/Repos/scratch                                     git@github.com:tkurtbond/scratch.git
-    y ~/Repos/RPG/Centauri-Knights                        git@github.com:tkurtbond/Centauri-Knights.git
-    y ~/Repos/RPG/Red-Planet-Blue-Helmets                 git@github.com:tkurtbond/Red-Planet-Blue-Helmets.git
-    y ~/current/RPG/Campaigns/Alusia/Partyhist-xml        git@github.com:tkurtbond/partyhist.git
-    y ~/current/RPG/Kids/Mini-Six/Middle-Sea              git@github.com:tkurtbond/Middle-Sea.git
-    y ~/current/RPG/Kids/OVA/The-Lost-Worlds              git@github.com:tkurtbond/The-Lost-Worlds.git
-    y ~/current/RPG/Kids/Story-Engine/Maelstrom           git@github.com:tkurtbond/Maelstrom.git
-    y ~/current/RPG/Mini-Six/SRD                          git@github.com:tkurtbond/Minimal-OpenD6.git
-    y ~/current/RPG/Mini-Six/m6charcost                   git@github.com:tkurtbond/m6charcost.git
-    y ~/current/RPG/Tools/BESM                            git@github.com:tkurtbond/besm-tools.git
-    y ~/current/RPG/Tools/Generators                      git@github.com:tkurtbond/Generators.git
-    y ~/current/RPG/Tools/TFT                             git@github.com:tkurtbond/TFT-tools.git
-    y ~/current/tnolang                                   git@github.com:tkurtbond/tnolang.git
-    y ~/Repos/filetap                                     git@github.com:tkurtbond/filetap.git
-    y ~/Repos/sdcl                                        git@github.com:tkurtbond/sdcl.git
-    y ~/Repos/sstg                                        git@github.com:tkurtbond/sstg.git
-    y ~/job/MPL/MHST/SIS-data                             git@github.com:tkurtbond/SIS-data.git
-    y ~/job/MPL/MHST/dmsfields                            git@github.com:tkurtbond/dmsfields.git
-    y ~/job/MPL/MHST/dmstosqldb                           git@github.com:tkurtbond/dmstosqldb.git
-    y ~/job/MPL/MHST/Processes                            git@github.com:tkurtbond/mhst-processes.git
-    y ~/job/MPL/MHST/sis-export                           git@github.com:tkurtbond/sis-export.git
-    y ~/current/programming/trampolines                   git@github.com:tkurtbond/trampolines.git
-    n /usr/local/sw/src/Oberon/tkb/voc                    git@github.com:tkurtbond/voc.git
+    9 y ~/lib/emacs/tkb                                     git@github.com:tkurtbond/emacs-lisp.git
+    9 y ~/lib/emacs/arrows                                  git@github.com:tkurtbond/arrow-macros-for-emacs.git
+    9 y ~/comp/tkbtools                                     git@github.com:tkurtbond/tkbtools.git
+    7 y ~/Repos/tkb-notes                                   git@gitlab.com:t-kurt-bond/tkb-notes.git
+    7 y ~/Notes                                             git@github.com:tkurtbond/general-notes.git
+    5 y ~/Repos/tkurtbond.github.io                         git@github.com:tkurtbond/tkurtbond.github.io.git
+    5 y ~/Repos/microblog                                   git@github.com:tkurtbond/microblog.git
+    4 y ~/Repos/scratch                                     git@github.com:tkurtbond/scratch.git
+    4 y ~/Repos/VTIL-pictures                               git@github.com:tkurtbond/VTIL-pictures.git
+    4 y ~/Repos/VTIL                                        git@github.com:tkurtbond/VTIL.git
+    3 y ~/current/RPG/Tools/TFT                             git@github.com:tkurtbond/TFT-tools.git
+    3 y ~/current/RPG/Tools/Generators                      git@github.com:tkurtbond/Generators.git
+    3 y ~/current/RPG/Tools/BESM                            git@github.com:tkurtbond/besm-tools.git
+    3 y ~/current/RPG/Mini-Six/m6charcost                   git@github.com:tkurtbond/m6charcost.git
+    3 y ~/current/RPG/Mini-Six/SRD                          git@github.com:tkurtbond/Minimal-OpenD6.git
+    3 y ~/current/RPG/Kids/Story-Engine/Maelstrom           git@github.com:tkurtbond/Maelstrom.git
+    3 y ~/current/RPG/Kids/OVA/The-Lost-Worlds              git@github.com:tkurtbond/The-Lost-Worlds.git
+    3 y ~/current/RPG/Kids/Mini-Six/Middle-Sea              git@github.com:tkurtbond/Middle-Sea.git
+    3 y ~/current/RPG/Campaigns/Alusia/Partyhist-xml        git@github.com:tkurtbond/partyhist.git
+    3 y ~/Repos/RPG/Red-Planet-Blue-Helmets                 git@github.com:tkurtbond/Red-Planet-Blue-Helmets.git
+    3 y ~/Repos/RPG/Centauri-Knights                        git@github.com:tkurtbond/Centauri-Knights.git
+    2 y ~/job/MPL/MHST/sis-export                           git@github.com:tkurtbond/sis-export.git
+    2 y ~/job/MPL/MHST/dmstosqldb                           git@github.com:tkurtbond/dmstosqldb.git
+    2 y ~/job/MPL/MHST/dmsfields                            git@github.com:tkurtbond/dmsfields.git
+    2 y ~/job/MPL/MHST/SIS-data                             git@github.com:tkurtbond/SIS-data.git
+    2 y ~/job/MPL/MHST/Processes                            git@github.com:tkurtbond/mhst-processes.git
+    2 y ~/current/programming/trampolines                   git@github.com:tkurtbond/trampolines.git
+    2 y ~/Repos/sstg                                        git@github.com:tkurtbond/sstg.git
+    2 y ~/Repos/sdcl                                        git@github.com:tkurtbond/sdcl.git
+    2 y ~/Repos/filetap                                     git@github.com:tkurtbond/filetap.git
+    1 y ~/current/tnolang                                   git@github.com:tkurtbond/tnolang.git
+    0 n /usr/local/sw/src/Oberon/tkb/voc                    git@github.com:tkurtbond/voc.git
 )
 
 #for i in ${REPOS[@]}; do echo $i; done
 
 function index () {
-    echo $((COLUMNS * $1 + $2))
+    # $1 is the row and $2 is the column offset
+    echo $((NUMCOLUMNS * $1 + $2))
 }
 
 if [[ $1 = "--verbose" ]]; then
-    NUMREPOS=$((${#REPOS[@]} / $COLUMNS))
+    NUMREPOS=$((${#REPOS[@]} / $NUMCOLUMNS))
     for ((i=0; i < NUMREPOS; i++)); do
-        INCLUDE=$(index $i 0)
-        DIR=$(index $i 1)
-        REPO=$(index $i 2)
-        echo INCLUDE: ${REPOS[$INCLUDE]}
-        echo DIR:     ${REPOS[$DIR]}
-        echo REPO:    ${REPOS[$REPO]}
+        PRI=$(index $i PRI_OFF)
+        INC=$(index $i INC_OFF)
+        DIR=$(index $i DIR_OFF)
+        REP=$(index $i REP_OFF)
+        echo PRI: ${REPOS[$PRI]}
+        echo INC: ${REPOS[$INC]}
+        echo DIR: ${REPOS[$DIR]}
+        echo REP: ${REPOS[$REP]}
     done
 fi
 
 if [[ $1 = "--directories" ]]; then
-    NUMREPOS=$((${#REPOS[@]} / $COLUMNS))
+    NUMREPOS=$((${#REPOS[@]} / $NUMCOLUMNS))
     for ((i=0; i < NUMREPOS; i++)); do
-        DIR=$(index $i 1)
+        DIR=$(index $i DIR_OFF)
         echo ${REPOS[$DIR]}
     done
 fi
 
 if [[ $1 = "--all-columns" ]]; then
-    NUMREPOS=$((${#REPOS[@]} / $COLUMNS))
-    for ((i=0; i < NUMREPOS; i++)); do
-        INCLUDE=$(index $i 0)
-        DIR=$(index $i 1)
-        REPO=$(index $i 2)
-        echo ${REPOS[$INCLUDE]} ${REPOS[$DIR]} ${REPOS[$REPO]}
-    done
+    NUMREPOS=$((${#REPOS[@]} / $NUMCOLUMNS))
+    for ((i=0; i < NUMREPOS; i++)); do # i is the row
+        # PRI=$(index $i PRI_OFF)
+        # INC=$(index $i INC_OFF)
+        # DIR=$(index $i DIR_OFF)
+        # REP=$(index $i REP_OFF)
+        # echo ${REPOS[$INC]} ${REPOS[$DIR]} ${REPOS[$REP]}
+        ACCUM=
+        for ((j = 0; j < NUMCOLUMNS; j++)); do # j is the column
+            PART=$(index $i $j)
+            if ((j > 0)); then
+                ACCUM+=" "
+            fi
+            ACCUM+=${REPOS[$PART]}
+        done                    # end j loop
+        echo "$ACCUM"
+    done                        # end i loop
 fi
