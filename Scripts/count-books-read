@@ -9,6 +9,8 @@
 # ...
 # *** 2022-05-21: Title of Book I **Have** Finished Reading -- https://www.amazon.com/amazon-link-if-it-exists
 # ...
+# *** 2 2023-11-01: Title of Book I **Have** Finished Reading that contains more than one book -- https://www.amazon.com/amazon-link-if-it-exists
+# ...
 # ** Did not finish
 # *** : Title of Book I Won't Finish Reading -- https://www.amazon.com/amazon-link-if-it-exists
 # ...
@@ -57,6 +59,23 @@ LAST_YEAR=$((YEAR - 1))
 sed -E -n "/^\* $YEAR/,/^(\*\* Did not finish|\* $LAST_YEAR)/p" $READ_FILE |
     $F1 | sed -e "/^* $YEAR/,/^** Read/d" \
               -e "/^(\*\* Did not finish|\* $LAST_YEAR)/d" |
-    $F2 | sed -E -n "/^\*\*\*[ \t]+[0-9]/p" |
-    $F3 | wc -l
+    $F2 | sed -E -n "/^\*\*\*[ \t]+([0-9]+[ \t]+){0,1}[0-9]/p" |
+    $F3 | gawk '
+{
+  line_no++
+  found = match($0, /\*\*\*[ \t]+(([0-9]+)[ \t]+){0,1}([0-9]+)/, matches)
+  if (found) {
+      if (matches[2] == "") {
+          total++
+      } else {
+          total += matches[2]
+      }
+  } else {
+      printf "Do not understand line %d: %s\n", line_no, $0 > "/dev/stderr"
+  }
+}
+END {
+    print total
+}
+'
 #    cat; exit
