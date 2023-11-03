@@ -165,6 +165,7 @@ SCRIPTS= \
 	tkb-sync \
 	tkbput.sh \
 	troff-depends \
+	uhome \
 	unbuilt-programs \
 	uncomment-caml \
 	uncomment-perl \
@@ -173,6 +174,7 @@ SCRIPTS= \
 	unwrap \
 	unwrap-paras \
 	usatime \
+	uwork \
 	winbox-in-wine \
 	worldtime \
 	# Nothing Here

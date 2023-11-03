@@ -1,0 +1,8 @@
+#! /usr/bin/env bash
+
+unison helblindi-tkb-to-oone &
+unison helblindi-tkb-to-oone-muspelheim &
+[[ -d /media/tkb/Kormt ]] && {
+    unison helblindi-kormt-to-oone-muspelheim &
+    unison helblindi-tkb-kormt &
+}      
