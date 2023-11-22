@@ -8,38 +8,39 @@ REP_OFF=3                       # Repository
 
 NUMCOLUMNS=4
 REPOS=(
-    9 y ~/lib/emacs/tkb                                     git@github.com:tkurtbond/emacs-lisp.git
-    9 y ~/lib/emacs/arrows                                  git@github.com:tkurtbond/arrow-macros-for-emacs.git
-    9 y ~/comp/tkbtools                                     git@github.com:tkurtbond/tkbtools.git
-    7 y ~/Repos/tkb-notes                                   git@gitlab.com:t-kurt-bond/tkb-notes.git
-    7 y ~/Notes                                             git@github.com:tkurtbond/general-notes.git
-    5 y ~/Repos/tkurtbond.github.io                         git@github.com:tkurtbond/tkurtbond.github.io.git
-    5 y ~/Repos/microblog                                   git@github.com:tkurtbond/microblog.git
-    4 y ~/Repos/scratch                                     git@github.com:tkurtbond/scratch.git
-    4 y ~/Repos/VTIL-pictures                               git@github.com:tkurtbond/VTIL-pictures.git
-    4 y ~/Repos/VTIL                                        git@github.com:tkurtbond/VTIL.git
-    3 y ~/current/RPG/Tools/TFT                             git@github.com:tkurtbond/TFT-tools.git
-    3 y ~/current/RPG/Tools/Generators                      git@github.com:tkurtbond/Generators.git
-    3 y ~/current/RPG/Tools/BESM                            git@github.com:tkurtbond/besm-tools.git
-    3 y ~/current/RPG/Mini-Six/m6charcost                   git@github.com:tkurtbond/m6charcost.git
-    3 y ~/current/RPG/Mini-Six/SRD                          git@github.com:tkurtbond/Minimal-OpenD6.git
-    3 y ~/current/RPG/Kids/Story-Engine/Maelstrom           git@github.com:tkurtbond/Maelstrom.git
-    3 y ~/current/RPG/Kids/OVA/The-Lost-Worlds              git@github.com:tkurtbond/The-Lost-Worlds.git
-    3 y ~/current/RPG/Kids/Mini-Six/Middle-Sea              git@github.com:tkurtbond/Middle-Sea.git
-    3 y ~/current/RPG/Campaigns/Alusia/Partyhist-xml        git@github.com:tkurtbond/partyhist.git
-    3 y ~/Repos/RPG/Red-Planet-Blue-Helmets                 git@github.com:tkurtbond/Red-Planet-Blue-Helmets.git
-    3 y ~/Repos/RPG/Centauri-Knights                        git@github.com:tkurtbond/Centauri-Knights.git
-    2 y ~/job/MPL/MHST/sis-export                           git@github.com:tkurtbond/sis-export.git
-    2 y ~/job/MPL/MHST/dmstosqldb                           git@github.com:tkurtbond/dmstosqldb.git
-    2 y ~/job/MPL/MHST/dmsfields                            git@github.com:tkurtbond/dmsfields.git
-    2 y ~/job/MPL/MHST/SIS-data                             git@github.com:tkurtbond/SIS-data.git
-    2 y ~/job/MPL/MHST/Processes                            git@github.com:tkurtbond/mhst-processes.git
-    2 y ~/current/programming/trampolines                   git@github.com:tkurtbond/trampolines.git
-    2 y ~/Repos/sstg                                        git@github.com:tkurtbond/sstg.git
-    2 y ~/Repos/sdcl                                        git@github.com:tkurtbond/sdcl.git
-    2 y ~/Repos/filetap                                     git@github.com:tkurtbond/filetap.git
-    1 y ~/current/tnolang                                   git@github.com:tkurtbond/tnolang.git
-    0 n /usr/local/sw/src/Oberon/tkb/voc                    git@github.com:tkurtbond/voc.git
+    90 y ~/lib/emacs/tkb                                     git@github.com:tkurtbond/emacs-lisp.git
+    90 y ~/lib/emacs/arrows                                  git@github.com:tkurtbond/arrow-macros-for-emacs.git
+    90 y ~/comp/tkbtools                                     git@github.com:tkurtbond/tkbtools.git
+    70 y ~/Repos/tkb-notes                                   git@gitlab.com:t-kurt-bond/tkb-notes.git
+    70 y ~/Notes                                             git@github.com:tkurtbond/general-notes.git
+    50 y ~/Repos/tkurtbond.github.io                         git@github.com:tkurtbond/tkurtbond.github.io.git
+    50 y ~/Repos/microblog                                   git@github.com:tkurtbond/microblog.git
+    45 y ~/Repos/scratch                                     git@github.com:tkurtbond/scratch.git
+    43 y ~/Repos/learn-htmx/                                 git@github.com:tkurtbond/learn-htmx.git
+    40 y ~/Repos/VTIL-pictures                               git@github.com:tkurtbond/VTIL-pictures.git
+    40 y ~/Repos/VTIL                                        git@github.com:tkurtbond/VTIL.git
+    30 y ~/current/RPG/Tools/TFT                             git@github.com:tkurtbond/TFT-tools.git
+    30 y ~/current/RPG/Tools/Generators                      git@github.com:tkurtbond/Generators.git
+    30 y ~/current/RPG/Tools/BESM                            git@github.com:tkurtbond/besm-tools.git
+    30 y ~/current/RPG/Mini-Six/m6charcost                   git@github.com:tkurtbond/m6charcost.git
+    30 y ~/current/RPG/Mini-Six/SRD                          git@github.com:tkurtbond/Minimal-OpenD6.git
+    30 y ~/current/RPG/Kids/Story-Engine/Maelstrom           git@github.com:tkurtbond/Maelstrom.git
+    30 y ~/current/RPG/Kids/OVA/The-Lost-Worlds              git@github.com:tkurtbond/The-Lost-Worlds.git
+    30 y ~/current/RPG/Kids/Mini-Six/Middle-Sea              git@github.com:tkurtbond/Middle-Sea.git
+    30 y ~/current/RPG/Campaigns/Alusia/Partyhist-xml        git@github.com:tkurtbond/partyhist.git
+    30 y ~/Repos/RPG/Red-Planet-Blue-Helmets                 git@github.com:tkurtbond/Red-Planet-Blue-Helmets.git
+    30 y ~/Repos/RPG/Centauri-Knights                        git@github.com:tkurtbond/Centauri-Knights.git
+    20 y ~/job/MPL/MHST/sis-export                           git@github.com:tkurtbond/sis-export.git
+    20 y ~/job/MPL/MHST/dmstosqldb                           git@github.com:tkurtbond/dmstosqldb.git
+    20 y ~/job/MPL/MHST/dmsfields                            git@github.com:tkurtbond/dmsfields.git
+    20 y ~/job/MPL/MHST/SIS-data                             git@github.com:tkurtbond/SIS-data.git
+    20 y ~/job/MPL/MHST/Processes                            git@github.com:tkurtbond/mhst-processes.git
+    20 y ~/current/programming/trampolines                   git@github.com:tkurtbond/trampolines.git
+    20 y ~/Repos/sstg                                        git@github.com:tkurtbond/sstg.git
+    20 y ~/Repos/sdcl                                        git@github.com:tkurtbond/sdcl.git
+    20 y ~/Repos/filetap                                     git@github.com:tkurtbond/filetap.git
+    10 y ~/current/tnolang                                   git@github.com:tkurtbond/tnolang.git
+    00 n /usr/local/sw/src/Oberon/tkb/voc                    git@github.com:tkurtbond/voc.git
 )
 
 #for i in ${REPOS[@]}; do echo $i; done
