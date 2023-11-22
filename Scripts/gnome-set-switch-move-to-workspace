@@ -1,0 +1,44 @@
+#! /usr/bin/env bash
+# From: https://askubuntu.com/a/1423856
+#    gsettings set "org.gnome.desktop.wm.keybindings" "switch-to-workspace-5" "['<Super>F5']" 
+#    gsettings set "org.gnome.desktop.wm.keybindings" "move-to-workspace-5" "['<Super><Shift>F5']"
+
+DO_SET=0
+errors=0
+
+while getopts "hs" opt
+do
+    case "$opt" in
+        (\?) ((errors++)) ;;
+        (h) DO_HELP=1 ;;
+        (s) DO_SET=1 ;;
+    esac
+done
+
+((DO_HELP)) && ERROUT=/dev/stdout || ERROUT=/dev/stderr
+
+((DO_HELP || errors)) && {
+    cat >$ERROUT <<EOF
+usage: $0 [-s]
+
+Displays or sets the GNOME Switch to Workspace and Move to Workspace keybindings
+for workspaces 1 through 10.
+
+Where 
+-s	Sets the keybindings instead of displaying them.
+EOF
+}
+
+for ws_key in {0..9}; do
+    ((ws_key == 0)) && ((ws_num=10)) || ((ws_num=ws_key))
+
+    if ((! DO_SET)); then 
+        curswitch=$(gsettings get "org.gnome.desktop.wm.keybindings" "switch-to-workspace-$ws_num")
+        printf "switch-to-workspace %d is %s\n" $ws_num "$curswitch"
+        curmove=$(gsettings get "org.gnome.desktop.wm.keybindings" "move-to-workspace-$ws_num")
+        printf "move-to-workspace-%d is %s\n" $ws_num "$curmove"
+    else
+        gsettings set "org.gnome.desktop.wm.keybindings" "switch-to-workspace-$ws_num" "['<Super>$ws_key']"
+        gsettings set "org.gnome.desktop.wm.keybindings" "move-to-workspace-$ws_num" "['<Ctrl><Super>$ws_key']"
+    fi
+done
