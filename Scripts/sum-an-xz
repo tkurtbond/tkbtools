@@ -1,0 +1,9 @@
+#! /usr/bin/env bash
+
+time (find "$@" -type f -name \*.vtape | while read FILENAME
+      do
+          echo $FILENAME
+          time sha512sum $FILENAME >$FILENAME.sha512sum
+          time /bin/xz --compress $FILENAME
+      done
+      echo Total:)
