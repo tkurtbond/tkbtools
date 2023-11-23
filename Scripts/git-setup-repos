@@ -15,7 +15,7 @@ if [[ -t 0 ]]; then
 fi
 
 
-mygitrepos --all-columns | while read INCLUDE DIR REPO
+mygitrepos --all-columns | while read PRIORITY INCLUDE DIR REPO
 do
     if ! [[ -d $DIR ]]; then 
         printf "===> ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" "Does not exist!"
