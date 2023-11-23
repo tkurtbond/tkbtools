@@ -26,7 +26,7 @@ EOF
 
 shift $((OPTIND-1))
 
-time find "$@" -type f -name \*.vtape | while read FILENAME
+time find "$@" -type f -name \*.vtape | sort | while read FILENAME
 do
     ((num_files++))
     ((LIMIT && num_files > LIMIT)) && {
