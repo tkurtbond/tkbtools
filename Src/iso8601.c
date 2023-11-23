@@ -30,7 +30,7 @@ main (int argc, char **argv)
   char buf[MAXSIZE];
   time_t now = time (NULL);
   struct tm *localnow = localtime (&now);
-  size_t n = strftime (buf, MAXSIZE, "%Y-%m-%dT%H%M%S%z", localnow);
+  size_t n = strftime (buf, MAXSIZE, "%Y-%m-%dT%H:%M:%S%z", localnow);
 
   if (! n) die ("error: strftime returned 0\n");
   else printf ("%s\n", buf);
