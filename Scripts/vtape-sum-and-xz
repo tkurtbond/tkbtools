@@ -34,7 +34,7 @@ time (find "$@" -type f -name \*.vtape | sort | while read FILENAME
               echo 2>&1 Exiting after processing $LIMIT files
               break
           }
-          echo $FILENAME at $(iso8601)
+          echo $num_files: $FILENAME at $(iso8601)
           ((DRY_RUN)) || {
               echo $FILENAME sha512sum
               time sha512sum $FILENAME >$FILENAME.sha512sum
