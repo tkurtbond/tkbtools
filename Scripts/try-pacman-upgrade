@@ -1,0 +1,7 @@
+#! /usr/bin/env bash
+
+while ! pacman -Syu --noconfirm
+do
+    ((i++))
+    echo "Run #$i of using pacman to upgrade $(hostname)"
+done
