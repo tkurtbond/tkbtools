@@ -1,0 +1,22 @@
+#! /usr/bin/env bash
+
+TESTFILE=$1
+
+{
+    
+    echo "==== xz <$TESTFILE at $(iso8601)"
+    ls -l $TESTFILE
+    ls -lh $TESTFILE
+    time xz <$TESTFILE >$TESTFILE.xz
+    ls -l $TESTFILE.xz
+    ls -lh $TESTFILE.xz
+} 2>&1 | tee vtape-xz.lis
+
+{
+    echo "==== zstd <$TESTFILE at $(iso8601)"
+    ls -l $TESTFILE
+    ls -lh $TESTFILE
+    time zstd -T16 -19 <$TESTFILE >$TESTFILE.zstd
+    ls -l $TESTFILE.zstd
+    ls -lh $TESTFILE.zstd
+} 2>&1 | tee vtape-zstd.lis
