@@ -2,7 +2,7 @@
 
 errors=0
 
-while getopts "hl:n" opt
+while getopts "hc" opt
 do
     case "$opt" in
         (\?) ((errors++)) ;;
@@ -25,7 +25,7 @@ EOF
 
 shift $((OPTIND-1))
 
-
+((DO_CLEAR)) && clear
 
 if [[ -t 0 ]]; then
     MAGENTA='\033[1;35m'        # Repo doesn't exist or is not a git repo.
@@ -40,9 +40,6 @@ if [[ -t 0 ]]; then
     BRIGHTYELLOW='\u001b[33;1m' # Repo diverged. 
     NC='\033[0m'                # No Color.
 fi
-
-((DO_CLEAR)) && clear
-
 
 time (echo "Start: $(date +'%F %H:%M:%S')"
       mygitrepos --directories | while read REPO
