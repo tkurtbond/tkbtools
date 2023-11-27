@@ -1,5 +1,32 @@
 #! /usr/bin/env bash
 
+errors=0
+
+while getopts "hl:n" opt
+do
+    case "$opt" in
+        (\?) ((errors++)) ;;
+        (h) DO_HELP=1 ;;
+        (c) DO_CLEAR=1 ;;
+    esac
+done
+
+((DO_HELP)) && ERROUT=/dev/stdout || ERROUT=/dev/stderr
+((DO_HELP || errors)) && {
+    cat >$ERROUT <<EOF
+usage: $0 [-ln]
+
+Options
+-c      Clears the screen.
+-h	Displays this message.
+EOF
+    exit
+}
+
+shift $((OPTIND-1))
+
+
+
 if [[ -t 0 ]]; then
     MAGENTA='\033[1;35m'        # Repo doesn't exist or is not a git repo.
     CYAN='\033[1;36m'           # Repo name (and prefix).
@@ -13,6 +40,9 @@ if [[ -t 0 ]]; then
     BRIGHTYELLOW='\u001b[33;1m' # Repo diverged. 
     NC='\033[0m'                # No Color.
 fi
+
+((DO_CLEAR)) && clear
+
 
 time (echo "Start: $(date +'%F %H:%M:%S')"
       mygitrepos --directories | while read REPO
