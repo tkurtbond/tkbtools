@@ -36,7 +36,7 @@ time (find "$@" -type f -name \*.vtape | sort | while read FILENAME
               echo 2>&1 Exiting after processing $LIMIT files
               break
           }
-          printf "%.0s" {1..80}
+          printf "=%.0s" {1..80}
           echo
           echo $num_files: $FILENAME at $(iso8601)
           ((DRY_RUN)) || {
