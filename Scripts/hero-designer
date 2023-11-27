@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+java -DWindows.controlFont=DejaVuSans-plain-18 -DWindows.menuFont=DejaVuSans-plain-18 -DPlastic.controlFont=DejaVuSans-plain-18 -DPlastic.menuFont=DejaVuSans-bold-18 -jar /usr/local/sw/versions/hero-designer/HD6.jar
