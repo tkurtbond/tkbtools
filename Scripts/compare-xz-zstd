@@ -47,8 +47,6 @@ EOF
         diff $TESTFILE.sha512sum $TESTFILE.c2.sha512sum
 
         echo "==== zstd --threads=$THREADS  -19 <$TESTFILE >$TESTFILE.zstd at $(iso8601)"
-        ls -l $TESTFILE
-        ls -lh $TESTFILE
         time zstd --threads=$THREADS -19 <$TESTFILE >$TESTFILE.zstd
         ls -l $TESTFILE.zstd
         ls -lh $TESTFILE.zstd
