@@ -1,3 +1,4 @@
 #! /usr/bin/env bash
+# From: https://unix.stackexchange.com/a/363368
 
 fc-list :spacing=100
