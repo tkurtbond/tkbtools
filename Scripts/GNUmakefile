@@ -96,6 +96,7 @@ SCRIPTS= \
 	kpsave \
 	latex-depends \
 	list-fixed-fonts.sh \
+	list-mono-fonts \
 	list-imports \
 	list-my-macports \
 	lnhere \
