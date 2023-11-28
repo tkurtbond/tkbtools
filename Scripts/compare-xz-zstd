@@ -1,22 +1,60 @@
 #! /usr/bin/env bash
 
-TESTFILE=$1
+errors=0
 
-{
-    
-    echo "==== xz <$TESTFILE at $(iso8601)"
-    ls -l $TESTFILE
-    ls -lh $TESTFILE
-    time xz <$TESTFILE >$TESTFILE.xz
-    ls -l $TESTFILE.xz
-    ls -lh $TESTFILE.xz
-} 2>&1 | tee vtape-xz.lis
+while getopts "ht:" opt
+do
+    case "$opt" in
+        (\?) ((errors++)) ;;
+        (h) DO_HELP=1 ;;
+        (t) THREADS=$OPTARG ;;
+    esac
+done
 
+((DO_HELP)) && ERROUT=/dev/stdout || ERROUT=/dev/stderr
+
+((DO_HELP || errors)) && {
+    cat >$ERROUT <<EOF
+usage: $0 [-tn]
+
+Options
+-h      Displays this message.
+-tn	Sets the number of threads to use.  Default: 1.
+EOF
+    exit
+}
 {
-    echo "==== zstd <$TESTFILE at $(iso8601)"
-    ls -l $TESTFILE
-    ls -lh $TESTFILE
-    time zstd -T16 -19 <$TESTFILE >$TESTFILE.zstd
-    ls -l $TESTFILE.zstd
-    ls -lh $TESTFILE.zstd
-} 2>&1 | tee vtape-zstd.lis
+    echo "command line: $@"
+
+    shift $((OPTIND-1))
+
+    TESTFILE=$1
+
+    time {
+        echo "==== sha512sum $TESTFILE >$TESTFILE.sha512sum"
+        time sha512sum $TESTFILE >$TESTFILE.sha512sum
+        
+        echo "==== xz --threads=$THREADS <$TESTFILE >$TESTFILE.xz at $(iso8601)"
+        ls -l $TESTFILE
+        ls -lh $TESTFILE
+        time xz --threads=$THREADS <$TESTFILE >$TESTFILE.xz
+        ls -l $TESTFILE.xz
+        ls -lh $TESTFILE.xz
+        echo "==== xz --decompress <$TESTFILE >$TESTFILE.c2 at $(iso8601)"
+        time xz --decompress <$TESTFILE.xz >$TESTFILE.c2
+        echo "sha512sum $TESTFILE.c2 >$TESTFILE.c2.sha512sum"
+        time sha512sum $TESTFILE.c2 >$TESTFILE.c2.sha512sum
+        diff $TESTFILE.sha512sum $TESTFILE.c2.sha512sum
+
+        echo "==== zstd --threads=$THREADS  -19 <$TESTFILE >$TESTFILE.zstd at $(iso8601)"
+        time zstd --threads=$THREADS -19 <$TESTFILE >$TESTFILE.zstd
+        ls -l $TESTFILE.zstd
+        ls -lh $TESTFILE.zstd
+        echo "==== zstd -d <$TESTFILE.zstd >$TESTFILE.c3 at $(iso8601)"
+        time zstd -d <$TESTFILE.zstd >$TESTFILE.c3
+        echo "sha512sum $TESTFILE.c3 >$TESTFILE.c3.sha512sum"
+        time sha512sum $TESTFILE.c3 >$TESTFILE.c3.sha512sum
+        diff $TESTFILE.sha512sum $TESTFILE.c3.sha512sum
+        echo "==== Done at $(iso8601)"
+    }
+} 2>&1 | log compare-xz-zstd
