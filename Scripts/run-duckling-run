@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+DUCKLING_POND="${DUCKLING_POND:-/usr/local/sw/src/gemini/duckling-proxy}"
+
+${DUCKLING_POND}/duckling-proxy -c 127.0.0.1.crt -k 127.0.0.1.key -a 127.0.0.1

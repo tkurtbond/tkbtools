@@ -142,6 +142,7 @@ SCRIPTS= \
 	rstfrag2html \
 	rstfragtxt \
 	run-chickadee \
+	run-duckling-run \
 	scream \
 	setup-gerbil \
 	signature-size \
