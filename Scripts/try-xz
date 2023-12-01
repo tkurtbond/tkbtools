@@ -1,0 +1,16 @@
+#! /usr/bin/env bash
+echo "xz default compression"
+time xz --compress <debug.vtape >xz.vtape.xz
+
+echo "xz -9 compression"
+time xz --compress -9 <debug.vtape >xz.vtape-9.xz
+
+echo "xz --decompress default compression"
+time xz --decompress <xz.vtape.xz >xz.vtape
+
+echo "xz --decompress -9 compression"
+time xz --decompress <xz.vtape-9.xz >xz.vtape-9
+
+echo "xz sizes"
+ls -l debug.vtape xz.*vtape*
+

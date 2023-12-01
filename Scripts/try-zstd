@@ -1,0 +1,19 @@
+#! /usr/bin/env bash
+echo "zstd default compression"
+time zstd <debug.vtape >zstd.vtape.zstd
+
+echo "zstd -9 compression"
+time zstd -9 <debug.vtape >zstd.vtape-9.zstd
+
+echo "zstd -19 compression"
+time zstd -19 <debug.vtape >zstd.vtape-19.zstd
+
+
+echo "zstd --decompress default compression"
+time zstd <zstd.vtape.zstd >zstd.vtape
+
+echo "zstd --decompress -9 compression"
+time zstd -9 <zstd.vtape-9.zstd >zstd.vtape-9
+
+echo "zstd --decompress -19 compression"
+time zstd -19 <zstd.vtape-19.zstd >zstd.vtape-19
