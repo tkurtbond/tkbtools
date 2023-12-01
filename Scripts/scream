@@ -1,9 +1,38 @@
 #!/usr/bin/env bash
 # Ought to add a -c option that just does it continuously.
-let x=0
-while [ "$x" -lt 5 ]
+DO_HELP=0                       # Does the help need to be displayed?
+CONTINUOUS=0                    # Keep dinging!
+LIMIT=5                         # Only ding five times by default.
+errors=0
+
+while getopts "chn:" opt
 do
-  echo -n 
+    case "$opt" in
+        (\?) ((errors++)) ;;
+        (c) CONTINUOUS=1 ;;
+        (h) DO_HELP=1 ;;
+        (n) LIMIT=$OPTARG ;;
+    esac
+done
+
+((DO_HELP)) && HELPOUT=/dev/stdout || HELPOUT=/dev/stderr
+
+((DO_HELP || errors)) && {
+    cat >$HELPOUT <<EOF
+usage: $0 [-tn]
+
+Options
+-c      Ding continously.
+-h      Displays this message.
+-nN     Ding N times.
+EOF
+    exit
+}
+
+let n=0
+while ((CONTINUOUS || n < LIMIT))
+do
+  printf "\a"
   sleep 1
-  let x=x+1
+  ((n++))
 done
