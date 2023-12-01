@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
 
+THREADS=1                       # Default is to use one thread.
+DO_HELP=0                       # Does the help need to be displayed?
 errors=0
 
 while getopts "ht:" opt
@@ -11,10 +13,10 @@ do
     esac
 done
 
-((DO_HELP)) && ERROUT=/dev/stdout || ERROUT=/dev/stderr
+((DO_HELP)) && HELPOUT=/dev/stdout || HELPOUT=/dev/stderr
 
 ((DO_HELP || errors)) && {
-    cat >$ERROUT <<EOF
+    cat >$HELPOUT <<EOF
 usage: $0 [-tn]
 
 Options
@@ -23,6 +25,7 @@ Options
 EOF
     exit
 }
+
 {
     echo "command line: $@"
 
