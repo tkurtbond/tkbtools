@@ -11,9 +11,9 @@ do
     esac
 done
 
-((DO_HELP)) && ERROUT=/dev/stdout || ERROUT=/dev/stderr
+((DO_HELP)) && HELPOUT=/dev/stdout || HELPOUT=/dev/stderr
 ((DO_HELP || errors)) && {
-    cat >$ERROUT <<EOF
+    cat >$HELPOUT <<EOF
 usage: $0 [-ln]
 
 Options
