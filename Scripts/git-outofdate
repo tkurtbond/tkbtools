@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
 
+### NOTE: use git-setup-repos to set up the repos!
+
 errors=0
 
 while getopts "hc" opt
