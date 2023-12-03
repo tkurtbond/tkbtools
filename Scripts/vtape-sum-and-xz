@@ -29,21 +29,22 @@ EOF
 
 shift $((OPTIND-1))
 
-time (find "$@" -type f -name \*.vtape | sort | while read FILENAME
-      do
-          ((num_files++))
-          ((LIMIT && num_files > LIMIT)) && {
-              echo 2>&1 Exiting after processing $LIMIT files
-              break
-          }
-          printf "=%.0s" {1..80}
-          echo
-          echo $num_files: $FILENAME at $(iso8601)
-          ((DRY_RUN)) || {
-              echo $FILENAME sha512sum
-              time sha512sum $FILENAME >$FILENAME.sha512sum
-              echo $FILENAME xz --compress
-              time /bin/xz --compress $FILENAME
-          }
-      done)
+time (find -maxdepth 1 "$@" -type f -name \*.vtape | sed 's#^\./##' | sort |
+          while read FILENAME
+          do
+              ((num_files++))
+              ((LIMIT && num_files > LIMIT)) && {
+                  echo 2>&1 Exiting after processing $LIMIT files
+                  break
+              }
+              printf "=%.0s" {1..80}
+              echo
+              echo $num_files: $FILENAME at $(iso8601)
+              ((DRY_RUN)) || {
+                  echo $FILENAME sha512sum
+                  time sha512sum $FILENAME >$FILENAME.sha512sum
+                  echo $FILENAME xz --compress
+                  time /bin/xz --compress $FILENAME
+              }
+          done)
 echo Finished at $(iso8601)
