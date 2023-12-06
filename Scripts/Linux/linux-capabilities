@@ -10,4 +10,7 @@
     { echo '* disks'
       lsblk | sed 's/^/  /'
     }
-) | tee ~/Repos/tkb-notes/Computer/$(hostname)-capabilities.org
+    { echo '* display'
+      xdpyinfo | sed -n -e '/screen #/,+3p' | sed  's/^/  /'
+    }
+) | tee ~/Repos/tkb-notes/Computer/Capabilities/$(hostname)-capabilities.org
