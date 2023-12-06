@@ -11,6 +11,7 @@
       lsblk | sed 's/^/  /'
     }
     { echo '* display'
-      xdpyinfo | sed -n -e '/screen #/,+3p' | sed  's/^/  /'
+      xdpyinfo | sed -n -e '/screen #/,+3p' \
+                     -e '/number of extensions:/,/default screen number/p'
     }
 ) | tee ~/Repos/tkb-notes/Computer/Capabilities/$(hostname)-capabilities.org
