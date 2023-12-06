@@ -1,0 +1,11 @@
+#! /usr/bin/env bash
+
+DESTDIR=/run/media/private/tkb/MPLTapes
+
+find /media/tkb/vaxtapes -name \*.vtape | sort | while read FN
+do
+    echo echo $FN
+    echo time cp -v $FN $DESTDIR/
+    echo export BASEFN="$(basename $FN)"
+    #(cd $DESTDIR && time xz --compress $BASEFN)
+done
