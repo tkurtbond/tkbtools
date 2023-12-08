@@ -9,21 +9,32 @@ function die () {
 
 
 HOSTNAME="$(hostname)"
-DESTDIR=/run/media/tkb/Utgard/From-NAS
+DESTDIR="/run/media/tkb/Utgard/From-NAS"
 
 find /media/tkb/vaxtapes -name \*.vtape | sort | while read FN
 do
-    echo echo $FN
     DIRNAME="$(dirname $FN)"
-    BASNAME="$(basename $FN)"
-    DSTNAME="$DESTDIR/$BASNAME"
-    CMPNAME="$BASNAME.xz"
-    [[ -e $DESTDIR/$BN.xz ]] && {
+    BASENAME="$(basename $FN)"
+    DESTNAME="$DESTDIR/$BASNAME"
+    COMPNAME="$BASENAME.xz"
+
+#    echo "DIRNAME=$DIRNAME
+#BASENAME=$BASENAME
+#DESTNAME=$DESTNAME
+#COMPNAME=$COMPNAME"
+    
+    [[ -e $DESTDIR/$COMPNAME ]] && {
         echo "DESTDIR/$BN.xz already exists, skipping $FN"
         continue
     }
+    echo "==========> Copying $FN to $DESTDIR"
     time cp -v $FN $DESTDIR/ || die 1 "Error copying $FN to $DESTDIR, exiting."
-    (cd $DESTDIR
-     time sha512sum --binary $BASNAME 
-     time xz --compress $BASEFN)
+    (
+        cd $DESTDIR
+        echo "==========> sha512sum $BASENAME"
+        time sha512sum --binary $BASENAME >$BASENAME.sha512sum.$HOSTNAME ||
+            die 1 "Error sha512summing $BASENAME, exiting."
+        time xz --compress $BASENAME ||
+            die "Error xz --compressing $BASENAME, exiting."
+    )
 done
