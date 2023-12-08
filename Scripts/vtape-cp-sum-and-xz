@@ -1,11 +1,29 @@
 #! /usr/bin/env bash
 
-DESTDIR=/run/media/private/tkb/MPLTapes
+function die () { 
+    RET=$1; shift 
+    echo 1>&2 "$*" 
+    echo "=========> Error, exiting at $(date -Iseconds)"
+    exit $RET 
+}
+
+
+HOSTNAME="$(hostname)"
+DESTDIR=/run/media/tkb/Utgard/From-NAS
 
 find /media/tkb/vaxtapes -name \*.vtape | sort | while read FN
 do
     echo echo $FN
-    echo time cp -v $FN $DESTDIR/
-    echo export BASEFN="$(basename $FN)"
-    #(cd $DESTDIR && time xz --compress $BASEFN)
+    DIRNAME="$(dirname $FN)"
+    BASNAME="$(basename $FN)"
+    DSTNAME="$DESTDIR/$BASNAME"
+    CMPNAME="$BASNAME.xz"
+    [[ -e $DESTDIR/$BN.xz ]] && {
+        echo "DESTDIR/$BN.xz already exists, skipping $FN"
+        continue
+    }
+    time cp -v $FN $DESTDIR/ || die 1 "Error copying $FN to $DESTDIR, exiting."
+    (cd $DESTDIR
+     time sha512sum --binary $BASNAME 
+     time xz --compress $BASEFN)
 done
