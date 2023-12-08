@@ -10,4 +10,16 @@
     { echo '* disks'
       lsblk | sed 's/^/  /'
     }
-) | tee ~/Repos/tkb-notes/Computer/$(hostname)-capabilities.org
+    { echo '* display'
+      xdpyinfo | sed -n -e '/screen #/,+3p' \
+                     -e '/number of extensions:/,/default screen number/p' |
+          sed 's/^/  /'
+    }
+    # This shows, among other things, the scaling.
+    [[ "$XDG_SESSION_DESKTOP" == "KDE" ]] && {
+        echo '* kscreen-doctor'
+        kscreen-doctor -o | ansifilter | sed 's/^/  /'
+    }
+    # What would the gnome equivalent be?
+    
+) | tee ~/Repos/tkb-notes/Computer/Capabilities/$(hostname)-capabilities.org
