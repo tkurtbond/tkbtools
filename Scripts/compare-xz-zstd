@@ -43,22 +43,24 @@ EOF
         time xz --compress --threads=$THREADS <$TESTFILE >T$THREADS-$TESTFILE.xz
         ls -l T$THREADS-$TESTFILE.xz
         ls -lh T$THREADS-$TESTFILE.xz
-        echo "==== xz --decompress <$TESTFILE >T$THREADS-$TESTFILE.c2 at $(date -Iseconds)"
-        time xz --decompress <$TESTFILE.xz >T$THREADS-$TESTFILE.c2
+        echo "==== xz --decompress --threads=$THREADS <T$THREADS-$TESTFILE.xz >T$THREADS-$TESTFILE.c2 at $(date -Iseconds)"
+        time xz --decompress --threads=$THREADS <T$THREADS-$TESTFILE.xz >T$THREADS-$TESTFILE.c2
         echo "sha512sum T$THREADS-$TESTFILE.c2 >T$THREADS-$TESTFILE.c2.sha512sum"
-        time sha512sum T$THREADS-$TESTFILE.c2 >$TESTFILE.c2.sha512sum
-        diff $TESTFILE.sha512sum T$THREADS-$TESTFILE.c2.sha512sum
+        echo "==== sha512sum T$THREADS-$TESTFILE.c2 >T$THREADS-$TESTFILE.c2.sha512sum"
+        time sha512sum T$THREADS-$TESTFILE.c2 >T$THREADS-$TESTFILE.c2.sha512sum
+        echo "==== diff $TESTFILE.sha512sum T$THREADS-$TESTFILE.c2.sha512sum"
+        diff T$THREADS-$TESTFILE.sha512sum T$THREADS-$TESTFILE.c2.sha512sum
 
         echo "==== zstd --threads=$THREADS  -19 <$TESTFILE >T$THREADS-$TESTFILE.zstd at $(date -Iseconds)"
         time zstd --threads=$THREADS -19 <$TESTFILE >T$THREADS-$TESTFILE.zstd
         ls -l T$THREADS-$TESTFILE.zstd
         ls -lh T$THREADS-$TESTFILE.zstd
-        echo "==== zstd -d <T$THREADS-$TESTFILE.zstd >T$THREADS-$TESTFILE.c3 at $(date -Iseconds)"
+        echo "==== zstd -d --threads=$THREADS <T$THREADS-$TESTFILE.zstd >T$THREADS-$TESTFILE.c3 at $(date -Iseconds)"
         time zstd -d <T$THREADS-$TESTFILE.zstd >T$THREADS-$TESTFILE.c3
         echo "==== sha512sum T$THREADS-$TESTFILE.c3 >T$THREADS-$TESTFILE.c3.sha512sum"
         time sha512sum T$THREADS-$TESTFILE.c3 >T$THREADS-$TESTFILE.c3.sha512sum
         echo "==== Diffing $TESTFILE.sha512sum and T$THREADS-$TESTFILE.C3.sha512sum"
-        diff $TESTFILE.sha512sum T$THREADS-$TESTFILE.c3.sha512sum
+        diff T$THREADS-$TESTFILE.sha512sum T$THREADS-$TESTFILE.c3.sha512sum
         echo "==== Done at $(date -Iseconds)"
     }
 } 2>&1 | log compare-xz-zstd
