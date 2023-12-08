@@ -1,0 +1,16 @@
+#! /usr/bin/env bash
+# From: https://stackoverflow.com/a/74964817
+
+echo Pad Right
+str=123456
+echo $str$(printf -- x%.s $(seq -s ' ' $((10-${#str}))))
+#                    ↑                    ↑↑
+#                 padding               length
+# output: 123456xxxx
+
+echo Pad left
+str=123456
+echo $(printf -- x%.s $(seq -s ' ' $((10-${#str}))))$str
+#                ↑                    ↑↑
+#             padding               length
+# output: xxxx123456

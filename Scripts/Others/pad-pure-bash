@@ -1,0 +1,67 @@
+#! /usr/bin/env bash
+
+# https://stackoverflow.com/questions/4409399/padding-characters-in-printf
+# It has other alternatives, as well.
+
+LINE="$(printf '%0.1s' '='{1..80})"
+
+# The next tree lines are from https://stackoverflow.com/a/4410103
+PADLIMIT=79
+PAD=$(printf '%*s' "$PADLIMIT")
+PAD=${PAD// /-}
+
+echo "$PAD"
+
+# From here down to the line of all hashes is from
+# https://stackoverflow.com/a/33339722
+
+A="[>---------------------<]";
+
+# Strip excess padding from the right
+#
+
+B="A very long header"; echo "${A:0:-${#B}} $B"
+B="shrt hdr"          ; echo "${A:0:-${#B}} $B"
+
+# Produces
+# [>----- A very long header
+# [>--------------- shrt hdr
+
+# Strip excess padding from the left
+#
+
+B="A very long header"; echo "${A:${#B}} $B"
+B="shrt hdr"          ; echo "${A:${#B}} $B"
+
+# Produces
+# -----<] A very long header
+# ---------------<] shrt hdr
+
+
+################################################################################
+# Pad on the right
+
+B="A very long header"; echo "$B ${A:0:-${#B}}"
+B="shrt hdr"          ; echo "$B ${A:0:-${#B}}"
+
+
+
+B="A very long header"; echo "$B ${A:${#B}}"
+B="shrt hdr"          ; echo "$B ${A:${#B}}"
+
+####TKB#########################################################################
+
+
+padlimit=${COLUMNS:-80}
+pad=$(printf '%*s' "$padlimit")
+pad=${pad// /=}
+
+function padleft () {
+    text="$1"
+    echo "${pad:0:-${#text}}$text"
+}
+
+function padright () {
+    text="$1"
+    echo "$text${pad:0:-${#text}}"
+}
