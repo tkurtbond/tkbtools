@@ -1,0 +1,19 @@
+#!/usr/bin/python3
+# From: https://www.reddit.com/r/kde/comments/tio016/comment/jeo11mw/
+
+import os
+import pyudev
+import time
+
+last_alert = 0
+context = pyudev.Context()
+monitor = pyudev.Monitor.from_netlink(context)
+for action, device in monitor:
+    print('{0}: {1}'.format(action, device))
+    this_alert = time.time()
+    if action == 'add' and this_alert - last_alert > 2.0:
+        last_alert = this_alert
+        os.system("aplay connected.wav &")
+    if action == 'remove' and this_alert - last_alert > 2.0:
+        last_alert = this_alert
+        os.system("aplay disconnected.wav &")
