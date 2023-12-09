@@ -2,5 +2,9 @@
 
 # Adapted from https://gist.github.com/3945964
 
+# [This] expression is a cheap literate programming system for Markdown.
+# Start commentary lines with '--- ' and they will be
+# markdown-formatted, the rest will be code. (Uses Lua comment syntax.)
+
 sed -E -e 's/^/    /g' -e 's/^    --- ?//g' | \
     pandoc -w ${OUTPUT_FORMAT:=rst} -o ${OUTPUT_FILE:=-} -

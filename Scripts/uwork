@@ -1,8 +1,11 @@
 #! /usr/bin/env bash
 
-unison helblindi-tkb-to-oone &
-unison helblindi-tkb-to-oone-muspelheim &
-[[ -d /media/tkb/Kormt ]] && {
-    unison helblindi-kormt-to-oone-muspelheim &
-    unison helblindi-tkb-kormt &
+HOSTNAME=$(hostname)
+echo HOSTNAME: $HOSTNAME
+
+unison $HOSTNAME-tkb-to-oone &
+unison $HOSTNAME-tkb-to-oone-muspelheim &
+[[ -d /var/run/media/tkb/Kormt ]] && {
+    unison $HOSTNAME-kormt-to-oone-muspelheim &
+    unison $HOSTNAME-tkb-kormt &
 }      

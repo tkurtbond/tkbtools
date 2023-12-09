@@ -2,6 +2,9 @@
 
 THREADS=1                       # Default is to use one thread.
 DO_HELP=0                       # Does the help need to be displayed?
+ZLEVEL=""                       # use the default
+XLEVEL=""
+
 errors=0
 
 while getopts "ht:" opt
@@ -10,6 +13,8 @@ do
         (\?) ((errors++)) ;;
         (h) DO_HELP=1 ;;
         (t) THREADS=$OPTARG ;;
+        (x) XLEVEL=$OPTARG ;;
+        (z) ZLEVEL=$OPTARG ;;
     esac
 done
 
@@ -26,6 +31,18 @@ EOF
     exit
 }
 
+if [[ -n $ZLEVEL ]]; then       # Non default level specified
+    ZLEVELFILEPART="ZL$ZLEVEL"
+else
+    ZLEVELFILEPART="ZL-default"
+fi
+
+if [[ -n $XLEVEL ]]; then       # Non default level specified
+    XLEVELFILEPART="XL$XLEVEL-"
+else
+    XLEVELFILEPART="XL-default-"
+fi
+
 {
     echo "command line: $@"
 
@@ -37,27 +54,30 @@ EOF
         echo "==== sha512sum $TESTFILE >$TESTFILE.sha512sum"
         time sha512sum $TESTFILE >$TESTFILE.sha512sum
         
-        echo "==== xz --threads=$THREADS <$TESTFILE >$TESTFILE.xz at $(iso8601)"
+        echo "==== xz --compress --threads=$THREADS <$TESTFILE >$XLEVELFILEPART-T$THREADS-$TESTFILE.xz at $(date -Iseconds)"
         ls -l $TESTFILE
         ls -lh $TESTFILE
-        time xz --threads=$THREADS <$TESTFILE >$TESTFILE.xz
-        ls -l $TESTFILE.xz
-        ls -lh $TESTFILE.xz
-        echo "==== xz --decompress <$TESTFILE >$TESTFILE.c2 at $(iso8601)"
-        time xz --decompress <$TESTFILE.xz >$TESTFILE.c2
-        echo "sha512sum $TESTFILE.c2 >$TESTFILE.c2.sha512sum"
-        time sha512sum $TESTFILE.c2 >$TESTFILE.c2.sha512sum
-        diff $TESTFILE.sha512sum $TESTFILE.c2.sha512sum
+        time xz --compress --threads=$THREADS <$TESTFILE >$XLEVELFILEPART-T$THREADS-$TESTFILE.xz
+        ls -l $XLEVELFILEPART-T$THREADS-$TESTFILE.xz
+        ls -lh $XLEVELFILEPART-T$THREADS-$TESTFILE.xz
+        echo "==== xz --decompress --threads=$THREADS <$XLEVELFILEPART-T$THREADS-$TESTFILE.xz >$XLEVELFILEPART-T$THREADS-$TESTFILE.c2 at $(date -Iseconds)"
+        time xz --decompress --threads=$THREADS <$XLEVELFILEPART-T$THREADS-$TESTFILE.xz >$XLEVELFILEPART-T$THREADS-$TESTFILE.c2
+        echo "sha512sum $XLEVELFILEPART-T$THREADS-$TESTFILE.c2 >$XLEVELFILEPART-T$THREADS-$TESTFILE.c2.sha512sum"
+        echo "==== sha512sum $XLEVELFILEPART-T$THREADS-$TESTFILE.c2 >$XLEVELFILEPART-T$THREADS-$TESTFILE.c2.sha512sum"
+        time sha512sum $XLEVELFILEPART-T$THREADS-$TESTFILE.c2 >$XLEVELFILEPART-T$THREADS-$TESTFILE.c2.sha512sum
+        echo "==== diff $TESTFILE.sha512sum $XLEVELFILEPART-T$THREADS-$TESTFILE.c2.sha512sum"
+        diff $TESTFILE.sha512sum $XLEVELFILEPART-T$THREADS-$TESTFILE.c2.sha512sum
 
-        echo "==== zstd --threads=$THREADS  -19 <$TESTFILE >$TESTFILE.zstd at $(iso8601)"
-        time zstd --threads=$THREADS -19 <$TESTFILE >$TESTFILE.zstd
-        ls -l $TESTFILE.zstd
-        ls -lh $TESTFILE.zstd
-        echo "==== zstd -d <$TESTFILE.zstd >$TESTFILE.c3 at $(iso8601)"
-        time zstd -d <$TESTFILE.zstd >$TESTFILE.c3
-        echo "sha512sum $TESTFILE.c3 >$TESTFILE.c3.sha512sum"
-        time sha512sum $TESTFILE.c3 >$TESTFILE.c3.sha512sum
-        diff $TESTFILE.sha512sum $TESTFILE.c3.sha512sum
-        echo "==== Done at $(iso8601)"
+        echo "==== zstd --threads=$THREADS  -19 <$TESTFILE >$ZLEVELFILEPART-T$THREADS-$TESTFILE.zstd at $(date -Iseconds)"
+        time zstd --threads=$THREADS -19 <$TESTFILE >$ZLEVELFILEPART-T$THREADS-$TESTFILE.zstd
+        ls -l $ZLEVELFILEPART-T$THREADS-$TESTFILE.zstd
+        ls -lh $ZLEVELFILEPART-T$THREADS-$TESTFILE.zstd
+        echo "==== zstd -d --threads=$THREADS <$ZLEVELFILEPART-T$THREADS-$TESTFILE.zstd >$ZLEVELFILEPART-T$THREADS-$TESTFILE.c3 at $(date -Iseconds)"
+        time zstd -d <$ZLEVELFILEPART-T$THREADS-$TESTFILE.zstd >$ZLEVELFILEPART-T$THREADS-$TESTFILE.c3
+        echo "==== sha512sum $ZLEVELFILEPART-T$THREADS-$TESTFILE.c3 >$ZLEVELFILEPART-T$THREADS-$TESTFILE.c3.sha512sum"
+        time sha512sum $ZLEVELFILEPART-T$THREADS-$TESTFILE.c3 >$ZLEVELFILEPART-T$THREADS-$TESTFILE.c3.sha512sum
+        echo "==== Diffing $TESTFILE.sha512sum and $ZLEVELFILEPART-T$THREADS-$TESTFILE.C3.sha512sum"
+        diff $TESTFILE.sha512sum $ZLEVELFILEPART-T$THREADS-$TESTFILE.c3.sha512sum
+        echo "==== Done at $(date -Iseconds)"
     }
 } 2>&1 | log compare-xz-zstd

@@ -1,0 +1,21 @@
+#! /usr/bin/env bash
+# From: https://discussion.fedoraproject.org/t/how-do-i-check-what-gpu-drivers-are-in-use/79360/7
+
+# Check video drivers in use
+printf "\n====> Check video drivers in use\n"
+lspci -n -n -k | grep -A 2 -e VGA -e 3D
+
+# Check active GPU driver
+printf "\n====> Active GPU driver\n"
+glxinfo | grep -e OpenGL.vendor -e OpenGL.renderer
+
+# List available and default GPU
+print "\n====> Avaiable and default GPUs\n"
+switcherooctl list
+
+printf "\n====> For each GPU list the vender information\n"
+for GPU_ID in $(switcherooctl list | sed -n -r -e "s/^\S+\s+//p")
+do
+    switcherooctl launch -g ${GPU_ID} glxinfo |
+        grep -e OpenGL.vendor -e OpenGL.renderer
+done

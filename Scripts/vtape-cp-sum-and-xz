@@ -1,0 +1,44 @@
+#! /usr/bin/env bash
+
+function die () { 
+    RET=$1; shift 
+    echo 1>&2 "$*" 
+    echo "=========> Error, exiting at $(date -Iseconds)"
+    exit $RET 
+}
+
+
+HOSTNAME="$(hostname)"
+DESTDIR="/run/media/tkb/Utgard/From-NAS"
+
+find /media/tkb/vaxtapes -name \*.vtape | sort | while read FN
+do
+    ((FILENUM++))
+    echo "==========> Working on file #$FILENUM, $FN"
+    DIRNAME="$(dirname $FN)"
+    BASENAME="$(basename $FN)"
+    DESTNAME="$DESTDIR/$BASNAME"
+    COMPNAME="$BASENAME.xz"
+
+#    echo "DIRNAME=$DIRNAME
+#BASENAME=$BASENAME
+#DESTNAME=$DESTNAME
+#COMPNAME=$COMPNAME"
+    
+    [[ -e $DESTDIR/$COMPNAME ]] && {
+        echo "DESTDIR/$BN.xz already exists, skipping $FN"
+        continue
+    }
+    echo "==========> Copying $FN to $DESTDIR"
+    time cp -v $FN $DESTDIR/ || die 1 "Error copying $FN to $DESTDIR, exiting."
+    (
+        cd $DESTDIR
+        echo "==========> sha512sum $BASENAME"
+        time sha512sum --binary $BASENAME >$BASENAME.sha512sum.$HOSTNAME ||
+            die 1 "Error sha512summing $BASENAME, exiting."
+        echo "==========> xz --compress $BASENAME"
+        time xz --compress $BASENAME ||
+            die "Error xz --compressing $BASENAME, exiting."
+    )
+    scream
+done
