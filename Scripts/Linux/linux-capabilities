@@ -1,6 +1,7 @@
 #! /usr/bin/env bash
 
 (
+    echo "* $(date -Iseconds)"
     { echo '* lscpu'
       lscpu | sed 's/^/  /'
     }
