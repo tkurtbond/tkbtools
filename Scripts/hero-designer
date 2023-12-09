@@ -1,4 +1,29 @@
 #! /usr/bin/env bash
 
-FONTSIZE=${1:-18}
-java -DWindows.controlFont=DejaVuSans-plain-${FONTSIZE} -DWindows.menuFont=DejaVuSans-plain-${FONTSIZE} -DPlastic.controlFont=DejaVuSans-plain-${FONTSIZE} -DPlastic.menuFont=DejaVuSans-bold-${FONTSIZE} -jar /usr/local/sw/versions/hero-designer/HD6.jar
+FONTSIZE=18
+DO_HELP=0                       # Does the help need to be displayed?
+errors=0
+
+while getopts "hs:" opt
+do
+    case "$opt" in
+        (\?) ((errors++)) ;;
+        (h) DO_HELP=1 ;;
+        (s) FONTSIZE=$OPTARG ;;
+    esac
+done
+
+((DO_HELP)) && HELPOUT=/dev/stdout || HELPOUT=/dev/stderr
+
+((DO_HELP || errors)) && {
+    cat >$HELPOUT <<EOF
+usage: $0 [-tn]
+
+Options
+-h      Displays this message.
+-sn	Sets the fontsize to use.  Default: 18.
+EOF
+    exit
+}
+
+java -jar /usr/local/sw/versions/hero-designer/HD6.jar $FONTSIZE

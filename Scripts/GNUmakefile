@@ -84,6 +84,7 @@ SCRIPTS= \
 	git-uptodate \
 	git-whoami \
 	hatch-eggs \
+	hero-designer \
 	htmlindex.sh \
 	hyphen-groff \
 	incf \
