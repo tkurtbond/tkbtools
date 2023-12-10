@@ -1,0 +1,19 @@
+#! /usr/bin/env bash
+
+while true
+do
+    ((i++))
+    echo "Run #$i of using 'flatpak update' on $(hostname) at $(date -Iseconds)"
+    flatpak update --assumeyes && break # Leave the loop on success.
+
+    # This allows the user to exit if necessary.
+    read -t 30 -p "Continue? (y/n) " reply
+    if (($?>128)); then
+	echo "timed out, continuing..."
+    elif [[ "$reply" =~ [Nn] ]]; then
+	echo "Exiting..."
+	exit
+    else
+	echo "Continuing..."
+    fi
+done
