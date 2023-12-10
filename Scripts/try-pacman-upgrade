@@ -1,7 +1,19 @@
 #! /usr/bin/env bash
 
-while ! pacman -Syu --noconfirm
+while true
 do
     ((i++))
-    echo "Run #$i of using pacman to upgrade $(hostname)"
+    echo "Run #$i of using pacman to upgrade $(hostname) at $(date -Iseconds)"
+    pacman -Syu --noconfirm && break # Leave the loop on success.
+
+    # This allows the user to exit if necessary.
+    read -t 30 -p "Continue? (y/n) " reply
+    if (($?>128)); then
+	echo "timed out, continuing..."
+    elif [[ "$reply" =~ [Nn] ]]; then
+	echo "Exiting..."
+	exit
+    else
+	echo "Continuing..."
+    fi
 done

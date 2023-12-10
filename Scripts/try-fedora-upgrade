@@ -1,6 +1,11 @@
 #! /usr/bin/bash
-while ! dnf -y upgrade
+while true
 do
+    ((i++))
+    echo "Run #$i of dnf update at $(date -Iseconds)"
+    dnf -y upgrade && break     # Exit loop on success
+
+    # This allows the user to exit if necessary.
     read -t 30 -p "Continue? (y/n) " reply
     if (($?>128)); then
 	echo "timed out, continuing..."
@@ -11,4 +16,3 @@ do
 	echo "Continuing..."
     fi
 done
-    
