@@ -1,0 +1,28 @@
+#! /usr/bin/env bash
+# Munged from: https://www.linuxjournal.com/content/using-named-pipes-fifos-bash
+#
+# Run this script in one terminal and then in another terminal issue
+# the following commands:
+#     echo bogus >/tmp/testpipe 
+#     echo bogus >/tmp/testpipe 
+#     echo quit >/tmp/testpipe 
+
+pipe=/tmp/testpipe
+
+trap "rm -f $pipe" EXIT
+
+if [[ ! -p $pipe ]]; then
+    mkfifo $pipe
+fi
+
+while true
+do
+    if read line <$pipe; then
+        if [[ "$line" == 'quit' ]]; then
+            break
+        fi
+        echo $line
+    fi
+done
+
+echo "Reader exiting"

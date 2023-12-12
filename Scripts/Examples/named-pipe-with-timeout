@@ -1,0 +1,51 @@
+#! /usr/bin/env bash
+
+###############################################################################
+### This doesn't work!
+###############################################################################
+
+# Munged from: https://www.linuxjournal.com/content/using-named-pipes-fifos-bash
+# and: https://stackoverflow.com/a/6448737
+# showed how to read without blocking.
+
+# Run this script in one terminal and then in another terminal issue
+# the following commands:
+#     echo bogus >/tmp/testpipe 
+#     echo bogus >/tmp/testpipe 
+#     echo quit >/tmp/testpipe
+
+
+PIPE=/tmp/testpipe
+DELAY=10
+
+trap "rm -f $PIPE" EXIT
+
+if [[ ! -p $PIPE ]]; then
+    mkfifo $PIPE
+fi
+
+
+while true; do
+    ((i++))
+    echo "Doing thing #$i!"
+    echo "Checking $PIPE"
+    read -t0 timeout <>$PIPE
+    STATUS=$?
+    echo "STATUS=$STATUS"
+
+    if ((! $STATUS)); then
+        echo "Reading command at $(date +%FT%H:%M:%S%z)" 
+        read command
+        if [[ $command = quit ]]; then 
+            echo "Quitting on command at $(date +%FT%H:%M:%S%z)"
+            break
+        else
+            echo "Command was: \"$command\" at $(date +%FT%H:%M:%S%z)"
+        fi
+    else
+        echo "No command at $(date +%FT%H:%M:%S%z); sleeping $DELAY"
+        sleep $DELAY
+    fi
+done
+    
+

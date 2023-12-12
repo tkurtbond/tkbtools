@@ -1,0 +1,7 @@
+#! /usr/bin/env bash
+
+read -t0 -p "Something here? "
+STATUS=$?
+echo With timeout: STATUS=$STATUS REPLY=$REPLY
+
+((! $STATUS))  && read && echo Real read: STATUS=$STATUS REPLY=$REPLY
