@@ -1,5 +1,5 @@
 #! /usr/bin/env bash
 
 sed -E -e 's/[ \t]+/\n/g' -e 's/\\//' | sed -e '/^$/d' | sort -u |
-    fmt -60 |
+    fmt -72 |
     sed -e 's/$/ \\/' -e 's/^/\t/' -e '$s/ \\//'
