@@ -32,11 +32,11 @@ DESTDIR="/run/media/tkb/Utgard/From-NAS"
             echo "DESTDIR/$COMPNAME already exists, skipping $FN"
             continue
         }
-        echo "==========> Copying $FN to $DESTDIR"
+        echo "==========> Copying $FN to $DESTDIR at $(date -Iseconds)"
         time cp -v $FN $DESTDIR/ || die 1 "Error copying $FN to $DESTDIR, exiting  at $(date -Iseconds)."
         (
             cd $DESTDIR
-            echo "==========> sha512sum $BASENAME  at $(date -Iseconds)"
+            echo "==========> sha512sum $BASENAME at $(date -Iseconds)"
             time sha512sum --binary $BASENAME >$BASENAME.sha512sum.$HOSTNAME ||
                 die 1 "Error sha512summing $BASENAME, exiting."
             echo "==========> xz --compress $BASENAME at $(date -Iseconds)"
