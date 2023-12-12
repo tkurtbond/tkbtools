@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+
+JAVAFXLIB=/usr/lib/jvm/openjfx
+
+# Alas, this crashes on Fedora 39, with openjdk 17, openjdk 21.  openjdk 11 is too old
+java --module-path $JAVAFXLIB --add-modules javafx.controls,javafx.web,javafx.swing,javafx.graphics,javafx.fxml -Xmx4G -jar /usr/local/sw/versions/worldographer/Worldographer-1.73.jar -Dprism.maxvran=3G
