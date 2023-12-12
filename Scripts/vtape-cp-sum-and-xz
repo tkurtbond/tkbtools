@@ -29,7 +29,7 @@ DESTDIR="/run/media/tkb/Utgard/From-NAS"
         #COMPNAME=$COMPNAME"
         
         [[ -e $DESTDIR/$COMPNAME ]] && {
-            echo "DESTDIR/$BN.xz already exists, skipping $FN"
+            echo "DESTDIR/$COMPNAME already exists, skipping $FN"
             continue
         }
         echo "==========> Copying $FN to $DESTDIR"
@@ -46,4 +46,4 @@ DESTDIR="/run/media/tkb/Utgard/From-NAS"
         scream
     done
     echo "==========> Finished copy, sum, and compress  at $(date -Iseconds)"
-} | log ~/tmp/vtape-cp-sum-and-xz
+} 2>&1 | log ~/tmp/vtape-cp-sum-and-xz
