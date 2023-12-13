@@ -1,12 +1,51 @@
 #! /usr/bin/env bash
 
+DO_HELP=0                       # Does the help need to be displayed?
+OPENBSD=
+USE_SUDO=
+DRY_RUN=
+errors=0
+
+while getopts "hOns" opt
+do
+    case "$opt" in
+        (\?) ((errors++)) ;;
+        (h) DO_HELP=1 ;;
+        (n) DRY_RUN="echo not really: " ;;
+        (O) OPENBSD="export SUDO=doas" ;;
+        (s) USE_SUDO=-s ;;
+    esac
+done
+
+((DO_HELP)) && HELPOUT=/dev/stdout || HELPOUT=/dev/stderr
+
+((DO_HELP || errors)) && {
+    cat >$HELPOUT <<EOF
+usage: $0 [-tn]
+
+Options
+-h      Displays this message.
+-O      OpenBSD, so use SUDO=doas chicken-install
+-s      Use chicken-install -s
+EOF
+    exit
+}
+
+shift $((OPTIND-1))
+
+$OPENBSD
+
+echo $SUDO
+
+echo "current files: $*"
+
 for file in $@
 do
     for egg in $(cat $file)
     do
         if [[ -z $(chicken-status $egg) ]]; then
             printf "Installing %s\n" $egg
-            chicken-install $egg
+            $DRY_RUN chicken-install $USE_SUDO $egg
         else
             printf "NOT Installing %s\n" $egg
         fi
