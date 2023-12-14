@@ -52,6 +52,7 @@ SCRIPTS= \
 	bldmyblog \
 	blogbot \
 	books-per-day \
+	check-eggs \
 	code2pandoc \
 	collapse \
 	combine-dicts \
