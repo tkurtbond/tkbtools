@@ -4,7 +4,7 @@ echo "current files: $*"
 
 for file in $@
 do
-    for egg in $(cat $file)
+    for egg in $(cat $file | sed 's/[ \t]*#.*$//')
     do
         if [[ -z $(chicken-status $egg) ]]; then
             printf "Missing %s\n" $egg
