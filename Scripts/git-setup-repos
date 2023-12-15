@@ -1,5 +1,29 @@
 #! /usr/bin/env bash
+DO_INTERACTIVE=0
+errors=0
 
+while getopts "hi" opt
+do
+    case "$opt" in
+        (\?) ((errors++)) ;;
+        (h) DO_HELP=1 ;;
+        (i) DO_INTERACTIVE=1 ;;
+    esac
+done
+
+((DO_HELP)) && HELPOUT=/dev/stdout || HELPOUT=/dev/stderr
+((DO_HELP || errors)) && {
+    cat >$HELPOUT <<EOF
+usage: $0 [-ln]
+
+Options
+-c      Clears the screen.
+-h	Displays this message.
+EOF
+    exit
+}
+
+shift $((OPTIND-1))
 if [[ -t 0 ]]; then
     MAGENTA='\033[1;35m'        # Repo doesn't exist or is not a git repo.
     CYAN='\033[1;36m'           # Repo name (and prefix).
@@ -23,11 +47,26 @@ do
             printf "     ${BRIGHTWHITE}But we are ignoring it!$NC\n"
             continue
         }
+        CREATE_REPO=1
         PARENTDIR=$(dirname $DIR)
         REPODIR=$(basename $DIR)
         echo PARENTDIR: $PARENTDIR REPODIR: $REPODIR
-        (mkdir -pv $PARENTDIR && cd $PARENTDIR &&
-             git clone $REPO $REPODIR)
+        echo DO_INTERACTIVE: $DO_INTERACTIVE
+        ((DO_INTERACTIVE)) && echo interactive || echo non-interactive
+        ((DO_INTERACTIVE)) && {
+            read -p "Create repo? (y/n/q)" ynq </dev/tty
+            echo ynq: $ynq
+            [[ $ynq == q* ]] && {
+                echo 1>&1 "User requested quit, exiting."
+                exit 1
+            }
+            [[ $ynq == y* ]] && CREATE_REPO=1
+        } || {
+            CREATE_REPO=0
+        }
+        ((CREATE_REPO)) &&
+            (mkdir -p $PARENTDIR && cd $PARENTDIR &&
+                 git clone $REPO $REPODIR)
     elif ! [[ -d $DIR/.git ]]; then 
         printf "===> ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" "Not a git repo!"
         continue
