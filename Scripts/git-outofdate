@@ -80,5 +80,5 @@ time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')"
           }
           
       done
-      echo "Stop:  $(date +'%F %H:%M:%S')"
+      printf "Stop: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')" "$(hostname)"
      )
