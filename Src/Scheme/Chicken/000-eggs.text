@@ -1,0 +1,43 @@
+apropos
+args
+bindings
+box
+chickadee
+chicken-doc
+clojurian
+condition-utils
+coops
+csm
+forcible
+format
+gemini
+html-parser
+http-client
+ioctl                           # This is for schemepunk, which is for show.
+loop
+matchable
+medea
+ncurses
+r7rs
+simple-loops
+simple-timer
+srfi-18                         # Multithreading support
+srfi-111                        # Boxes
+srfi-113                        # Sets and bags
+srfi-128                        # Comparators (reduced)
+srfi-13                         # String Library
+srfi-133                        # Vecor Library (R7RS-compatible)
+srfi-14                         # Character-set  Library
+srfi-141                        # Integer division
+srfi-152                        # String Library (reduced)
+srfi-19                         # Time Data Types and Procedures
+srfi-25                         # Multi-dimensional Array Primitives
+srfi-41                         # Streams
+srfi-69                         # Basic hash tables
+srfi-99                         # ERR5RS Record Syntax
+sxpath
+system-information
+tabular
+uri-generic
+utf8
+yaml
