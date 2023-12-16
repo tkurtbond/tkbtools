@@ -79,12 +79,28 @@ char *binary_units[] =
    "B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"
   };
 
+/* command line options set these. */
+bool mult_by_k = false;
+bool mult_by_m = false;
+bool mult_by_g = false;
+bool mult_by_t = false;
+bool mult_by_p = false;
+bool mult_by_e = false;
+
+
 void readable_bytes_binary (char *number, char *buf, size_t bufsize)
 {
   char *end;
   double bytes = strtod (number, &end);
   if ((bytes == 0) && (end == number))
     die (1, "unable to parse \"%s\"", number);
+
+  if (mult_by_k) bytes *= 1024.0;
+  else if (mult_by_m) bytes *= 1024.0 * 1024.0;
+  else if (mult_by_g) bytes *= 1024.0 * 1024.0 * 1024.0;
+  else if (mult_by_t) bytes *= 1024.0 * 1024.0 * 1024.0 * 1024.0;
+  else if (mult_by_p) bytes *= 1024.0 * 1024.0 * 1024.0 * 1024.0 * 1024.0;
+  else if (mult_by_e) bytes *= 1024.0 * 1024.0 * 1024.0 * 1024.0 * 1024.0 * 1024.0;  
   double n = floor (log (bytes) / log (1024.0));
   double m = bytes / pow (1024, n);
   snprintf (buf, bufsize, "%g %s", m, binary_units[(int) floor (n)]);
@@ -101,8 +117,16 @@ void readable_bytes_si (char *number, char *buf, size_t bufsize)
   double bytes = strtod (number, &end);
   if ((bytes == 0) && (end == number))
     die (1, "unable to parse \"%s\"", number);
-  double n = floor (log (bytes) / log (1000));
-  double m = bytes / pow (1000, n);
+
+  if (mult_by_k) bytes *= 1000.0;
+  else if (mult_by_m) bytes *= 1000.0 * 1000.0;
+  else if (mult_by_g) bytes *= 1000.0 * 1000.0 * 1000.0;
+  else if (mult_by_t) bytes *= 1000.0 * 1000.0 * 1000.0 * 1000.0;
+  else if (mult_by_p) bytes *= 1000.0 * 1000.0 * 1000.0 * 1000.0 * 1000.0;
+  else if (mult_by_e) bytes *= 1000.0 * 1000.0 * 1000.0 * 1000.0 * 1000.0 * 1000.0;  
+
+  double n = floor (log (bytes) / log (1000.0));
+  double m = bytes / pow (1000.0, n);
   snprintf (buf, bufsize, "%g %s", m, si_units[(int) floor (n)]);
 }
 
@@ -121,20 +145,26 @@ main (int argc, char **argv)
   
   prog_name = argv[0];
 
-  while ((ch = getopt (argc, argv, "hps")) != EOF)
+  while ((ch = getopt (argc, argv, "hpsKMGTPE")) != EOF)
     {
       switch (ch)
         {
         case 'h': errflg++; break;
-        case 'p': print_prefixes (); break;
+        case 'P': print_prefixes (); break;
         case 's': binary = false; break;
+        case 'K': mult_by_k = true; break;
+        case 'M': mult_by_m = true; break;
+        case 'G': mult_by_g = true; break;
+        case 'T': mult_by_t = true; break;
+        case 'P': mult_by_p = true; break;
+        case 'E': mult_by_e = true; break;
         default: errflg++; break;
         }
     }
   if (errflg)
     {
       fprintf (stderr,
-               "usage: %s [-p] [-s] [[NUM]]\n\n"
+               "usage: %s [-p] [-s] [-K | -M | -G | -T | -P | -E] [[NUM]]\n\n"
                "Convert an numeric string NUM to a numeric string with the\n"
                "number followed by a binary multiple (power of 1024) or SI\n"
                "(power of 1000) suffix.\n\n"
