@@ -150,7 +150,7 @@ main (int argc, char **argv)
       switch (ch)
         {
         case 'h': errflg++; break;
-        case 'P': print_prefixes (); break;
+        case 'p': print_prefixes (); break;
         case 's': binary = false; break;
         case 'K': mult_by_k = true; break;
         case 'M': mult_by_m = true; break;
