@@ -19,6 +19,8 @@
 Src/Ocaml/binmod
 Src/Ocaml/ocamlize
 Src/Ocaml/xpmtoocaml
+Src/OCamlGTK/gpe/gpe
+Src/OCamlGTK/gtimer/gtimer
 Src/OcamlTk/animgif
 Src/OcamlTk/animxbm
 Src/OcamlTk/countdown
