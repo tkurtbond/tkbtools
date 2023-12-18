@@ -1,0 +1,516 @@
+(* gpe.ml -- GUI path editor  *)
+
+open GdkKeysyms
+
+module GEB = GdkEvent.Button
+module GD  = Gobject.Data
+module TP  = GtkTree.TreePath
+module TM  = GtkTree.TreeModel
+
+let version_string = "0.5.1"
+let progname =
+ let bn = (Filename.basename Sys.argv.(0)) in
+ try Filename.chop_extension bn with Invalid_argument x -> bn
+
+let nyi msg () = prerr_endline (msg ^ ": not yet implemented")
+
+let debugging = true
+
+let dbg =
+  if debugging then (function s -> prerr_endline s; ())
+  else (function s -> ())
+
+let ep (format : ('b, unit, string, 'a) format4) =
+  Printf.kprintf dbg format
+
+let about () =
+  ignore (GToolbox.message_box ~title:progname
+	    (progname ^ " version " ^ version_string))
+
+let path_sep = if Sys.os_type = "Win32" then ";" else ":"
+let path_sep_rx = Str.regexp path_sep
+let split s = Str.split_delim path_sep_rx s
+let join ss = String.concat path_sep ss
+
+let get_var_maybe var =
+  try Some (Sys.getenv var) with
+  | Not_found -> None
+  | e -> (* ??? print a  *) None
+
+let get_status pathname =
+  try
+    let status = Unix.stat pathname in
+    match status.Unix.st_kind with
+    | Unix.S_DIR -> "gtk-directory"
+    | Unix.S_REG -> "gtk-file"
+    | _ -> "gtk-dialog-question"
+  with _ -> "gtk-dialog-error"
+
+let to_row_references (model : GTree.list_store) paths =
+  List.map (fun path -> model#get_row_reference path) paths
+
+let to_row_iters (model : GTree.list_store) paths =
+  List.map (fun path -> model#get_iter path) paths
+
+let print_path label path = 
+  dbg ("    " ^ label ^ ":  " ^ TP.to_string path)
+
+let print_row_path label row_ref = print_path label row_ref#path
+
+let print_paths (rows : GTree.row_reference list) = 
+  List.iter 
+    (fun row_ref -> dbg ("    " ^ (TP.to_string row_ref#path)))
+    rows
+
+let get_bt event = (GdkEvent.Button.button event, GdkEvent.Button.time event)
+
+class path_edit ?width ?height ?packing ?show () =
+  (* This vbox contains everything. *)
+  let vbox        = (GPack.vbox ?width ?height ?packing ~border_width:5
+		       ~spacing:10 ?show ()) in
+  let menu_bar    = GMenu.menu_bar () in
+  let _           = vbox#pack ~expand:false ~fill:false menu_bar#coerce in 
+  let f           = new GMenu.factory menu_bar in
+  let accel_group = f#accel_group in 
+  let file_menu   = new GMenu.factory (f#add_submenu "File") ~accel_group in
+  let ops_menu    = new GMenu.factory (f#add_submenu "Ops") ~accel_group in
+  let help_menu   = new GMenu.factory (f#add_submenu "Help") ~accel_group in 
+  let label_group = GtkPack.SizeGroup.create [] in
+  let clear_group = GtkPack.SizeGroup.create [] in
+  let in_box      = GPack.hbox ~spacing:10 ~border_width:10 () in
+  let _           = vbox#pack ~expand:false ~fill:false in_box#coerce in 
+  let in_label    = GMisc.label ~text:"In" () in
+  let in_entry    = GEdit.entry () in
+  let in_clear    = GButton.button ~label:"Clear" () in
+  (* let (w, h)      = ((match width with Some w -> w - 20 | None -> 200), 
+                     (match height with Some h -> h / 2 | None -> 100)) in *)
+  (* sw_box contains the scrolled window and the buttons to the right. *)
+  let sw_box      = (GPack.hbox ~spacing:10 ~border_width:10
+		       (* ~packing:vbox#add *) ()) in
+  let _ = vbox#pack ~expand:true ~fill:true sw_box#coerce in 
+  (* let empty       = GPack.vbox () in
+  let _           = sw_box#pack ~expand:false ~fill:false empty#coerce in *)
+  let sw          = (GBin.scrolled_window ~hpolicy:`AUTOMATIC
+		       ~packing:sw_box#add (* ~width:w ~height:h *) ()) in
+  (* sw_buttons contains the buttons to the right of the scrolled window. *)
+  let sw_buttons  = GPack.vbox ~spacing:10 () in
+  let _           = sw_box#pack ~expand:false ~fill:false sw_buttons#coerce in 
+  let sw_clear    = GButton.button ~label:"Clear" () in
+  let _           = (sw_buttons#pack ~expand:false ~fill:false
+		       sw_clear#coerce) in 
+  let sw_new      = GButton.button ~label:"New" () in 
+  let _           = sw_buttons#pack ~expand:false ~fill:false sw_new#coerce in
+  let sw_unique   = GButton.button ~label:"Unique" () in
+  let _           = (sw_buttons#pack ~expand:false ~fill:false
+		       sw_unique#coerce) in
+  let sw_up       = GButton.button ~label:"Up" () in
+  let _           = (sw_buttons#pack ~expand:false ~fill:false
+		       sw_up#coerce) in
+  let sw_down     = GButton.button ~label:"Down" () in
+  let _           = (sw_buttons#pack ~expand:false ~fill:false
+		       sw_down#coerce) in
+  let sw_delete   = GButton.button ~label:"Delete" () in
+  let _           = (sw_buttons#pack ~expand:false ~fill:false
+		       sw_delete#coerce) in
+  let cols        = new GTree.column_list in
+  let icon_col    = cols#add GD.string in 
+  let element_col = cols#add GD.string in 
+  let store       = GTree.list_store cols in
+  let view        = GTree.view ~model:store ~packing:sw#add () in
+  (* rdr: renderer; vcol: view column.  *)
+  let icon_rdr    = GTree.cell_renderer_pixbuf [`STOCK_SIZE `BUTTON] in
+  let icon_vcol   = (GTree.view_column ~title:"Status"
+		       ~renderer:(icon_rdr, ["stock_id", icon_col]) ()) in
+  let _           = view#append_column icon_vcol in 
+  let element_rdr = GTree.cell_renderer_text [`XALIGN 0.0;`EDITABLE true] in
+  let _           = (element_rdr#connect#edited
+		       ~callback:(fun path data ->
+			 let iter = store#get_iter path in
+                         store#set iter element_col data;
+                         store#set iter icon_col (get_status data))) in 
+  let element_vcol = (GTree.view_column ~title:"Element"
+			~renderer:(element_rdr, ["text", element_col]) ()) in
+  let _ = view#append_column element_vcol in
+  
+  (* ???? let elements    = new Memo.memo () in  *)
+  let menu        = GMenu.menu () in
+  let new_elem 	  = GMenu.menu_item ~label:"New" ~packing:menu#add () in
+  let out_box     = GPack.hbox ~spacing:10 ~border_width:10 () in 
+  let _           = vbox#pack ~expand:false ~fill:false out_box#coerce in 
+  let out_label   = GMisc.label ~text:"Out" () in
+  let out_entry   = GEdit.entry () in
+  let out_clear   = GButton.button ~label:"Clear" () in
+  let _ = begin
+    out_box#pack  ~expand:false ~fill:false out_label#coerce;
+    out_box#pack  ~expand:true  ~fill:true  out_entry#coerce;
+    out_box#pack  ~expand:false ~fill:false out_clear#coerce;
+  end in  
+  (*
+  let cmd_sep     = (GMisc.separator `HORIZONTAL
+                       ~packing:vbox#add ~show:true ()) in
+  *)
+  let cmd_box     = GPack.button_box ~spacing:10 `HORIZONTAL () in
+  let _           = vbox#pack ~expand:false ~fill:false cmd_box#coerce in 
+  let split_btn   = GButton.button ~label:"Split" ~packing:cmd_box#add () in
+  let join_btn    = GButton.button ~label:"Join" ~packing:cmd_box#add () in
+  let print_btn   = GButton.button ~label:"Print" ~packing:cmd_box#add () in
+  let clear_btn   = (GButton.button ~label:"Clear All"
+		       ~packing:cmd_box#add ()) in
+  let quit_btn    = GButton.button ~label:"Quit" ~packing:cmd_box#add () in 
+  let set_sensitive_el_ops b =
+    sw_up#misc#set_sensitive b;
+    sw_down#misc#set_sensitive b;
+    sw_delete#misc#set_sensitive b in
+  object (self)
+    inherit GObj.widget vbox#as_widget
+	(*??? method elements = elements *)
+    method children = sw#children
+    method do_sw_clear () = store#clear ()
+    method do_op op row () =
+      let text = self#get_element row in
+      let new_text = op text in
+      self#set_element row new_text
+    method do_op_iter op () =
+      match store#get_iter_first with
+      | None -> ()
+      | Some row ->
+	  let rec loop () =
+	    begin try 
+	      self#do_op op row ();
+	    with Ops.Error msg ->
+	      (* FIXME: This should really use a dialog
+		 that allows cut and paste. *)
+	      GToolbox.message_box ~title:"Error" msg
+	    end;
+	    if store#iter_next row then loop ()
+	    else ()
+	  in
+	  loop ()      
+    method add_before ?(edit=true) ?(text="") iter () =
+      let row = store#insert_before iter in
+      let path = store#get_path row in 
+      store#set ~row ~column:element_col text;
+      view#scroll_to_cell path element_vcol;
+      if edit then
+	view#set_cursor ~cell:element_rdr ~edit:true path element_vcol
+    method add_after ?(edit=true) ?(text="") iter () =
+      let row = store#insert_after iter in
+      let path = store#get_path row in 
+      store#set ~row ~column:element_col text;
+      view#scroll_to_cell path element_vcol;
+      if edit then
+	view#set_cursor ~cell:element_rdr ~edit:true path element_vcol
+    method delete_element iter () =
+      let deleted = store#remove iter in
+      ep "Deleted: %b\n" deleted
+    method delete_selected_elements () =
+      let selected_rows = (to_row_references store
+			     view#selection#get_selected_rows) in
+      begin match selected_rows with
+      | [] -> ()
+      | _ -> (List.iter (fun r -> let i = r#iter in self#delete_element i ())
+		selected_rows)
+      end
+    method unique_elements () =
+      dbg "Uniquifying!";
+      match store#get_iter_first with
+      | None -> ()
+      | Some row ->
+	  let seen = (Hashtbl.create 10 : (string, bool) Hashtbl.t) in 
+	  let rec loop () =
+	    let s = store#get ~row ~column:element_col in
+	    if Hashtbl.mem seen s then begin
+	      dbg ("Uniquing out " ^ s);
+	      ignore (store#remove row)
+	    end else
+	      Hashtbl.add seen s true;
+	    if store#iter_next row then loop ()
+	    else ()
+	  in loop ()
+    method add_element
+	?(edit=false) ?(icon="gtk-dialog-question") ?(text="") () =
+      ep "add_element: %b\n" edit;
+      let row = store#append () in
+      let path = store#get_path row in 
+      store#set ~row ~column:element_col text;
+      store#set ~row ~column:icon_col (get_status text);
+      print_path "add_element" path;
+      view#scroll_to_cell path element_vcol;
+      if edit then begin
+	dbg "set_cursor";
+	view#set_cursor ~cell:element_rdr ~edit:true path element_vcol
+      end
+    method set_in_path ?var ?text () =
+      let path_var = match var with None -> "PATH" | Some s -> s in 
+      let text = match text with
+	None -> Sys.getenv path_var | Some s -> s in
+      in_entry#set_text text
+    method set_in_path_from_var () =
+      match (GToolbox.input_string ~title:"Get path from environment"
+	       "Please enter an environment variable name") with
+      | None -> ()
+      | Some varname ->
+	  let text = Sys.getenv varname in ignore (self#set_in_path ~text ())
+    method set_in_path_from_user () =
+      match (GToolbox.input_string ~title:"Get path from user"
+	       "Please enter a pathlist") with
+      | None -> ()
+      | Some pathlist ->
+	  self#set_in_path ~text:pathlist ()
+    method split event =
+      List.iter (fun text -> self#add_element ~text ()) (split in_entry#text)
+    method set_element row text = store#set ~row ~column:element_col text
+    method get_element row = store#get ~row ~column:element_col
+    method get_elements =
+      match store#get_iter_first with
+      | None -> []
+      | Some row ->
+	  let rec loop element elements =
+	    if store#iter_next row then
+	      loop (self#get_element row) (element :: elements)
+	    else
+	      element :: elements
+	  in
+	  let elements = loop (self#get_element row) [] in
+	  List.rev elements
+    method join event =
+      let elements =  self#get_elements in 
+      out_entry#set_text (join elements)
+    method print event = print_endline out_entry#text
+    method do_in_clear event = in_entry#set_text ""
+    method do_out_clear event = out_entry#set_text ""
+    method clear_all () =
+      self#do_in_clear ();
+      self#do_out_clear ();
+      self#do_sw_clear ()
+    initializer
+      set_sensitive_el_ops false;
+      in_box#pack   ~expand:false ~fill:false in_label#coerce;
+      in_box#pack   ~expand:true  ~fill:true  in_entry#coerce;
+      in_box#pack   ~expand:false ~fill:false in_clear#coerce;
+(*
+      out_box#pack  ~expand:false ~fill:false out_label#coerce;
+      out_box#pack  ~expand:true  ~fill:true  out_entry#coerce;
+      out_box#pack  ~expand:false ~fill:false out_clear#coerce;
+*)
+      GtkPack.SizeGroup.add_widget label_group in_label#as_widget;
+      (* GtkPack.SizeGroup.add_widget label_group empty#as_widget; *)
+      GtkPack.SizeGroup.add_widget label_group out_label#as_widget;
+      GtkPack.SizeGroup.add_widget clear_group in_clear#as_widget;
+      (* 
+	 GtkPack.SizeGroup.add_widget clear_group sw_clear#as_widget;
+	 GtkPack.SizeGroup.add_widget clear_group sw_new#as_widget;
+       *)
+      GtkPack.SizeGroup.add_widget clear_group sw_buttons#as_widget;
+      GtkPack.SizeGroup.add_widget clear_group out_clear#as_widget;
+      new_elem#connect#activate ~callback:(self#add_element ~edit:true);
+      sw_clear#connect#clicked ~callback:self#do_sw_clear;
+      sw_new#connect#clicked ~callback:(self#add_element ~edit:true);
+      sw_unique#connect#clicked ~callback:self#unique_elements;
+      in_clear#connect#clicked ~callback:self#do_in_clear;
+      out_clear#connect#clicked ~callback:self#do_out_clear;
+      split_btn#connect#clicked ~callback:self#split;
+      join_btn#connect#clicked ~callback:self#join;
+      print_btn#connect#clicked ~callback:self#print;
+      clear_btn#connect#clicked ~callback:self#clear_all;
+      quit_btn#connect#clicked ~callback:GMain.Main.quit;
+      (* Should the file_menu and submenu stuff be in the lets before the
+	 object ???  *)
+      file_menu#add_item "Quit" ~key:_Q ~callback:GMain.Main.quit;
+      let get_item = ops_menu#add_item "Get" ~key:_G in 
+      let get_menu = GMenu.menu () in
+      let path_item = GMenu.menu_item ~label:"PATH" ~packing:get_menu#add () in
+      path_item#connect#activate ~callback:self#set_in_path;
+      let var_item = (GMenu.menu_item ~label:"Variable"
+			~packing:get_menu#add ()) in
+      var_item#connect#activate ~callback:self#set_in_path_from_var;
+      let user_item = (GMenu.menu_item ~label:"User"
+			 ~packing:get_menu#add ()) in
+      user_item#connect#activate ~callback:self#set_in_path_from_user;
+      get_item#set_submenu get_menu;
+      let put_item = ops_menu#add_item "Put" ~key:_P in
+      let put_menu = GMenu.menu () in
+      let out_item = (GMenu.menu_item ~label:"stdout"
+			~packing:put_menu#add ()) in 
+      put_item#set_submenu put_menu;
+      out_item#connect#activate ~callback:self#print;
+
+      List.iter
+	(fun (label, op) ->
+	  let item = ops_menu#add_item label in
+	  ignore (item#connect#activate ~callback:(self#do_op_iter op)))
+	(Ops.get_ops ());
+
+      help_menu#add_item "About" ~key:_A ~callback:about;
+
+      view#selection#set_mode `MULTIPLE;
+      (* only a hint, some themes do not actually make it do it.
+	 (* view#set_rules_hint true; *) *) 
+      view#selection#connect#after#changed ~callback:
+	(fun () ->
+	  let selected_rows = (to_row_references store
+				 view#selection#get_selected_rows) in
+	  print_paths selected_rows;
+	  begin match view#selection#get_selected_rows with
+	  | [] -> set_sensitive_el_ops false
+	  | _ -> set_sensitive_el_ops true
+	  end);
+      let go_up (model : GTree.list_store) (view : GTree.view) event =
+	let selected_paths = view#selection#get_selected_rows in 
+	let selected_rows = to_row_references model selected_paths in
+	ep "up: %d rows selected\n" (List.length  selected_rows);
+	print_paths selected_rows;
+	List.iter
+	  (fun row_ref ->
+	    prerr_newline ();
+	    print_row_path "row's path" row_ref;
+	    let (row_iter : Gtk.tree_iter) = row_ref#iter in
+	    let prev_path = row_ref#path in
+	    print_path "prev_path before prev" prev_path;
+	    let has_prev =
+	      GTree.Path.prev prev_path (* fixed in CVS: *);  true in
+	    ep  "has_prev: %b\n" has_prev;
+	    if has_prev then begin
+	      print_path "prev's path" prev_path;
+	      let prev_iter = model#get_iter prev_path in 
+	      ep "    swap: %b\n" (model#swap row_iter prev_iter)
+	    end)
+	  selected_rows;
+	match List.rev selected_rows with
+	| [] -> ()
+	| row :: _ ->
+            dbg "Scroll";
+	    print_row_path "scroll path" row;
+            view#scroll_to_cell (* ~align:(1.0,0.0) *) row#path element_vcol in 
+      let go_down (model : GTree.list_store) (view : GTree.view) event =
+	let selected_rows =
+	  List.rev (to_row_references model
+		      view#selection#get_selected_rows) in
+	ep "down: %d rows selected\n" (List.length selected_rows);
+	print_paths selected_rows;
+	(* what is this an artifact of???
+	   let n = model#iter_n_children None in *)
+	List.iter
+	  (fun row_ref ->
+	    prerr_newline ();
+	    print_row_path "row's path" row_ref;
+	    let row_iter = row_ref#iter in
+	    let next_iter = row_ref#iter in
+	    let has_next = model#iter_next next_iter in
+	    ep "    has_next: %b\n" has_next;
+	    if has_next then begin 
+	      print_path "next's path" (TM.get_path model#as_model next_iter);
+	      ep "    swap: %b\n" (model#swap row_iter next_iter)
+	    end)
+	  selected_rows;
+	match List.rev selected_rows with
+	| [] -> ()
+	| row :: _ ->
+            dbg "Scroll";
+	    print_row_path "scroll path" row;
+            view#scroll_to_cell (* ~align:(1.0,0.0) *) row#path
+	      element_vcol in 
+      sw_up#connect#clicked ~callback:(go_up store view);
+      sw_down#connect#clicked ~callback:(go_down store view);
+      sw_delete#connect#clicked ~callback:self#delete_selected_elements;
+      (* ??? Cleanup.add_main_ops ops_menu#menu
+	 (self :> Cleanup_type.path_edit_type); *)
+      let make_menu (view : GTree.view) (model : GTree.list_store) event =
+	let button = GEB.button event
+	and time = GEB.time event
+	and x = int_of_float (GEB.x event)
+	and y = int_of_float (GEB.y event) in
+	if button = 3 then begin
+	  let ops = Ops.get_ops () in
+	  let menu = GMenu.menu () in
+	  menu#event#connect#unmap ~callback:(fun e -> menu#destroy (); true);
+	  let item = GMenu.menu_item ~label:"New" ~packing:menu#add () in
+	  item#connect#activate ~callback:(self#add_element ~edit:true);
+	  begin match view#get_path_at_pos ~x ~y with
+	  | Some (path, column, cell_x, cell_y) ->
+	      (* There is currently a row under the cursor,
+		 so add a menu item specifically for it. *)
+	      let it = model#get_iter path in
+	      assert (model#iter_is_valid it);
+	      let iter = store#get_iter path in
+	      let item =
+		GMenu.menu_item ~label:"Add Before" ~packing:menu#add () in
+	      item#connect#activate ~callback:
+		(self#add_before ~edit:true iter);
+	      let item =
+		GMenu.menu_item ~label:"Add After" ~packing:menu#add () in
+	      item#connect#activate ~callback:
+		(self#add_after ~edit:true iter);
+	      let item =
+		GMenu.menu_item ~label:"Delete" ~packing:menu#add () in
+	      item#connect#activate ~callback:(self#delete_element iter);
+	      List.iter
+		(fun (label, op) ->
+		  let item = GMenu.menu_item ~label ~packing:menu#add () in
+		  ignore (item#connect#activate
+			    ~callback:(self#do_op op iter)))
+		ops;
+	      let selected_rows =
+		(to_row_iters store view#selection#get_selected_rows) in
+	      begin match selected_rows with
+	      | [] -> ()
+	      | selected_rows ->
+		  let item =
+		    GMenu.menu_item ~label:"Selected" ~packing:menu#add () in
+		  let sel_menu = GMenu.menu () in
+		  item#set_submenu sel_menu;
+		  let delete_item =
+		    GMenu.menu_item ~label:"Delete" ~packing:sel_menu#add () in
+		  delete_item#connect#activate ~callback:
+		    (fun () ->
+		      List.iter
+			(fun iter -> self#delete_element iter ())
+			selected_rows);
+		  (* FIXME: Operations on selected elements???*)
+		  List.iter
+		    (fun (label, op) ->
+		      let item =
+			GMenu.menu_item ~label ~packing:sel_menu#add () in
+		      ignore
+			(item#connect#activate ~callback:
+			   (fun () ->
+			     List.iter (fun row -> self#do_op op row ())
+			       selected_rows)))
+		    ops;
+		  ()
+	      end;
+	      ()
+	  | None -> ()
+	  end;
+	  menu#popup ~button ~time;
+	  true
+	end else
+	  false;
+      in
+      view#event#connect#button_press ~callback:(make_menu view store);
+      ()
+  end
+
+
+let path_var  = ref (None : string option)
+let set_path_var s = path_var := Some (s)
+
+let main () =
+  GMain.Main.init ();
+  let main_window = GWindow.window ~title:progname () in
+  let argdefs =
+    [("-var", Arg.String set_path_var, "pathvar\t Path variable")]
+  and anonymous_arg arg =
+    GToolbox.message_box ~title:(progname ^ ": Error")
+      ("Unexpected argument: " ^ arg)
+  in
+  Arg.parse argdefs anonymous_arg ("\nusage: " ^ progname ^ "\n");
+  let path_edit = new path_edit ~width:600 ~height:400
+      ~packing:main_window#add () in
+  path_edit#set_in_path ?var:!path_var ();
+  main_window#connect#destroy ~callback:GMain.Main.quit;
+  main_window#show ();
+  GMain.Main.main ()
+
+let _ =
+  Printexc.catch main ()
