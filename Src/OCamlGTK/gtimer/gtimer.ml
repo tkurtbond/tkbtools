@@ -29,8 +29,11 @@ let now_tm () =
   now_lt 
 
 
-(* Command line arguments *)
+(* Global variables. *)
+let using_wayland = ref false
+let beep_command = "ogg123 /usr/share/sounds/freedesktop/stereo/bell.oga </dev/null >/dev/null 2>&1 &"
 
+(* Command line arguments *)
 let now_option = ref None
 let set_now ts =
   Scanf.sscanf ts "%u/%u/%u %u:%u"
@@ -316,7 +319,13 @@ class notice_window parent ?(beeps=5) ?(target : string option)
       self#next ();
       if (not continuous) && (must_beep && counter > beeps) then
 	must_beep <- false;
-      if must_beep then Gdk.X.beep () (* Sysops_hooks.beep () *);
+      if must_beep then begin
+        if not !using_wayland then 
+          (* Oh, if only it was that simple... *)
+          Gdk.X.beep () (* Sysops_hooks.beep () *)
+        else
+          ignore (Sys.command beep_command)
+      end;
       true
     method show () =
       window#show ();
@@ -685,5 +694,10 @@ let () =
     prerr_endline ("Unknown anonymous argument: " ^ s); exit 2 in 
   let args = [("-now", Arg.String set_now, "\tabsolute time")] in
   Arg.parse args anon_arg usage;
+  let wayland_rx = Str.regexp_case_fold "wayland.*" in begin 
+  try
+    let wayland_env = Sys.getenv "WAYLAND_DISPLAY" in
+    if Str.string_match wayland_rx wayland_env 0 then using_wayland := true
+  with Not_found -> ()
+  end; 
   create_main ()
-
