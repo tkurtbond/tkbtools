@@ -21,6 +21,7 @@ Src/Ocaml/ocamlize
 Src/Ocaml/xpmtoocaml
 Src/OCamlGTK/gpe/gpe
 Src/OCamlGTK/gpe/gpe_icons.ml
+Src/OCamlGTK/gtimer/boxes.ml
 Src/OCamlGTK/gtimer/gtimer
 Src/OcamlTk/animgif
 Src/OcamlTk/animxbm
