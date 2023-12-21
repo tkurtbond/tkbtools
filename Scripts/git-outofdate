@@ -39,11 +39,12 @@ if [[ -t 0 ]]; then
     BRIGHTBLUE='\u001b[34;1m'   # Repo needs to push.
     BRIGHTRED='\u001b[31;1m'    # 
     BRIGHTWHITE='\u001b[37;1m'  # Status didn't match.
-    BRIGHTYELLOW='\u001b[33;1m' # Repo diverged. 
+    BRIGHTYELLOW='\u001b[33;1m' # Repo diverged.
+    INVERSE='\u001b[7m'         # Inverse.
     NC='\033[0m'                # No Color.
 fi
 
-time (echo "Start: $(date +'%F %H:%M:%S')"
+time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')" "$(hostname)"
       mygitrepos --directories | while read REPO
       do
           [[ -d $REPO ]] || {
@@ -79,5 +80,5 @@ time (echo "Start: $(date +'%F %H:%M:%S')"
           }
           
       done
-      echo "Stop:  $(date +'%F %H:%M:%S')"
+      printf "Stop: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')" "$(hostname)"
      )

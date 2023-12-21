@@ -1,0 +1,3 @@
+I've abandoned the sysops stuff, since I'm not building on cygwin/mingw at the
+moment, and moved to dune to build things, except for gpe_icons.ml, which I
+can't see an easy way to make with dune.

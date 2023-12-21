@@ -1,0 +1,10 @@
+(env
+ (dev
+  (flags (:standard -w -27-6))))
+
+(executable
+ (name gpe)
+ (public_name gpe)
+ (modules ops gpe_icons gpe)
+ (libraries str unix lablgtk2)
+ (modes exe))

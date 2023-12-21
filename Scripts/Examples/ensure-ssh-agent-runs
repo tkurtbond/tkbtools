@@ -1,0 +1,17 @@
+#! /usr/bin/env bash
+# From: https://serverfault.com/a/1118374
+
+# This is supposed to be part of your .bashrc.
+
+# Run the ssh agent (if not already running):
+# SSH Agent should be running, once
+if ! ps -ef | grep "[s]sh-agent" &>/dev/null; then
+    echo Starting SSH Agent
+    eval $(ssh-agent -s)
+fi
+
+# Add the ssh-key if no keys are added yet
+if ! ssh-add -l &>/dev/null; then
+     echo Adding keys...
+     ssh-add -t 1d
+fi

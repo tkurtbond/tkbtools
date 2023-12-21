@@ -1,0 +1,5 @@
+Looks like I don't need the sysops stuff anymore.
+
+I've built this with dune in the past, but it also builds just fine
+with GNU make, as long as ocaml-findlib is installed, and that's what
+I use now.

@@ -1,0 +1,153 @@
+# make NO_WINDOWS_CONSOLE=yes
+include .what-sys.dat
+
+RM=rm
+MV=mv
+CP=cp
+ifeq ($(OPSYS),UNIX)
+EXE=
+OBJ=o
+else
+EXE=.exe
+# Warning: using gcc!
+OBJ=o
+endif
+UNAME=$(shell uname)
+
+.PHONY: clean realclean install install-variant
+
+BINDIR=~/local/bin
+ALL_EXES=gtimer$(EXE)
+PACKAGES=-package str -package unix -package threads -package lablgtk2
+
+all: $(ALL_EXES)
+
+CAMLC = ocamlfind ocamlc $(XMLFLAGS) $(PACKAGES) -thread
+CAMLOPT = ocamlfind ocamlopt $(XMLFLAGS) $(PACKAGES) -thread
+COMPILER = $(CAMLOPT) $(MLFLAGS) -c
+LINKER = $(CAMLOPT) $(MLFLAGS) -linkpkg
+COMPOPT = $(CAMLOPT) $(MLFLAGS) -c
+LINKOPT = $(CAMLOPT) $(MLFLAGS) -linkpkg
+
+TOPLEVEL = olablmktop $(MLFLAGS)
+RANLIB = ranlib
+
+MLFLAGS = -w -s-y -labels -g
+
+PKGS=gtk+-2.0
+ifeq ($(UNAME),Darwin)
+# not with brew and opam
+#PKGS+=x11
+endif # Uname
+
+ifeq ($(UNAME),Darwin)
+LINKER+=-custom
+endif
+
+GTKCFLAGS=$(shell pkg-config $(PKGS) --cflags)
+GTKLIBS=$(shell pkg-config $(PKGS) --libs)
+
+ifdef DEBUG
+CFLAGS = -g $(GTKCFLAGS)
+LDFLAGS = $(GTKLIBS) -lcamlrund
+MLFLAGS += -g
+else
+CFLAGS = -O -DGTK_NO_CHECK_CASTS -DGTK_DISABLE_COMPAT_H $(GTKCFLAGS)
+LDFLAGS = $(GTKLIBS)
+endif
+
+
+ifeq ($(OPSYS),UNIX)
+SYSOPS_SRC=
+PRIM_OBJS=
+ifeq ($(UNAME),Darwin)
+SYSOPS_SRC+= #darwin_sysops.ml
+PRIM_OBJS+= #darwin_beep.o
+endif # UNAME
+else
+CFLAGS += -mno-cygwin -mms-bitfields
+SYSOPS_SRC=win32_sysops.ml
+PRIM_OBJS=win32_beep.o
+ifdef NO_WINDOWS_CONSOLE
+MLFLAGS += -cclib -mwindows
+endif
+endif
+SYSOPS_OBJS=$(SYSOPS_SRC:.ml=.cmo)
+
+
+ifdef USE_CC
+CCOMPILER = $(CC) -c -I$(LABLLIB) $(CFLAGS)
+else
+CCOMPILER = ocamlc -c -ccopt "$(CFLAGS)"
+endif
+
+
+# Rules
+.SUFFIXES: .ml .mli .cmo .cmi .cmx .c .o .var .h .opt .def
+.c.o:
+	$(CCOMPILER) $<
+.ml.cmo:
+	$(COMPILER) $<
+.mli.cmi:
+	$(COMPILER) $<
+.ml.cmx:
+	$(COMPOPT) $<
+
+# %$(EXE): %.ml
+#	$(CAMLC) $(MLFLAGS) -o $@ $(SYSOPS_OBJS) $(PRIM_OBJS)\
+#		unix.cma str.cma lablgtk.cma $<
+
+%.mli %.ml: %.mly
+	ocamlyacc $<
+
+%.ml: %.mll
+	ocamllex $<
+
+# used to include sysops_hooks.cmo $(SYSOPS_OBJS)
+gtimer$(EXE): boxes.cmx  gtimer_icon.cmx gtimer.cmx $(PRIM_OBJS)
+ifneq ($(OPSYS),UNIX)
+ifndef NO_WINDOWS_CONSOLE
+	echo "Did you forget 'make NO_WINDOWS_CONSOLE=yes'?"
+endif # NO_WINDOWS_CONSOLE
+endif # UNIX
+	$(LINKER) -o $@ $^
+
+
+
+boxes.ml: box-ne.xpm box-nw.xpm box-se.xpm box-sw.xpm 
+	xpmtoocaml $^ >$@
+
+gtimer_icon.ml: kettle-32px.xpm kettle-64px.xpm kettle-128px.xpm \
+	kettle-256px.xpm kettle-512px.xpm
+	xpmtoocaml $^ >$@
+
+$(BINDIR)/% : %
+	[ -d $(BINDIR) ] || (mkdir -p $(BINDIR) && echo built $(BINDIR))
+	$(CP) $< $@
+
+
+install: $(foreach e,$(ALL_EXES),$(BINDIR)/$(e))
+
+info: 
+	echo PKGS: $(PKGS)
+	echo SYSOPS_SRC: $(SYSOPS_SRC)
+	echo PRIM_OBJS: $(PRIM_OBJS)
+
+clean:
+	-$(RM) -f *.cm* *.o *.a *_parser.ml *_parser.mli *_lexer.ml
+	-$(RM) boxes.ml
+	-$(RM) $(ALL_EXES)
+
+realclean: clean
+	-$(RM) .what-sys.dat .depend
+
+.depend: .what-sys.dat
+	ocamldep *.mli *.ml >.depend
+
+include .depend
+
+.what-sys.dat:
+	what-sys
+
+debug: 
+	echo opsys: $(OPSYS)
