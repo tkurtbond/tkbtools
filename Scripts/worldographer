@@ -1,6 +1,13 @@
 #! /usr/bin/env bash
 
-JAVAFXLIB=/usr/lib/jvm/openjfx
+JAVAFXLIB='--module-path /usr/lib/jvm/openjfx'
 
 # Alas, this crashes on Fedora 39, with openjdk 17, openjdk 21.  openjdk 11 is too old
-java --module-path $JAVAFXLIB --add-modules javafx.controls,javafx.web,javafx.swing,javafx.graphics,javafx.fxml -Xmx4G -jar /usr/local/sw/versions/worldographer/Worldographer-1.73.jar -Dprism.maxvran=3G
+java $JAVAFXLIB --add-modules javafx.controls,javafx.web,javafx.swing,javafx.graphics,javafx.fxml -Xmx4G -jar /usr/local/sw/versions/worldographer/Worldographer-1.73.jar -Dprism.maxvran=3G
+
+# Exception in Application start method
+# Exception in thread "main" java.lang.RuntimeException: Exception in Application start method
+#         at javafx.graphics@17.0.0.1/com.sun.javafx.application.LauncherImpl.launchApplication1(LauncherImpl.java:901)
+#         at javafx.graphics@17.0.0.1/com.sun.javafx.application.LauncherImpl.lambda$launchApplication$2(LauncherImpl.java:196)
+#         at java.base/java.lang.Thread.run(Thread.java:1583)
+# Caused by: java.lang.UnsatisfiedLinkError: no jfxwebkit in java.library.path: /usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
