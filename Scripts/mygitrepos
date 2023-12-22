@@ -50,7 +50,18 @@ function index () {
     echo $((NUMCOLUMNS * $1 + $2))
 }
 
-if [[ $1 = "--verbose" ]]; then
+if [[ $1 = "-h" || $1 = "--help" ]]; then
+    cat <<EOF
+usage: $0 [--help } -h ] [ --all-columns | --directories | --verbose ]
+
+Options
+-h or --help        Display this message and exit
+--all-columns       Display all the columns of info about the repositories
+--directories       Display just the directory into which the repo is cloned.
+--verbose           Display a verbose list of each item stored about the
+                    repository. 
+EOF
+elif [[ $1 = "--verbose" ]]; then
     NUMREPOS=$((${#REPOS[@]} / $NUMCOLUMNS))
     for ((i=0; i < NUMREPOS; i++)); do
         PRI=$(index $i PRI_OFF)
@@ -62,17 +73,13 @@ if [[ $1 = "--verbose" ]]; then
         echo DIR: ${REPOS[$DIR]}
         echo REP: ${REPOS[$REP]}
     done
-fi
-
-if [[ $1 = "--directories" ]]; then
+elif [[ $1 = "--directories" ]]; then
     NUMREPOS=$((${#REPOS[@]} / $NUMCOLUMNS))
     for ((i=0; i < NUMREPOS; i++)); do
         DIR=$(index $i DIR_OFF)
         echo ${REPOS[$DIR]}
     done
-fi
-
-if [[ $1 = "--all-columns" ]]; then
+elif [[ $1 = "--all-columns" ]]; then
     NUMREPOS=$((${#REPOS[@]} / $NUMCOLUMNS))
     for ((i=0; i < NUMREPOS; i++)); do # i is the row
         # PRI=$(index $i PRI_OFF)
@@ -90,4 +97,10 @@ if [[ $1 = "--all-columns" ]]; then
         done                    # end j loop
         echo "$ACCUM"
     done                        # end i loop
+else
+    NUMREPOS=$((${#REPOS[@]} / $NUMCOLUMNS))
+    for ((i=0; i < NUMREPOS; i++)); do
+        REP=$(index $i REP_OFF)
+        echo ${REPOS[$REP]}
+    done
 fi
