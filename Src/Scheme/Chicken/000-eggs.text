@@ -18,6 +18,7 @@ loop
 matchable
 medea
 ncurses
+pathname-expand
 r7rs
 simple-loops
 simple-timer
