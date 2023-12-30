@@ -1,5 +1,10 @@
 #! /usr/bin/env bash
 
+function NYI {
+    echo $0: not yet implemented: "$@"
+    exit 2
+}
+
 THREADS=1                       # Default is to use one thread.
 DO_HELP=0                       # Does the help need to be displayed?
 ZLEVEL=""                       # use the default
@@ -7,16 +12,18 @@ XLEVEL=""
 
 errors=0
 
-while getopts "ht:" opt
+while getopts "ht:" opt         # Add this "x:z:" back in when implemented
 do
     case "$opt" in
         (\?) ((errors++)) ;;
         (h) DO_HELP=1 ;;
         (t) THREADS=$OPTARG ;;
-        (x) XLEVEL=$OPTARG ;;
-        (z) ZLEVEL=$OPTARG ;;
+        (x) NYI -x XLEVEL=$OPTARG ;;
+        (z) NYI -z ZLEVEL=$OPTARG ;;
     esac
 done
+exit 1
+
 
 ((DO_HELP)) && HELPOUT=/dev/stdout || HELPOUT=/dev/stderr
 
