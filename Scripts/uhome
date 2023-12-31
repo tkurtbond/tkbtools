@@ -6,7 +6,8 @@ echo HOSTNAME: $HOSTNAME
 unison $HOSTNAME-tkb-to-ulrich &
 unison $HOSTNAME-tkb-to-ulrich-d1tkb &
 unison $HOSTNAME-tkb-to-ilian &
-unison $HOSTNAME-tkb-to-smiorgan &
+# unison $HOSTNAME-tkb-to-smiorgan &
+unison $HOSTNAME-tkb-to-cornelius &
 [[ -d /run/media/tkb/Kormt ]] && {
     unison $HOSTNAME-kormt-to-ulrich-d1tkb &
 }      
