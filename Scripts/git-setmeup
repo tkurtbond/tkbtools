@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-git config pull.rebase false  # merge
+git config --global pull.rebase false  # merge
 
 git config --global user.email "tkurtbond@gmail.com"
 git config --global user.name "T. Kurt Bond"
