@@ -79,11 +79,11 @@ SCRIPTS= \
 	git-main \
 	git-needs-checkin \
 	git-outofdate \
+	git-setmeup \
 	git-setup-repos \
 	git-state \
 	git-undo-last-commit \
 	git-uptodate \
-	git-whoami \
 	hatch-eggs \
 	hero-designer \
 	htmlindex.sh \
