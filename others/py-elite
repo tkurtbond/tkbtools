@@ -1,0 +1,38 @@
+#! /usr/bin/env python
+# From: https://cartographersguild.com/showthread.php?t=3571&page=2&p=40167#post40167
+
+ELITE = False
+
+if ELITE:
+    seed = [0x5A4A, 0x0248, 0xB753]
+else:
+    import random
+    seed = [random.randint(0, 0xffff), random.randint(0, 0xffff), random.randint(0, 0xffff)]
+
+def tweakseed():
+    temp = (seed[0] + seed[1] + seed[2]) % 0x10000
+    seed[0] = seed[1]
+    seed[1] = seed[2]
+    seed[2] = temp
+
+digraphs = "..lexegezacebisousesarmaindirea.eratenberalavetiedorquanteisrion"
+
+def name():
+    longnameflag = seed[0] & 0x40
+
+    name = ""
+
+    for n in range(4):
+        d = ((seed[2] >> 8) & 0x1f) << 1
+
+        tweakseed()
+
+        if n < 3 or longnameflag:
+            name += digraphs[d:d+2]
+
+    return name.replace(".", "").title()
+
+# TKB from here on down.
+if __name__ == '__main__':
+    for x in range (1, 101):
+        print (name ());

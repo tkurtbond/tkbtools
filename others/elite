@@ -1,0 +1,20 @@
+#!/usr/bin/env perl
+
+# From: https://alexschroeder.ch/view/2009-09-11_Elite_Names
+
+my $digraphs = "..lexegezacebisousesarmaindire.aeratenberalavetiedorquanteisrion";
+my $max = length($digraphs);
+
+sub name {
+  my $length = 5 + rand(5); # 4-8
+  my $name = '';
+  while (length($name) < $length) {
+    $name .= substr($digraphs, 2*int(rand($max/2)), 2);
+  }
+  $name =~ s/\.//g;
+  return $name;
+}
+
+for my $n (0..100) {
+  printf "%3d. %s\n", $n, name();
+}

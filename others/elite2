@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+
+# From: https://alexschroeder.ch/view/2023-12-13%20Elite%20names%20for%20dice%20rolling
+# See also: https://wiki.alioth.net/index.php/Classic_Elite_planet_descriptions
+
+use Modern::Perl;
+use List::Util qw(sum);
+
+my $num = shift || 12;
+
+my @stack = qw(23114 584 46931);
+
+my $digraphs = "..lexegezacebisousesarmaindirea.eratenberalavetiedorquanteisrion";
+
+sub name {
+  my $longname = $stack[0] & 0x40;
+  my $name;
+  for my $n (1 .. 4) {
+    my $d = (($stack[2] >> 8) & 0x1f) << 1;
+    push(@stack, sum(@stack) % 0x10000);
+    shift(@stack);
+    $name .= substr($digraphs, $d, 2)
+	if $n <= 3 or $longname;
+  }
+  $name =~ s/\.//g;
+  return $name;
+}
+
+say ucfirst name() for (1 .. $num);
