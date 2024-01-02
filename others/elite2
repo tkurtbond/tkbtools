@@ -3,6 +3,33 @@
 # From: https://alexschroeder.ch/view/2023-12-13%20Elite%20names%20for%20dice%20rolling
 # See also: https://wiki.alioth.net/index.php/Classic_Elite_planet_descriptions
 
+###############################################################################
+# Now, what if you wanted to get such names with dice rolling?
+#
+# Roll d66 3× and if you get a +2 result, roll two more times. Remove
+# all the dots in the end.
+#
+# 	1 	2 	3 	4 	5 	6
+# 1 	.. 	le 	xe 	ge 	za 	ce
+# 2 	bi 	so 	us 	es 	ar 	ma
+# 3 	in 	di 	re 	a. 	er 	at
+# 4 	en 	be 	ra 	la 	ve 	ti
+# 5 	ed 	or 	qu 	an 	te 	is
+# 6 	ri 	on 	+2 	+2 	+2 	+2
+#
+# Let’s try it!
+#
+#     Rolling 13 41 54 → Ingeve
+#     Rolling 22 45 46 63 23 → Soanatdi
+#     Rolling 31 64 45 → Xetian
+#
+# I think it works.
+#
+# And it’s easy to modify, too! Add more “..” results to get shorter
+# names. Add more +2 results to get longer names. Change the
+# syllables. You could have a different d66 for every culture…
+###############################################################################
+
 use Modern::Perl;
 use List::Util qw(sum);
 
