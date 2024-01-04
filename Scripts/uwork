@@ -5,7 +5,13 @@ echo HOSTNAME: $HOSTNAME
 
 unison $HOSTNAME-tkb-to-oone &
 unison $HOSTNAME-tkb-to-oone-muspelheim &
+
+
 [[ -d /var/run/media/tkb/Kormt ]] && {
     unison $HOSTNAME-kormt-to-oone-muspelheim &
     unison $HOSTNAME-tkb-kormt &
+}      
+
+[[ -d /var/run/media/tkb/Sindri ]] && {
+    unison $HOSTNAME-tkb-sindri &
 }      
