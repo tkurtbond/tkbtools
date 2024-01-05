@@ -1,8 +1,8 @@
 #! /usr/bin/env bash
-# Source this, don't execute it!
-
 # For some reason, when building unison on Fedora 39, I got errors about
 # each of these being undefined.
+
+echo "Source this, don't execute it!"
 
 export RPM_ARCH=bogus RPM_VERSION=bogus RPM_PACKAGE_RELEASE=bogus \
        RPM_PACKAGE_VERSION=bogus \
