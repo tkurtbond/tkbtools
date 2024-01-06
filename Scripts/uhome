@@ -10,4 +10,5 @@ unison $HOSTNAME-tkb-to-ilian &
 unison $HOSTNAME-tkb-to-cornelius &
 [[ -d /run/media/tkb/Kormt ]] && {
     unison $HOSTNAME-kormt-to-ulrich-d1tkb &
+    unison $HOSTNAME-kormt-to-ulrich-jotunheim &
 }      
