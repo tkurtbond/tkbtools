@@ -7,11 +7,11 @@ unison $HOSTNAME-tkb-to-oone &
 unison $HOSTNAME-tkb-to-oone-muspelheim &
 
 
-[[ -d /var/run/media/tkb/Kormt ]] && {
+if [[ -d /var/run/media/tkb/Kormt ]]; then
     unison $HOSTNAME-kormt-to-oone-muspelheim &
     unison $HOSTNAME-tkb-kormt &
-}      
+fi
 
-[[ -d /var/run/media/tkb/Sindri ]] && {
+if [[ -d /var/run/media/tkb/Sindri ]]; then
     unison $HOSTNAME-tkb-sindri &
-}      
+fi
