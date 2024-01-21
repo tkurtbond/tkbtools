@@ -14,6 +14,7 @@ csm
 forcible
 format
 gemini
+geminih
 html-parser
 http-client
 ioctl                           # This is for schemepunk, which is for show.
