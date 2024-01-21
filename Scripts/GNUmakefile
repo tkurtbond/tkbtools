@@ -114,6 +114,7 @@ SCRIPTS= \
 	mygitrepos \
 	mzr \
 	nikola-categories \
+	nikola-install \
 	nikola-roles \
 	nikola-tags \
 	nisttime \

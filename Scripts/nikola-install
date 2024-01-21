@@ -1,0 +1,11 @@
+#! /usr/bin/env bash
+NIKOLA=nikola-env
+
+cd ~/pyve
+
+[[ -d $NIKOLA ]] && mv -v $NIKOLA $(incf $NIKOLA)
+
+python3 -m venv $NIKOLA && 
+    cd $NIKOLA &&
+    bin/python -m pip install -U pip setuptools wheel &&
+    bin/python -m pip install -U "Nikola[extras]"
