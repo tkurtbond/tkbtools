@@ -4,12 +4,14 @@
 
 errors=0
 
-while getopts "hc" opt
+while getopts "chiu" opt
 do
     case "$opt" in
         (\?) ((errors++)) ;;
-        (h) DO_HELP=1 ;;
         (c) DO_CLEAR=1 ;;
+        (h) DO_HELP=1 ;;
+        (i) DO_INTERACTIVE=1 ;;
+        (u) DO_UPDATE=1 ;;
     esac
 done
 
@@ -47,6 +49,8 @@ fi
 time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')" "$(hostname)"
       mygitrepos --directories | while read REPO
       do
+          NEED_TO_PULL=0
+          MAY_NEED_CHECKIN=0
           [[ -d $REPO ]] || {
               printf "===> ${MAGENTA}%20s ${CYAN}Repo $REPO$NC\n" "Does not exist!"
               continue
@@ -62,6 +66,8 @@ time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')"
                   ;;
               "Need to pull")
                   STATCOLOR="$BLUE"
+                  NEED_TO_PULL=1
+                  # echo NEED_TO_PULL: $NEED_TO_PULL
                   ;;
               "Need to push")
                   STATCOLOR="$BRIGHTBLUE"
@@ -77,8 +83,20 @@ time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')"
           STATUS=$(cd $REPO && git status --short)
           [[ -n "$STATUS" ]] && {
               printf "===> ${RED}%20s ${CYAN}Repo $REPO $NC\n" "May need checkin!"
+              MAY_NEED_CHECKIN=1
           }
+
+          #echo DO_UPDATE: $DO_UPDATE NEED_TO_PULL: $NEED_TO_PULL MAY_NEED_CHECKIN:$MAY_NEED_CHECKIN
           
+          if ((DO_UPDATE && NEED_TO_PULL && ! MAY_NEED_CHECKIN)); then
+              if ((DO_INTERACTIVE)); then 
+                  read -p "Update repo? (Y/n)" yn </dev/tty
+                  [[ $yn == [Yy]* || -z $yn ]] && DO_PULL=1 || DO_PULL=0
+              else
+                  DO_PULL=1
+              fi
+              ((DO_PULL)) && (cd $REPO && git pull)
+          fi
       done
       printf "Stop: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')" "$(hostname)"
      )
