@@ -74,6 +74,7 @@ time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')"
                   ;;
               "Need to push")
                   STATCOLOR="$BRIGHTBLUE"
+                  NEED_TO_PUSH=1
                   ;;
               "Diverged")
                   STATCOLOR="$BRIGHTYELLOW"
