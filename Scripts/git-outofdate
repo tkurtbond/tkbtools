@@ -18,11 +18,13 @@ done
 ((DO_HELP)) && HELPOUT=/dev/stdout || HELPOUT=/dev/stderr
 ((DO_HELP || errors)) && {
     cat >$HELPOUT <<EOF
-usage: $0 [-ln]
+usage: $0 [-chiu]
 
 Options
 -c      Clears the screen.
 -h	Displays this message.
+-i      Asks the user first when updating repos.
+-u      Update repos that need pulled.
 EOF
     exit
 }
