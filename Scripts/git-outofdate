@@ -82,6 +82,7 @@ time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')"
                   ;;
           esac
           printf "===> $STATCOLOR%20s ${CYAN}Repo $REPO$NC\n" "$STATUS"
+
           STATUS=$(cd $REPO && git status --short)
           [[ -n "$STATUS" ]] && {
               printf "===> ${RED}%20s ${CYAN}Repo $REPO $NC\n" "May need checkin!"
@@ -100,5 +101,6 @@ time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')"
               ((DO_PULL)) && (cd $REPO && git pull)
           fi
       done
+
       printf "Stop: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')" "$(hostname)"
      )
