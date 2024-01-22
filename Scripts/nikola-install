@@ -1,6 +1,8 @@
 #! /usr/bin/env bash
 NIKOLA=nikola-env
 
+[[ ! -e ~/pyve ]] && mkdir ~/pyve
+
 cd ~/pyve
 
 [[ -d $NIKOLA ]] && mv -v $NIKOLA $(incf $NIKOLA)
