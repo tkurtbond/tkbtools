@@ -49,20 +49,21 @@ if [[ -t 0 ]]; then
 fi
 
 time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')" "$(hostname)"
-      mygitrepos --directories | while read REPO
+      mygitrepos --all-columns | while read PRIO INCL DIR REPO
       do
           NEED_TO_PULL=0
           NEED_TO_PUSH=0
+          NEED_TO_CREATE=0
           MAY_NEED_CHECKIN=0
-          [[ -d $REPO ]] || {
-              printf "===> ${MAGENTA}%20s ${CYAN}Repo $REPO$NC\n" "Does not exist!"
+          [[ -d $DIR ]] || {
+              printf "===> ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" "Does not exist!"
               continue
           }
-          [[ -d $REPO/.git ]] || {
-              printf "===> ${MAGENTA}%20s ${CYAN}Repo $REPO$NC\n" "Not a git repo!"
+          [[ -d $DIR/.git ]] || {
+              printf "===> ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" "Not a git repo!"
               continue
           }
-          STATUS=$(cd $REPO && git-uptodate)
+          STATUS=$(cd $DIR && git-uptodate)
           case "$STATUS" in
               "Up to date")
                   STATCOLOR="$GREEN"
@@ -83,11 +84,11 @@ time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')"
                   STATCOLOR="$BRIGHTWHITE"
                   ;;
           esac
-          printf "===> $STATCOLOR%20s ${CYAN}Repo $REPO$NC\n" "$STATUS"
+          printf "===> $STATCOLOR%20s ${CYAN}Repo $DIR$NC\n" "$STATUS"
 
-          STATUS=$(cd $REPO && git status --short)
+          STATUS=$(cd $DIR && git status --short)
           [[ -n "$STATUS" ]] && {
-              printf "===> ${RED}%20s ${CYAN}Repo $REPO $NC\n" "May need checkin!"
+              printf "===> ${RED}%20s ${CYAN}Repo $DIR $NC\n" "May need checkin!"
               MAY_NEED_CHECKIN=1
           }
 
@@ -100,7 +101,7 @@ time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')"
               else
                   DO_PULL=1
               fi
-              ((DO_PULL)) && (cd $REPO && git pull)
+              ((DO_PULL)) && (cd $DIR && git pull)
           fi
 
           if ((DO_UPDATE && NEED_TO_PUSH && ! MAY_NEED_CHECKIN)); then
@@ -110,7 +111,7 @@ time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')"
               else
                   DO_PUSH=1
               fi
-              ((DO_PUSH)) && (cd $REPO && git push)
+              ((DO_PUSH)) && (cd $DIR && git push)
           fi
       done
 
