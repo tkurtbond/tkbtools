@@ -52,6 +52,7 @@ time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')"
       mygitrepos --directories | while read REPO
       do
           NEED_TO_PULL=0
+          NEED_TO_PUSH=0
           MAY_NEED_CHECKIN=0
           [[ -d $REPO ]] || {
               printf "===> ${MAGENTA}%20s ${CYAN}Repo $REPO$NC\n" "Does not exist!"
@@ -93,12 +94,22 @@ time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')"
           
           if ((DO_UPDATE && NEED_TO_PULL && ! MAY_NEED_CHECKIN)); then
               if ((DO_INTERACTIVE)); then 
-                  read -p "Update repo? (Y/n)" yn </dev/tty
+                  read -p "Pull repo? (Y/n)" yn </dev/tty
                   [[ $yn == [Yy]* || -z $yn ]] && DO_PULL=1 || DO_PULL=0
               else
                   DO_PULL=1
               fi
               ((DO_PULL)) && (cd $REPO && git pull)
+          fi
+
+          if ((DO_UPDATE && NEED_TO_PUSH && ! MAY_NEED_CHECKIN)); then
+              if ((DO_INTERACTIVE)); then 
+                  read -p "Push repo? (Y/n)" yn </dev/tty
+                  [[ $yn == [Yy]* || -z $yn ]] && DO_PUSH=1 || DO_PUSH=0
+              else
+                  DO_PUSH=1
+              fi
+              ((DO_PUSH)) && (cd $REPO && git push)
           fi
       done
 
