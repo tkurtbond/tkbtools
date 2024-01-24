@@ -1,0 +1,50 @@
+#! /usr/bin/env bash
+# Linux ping doesn't have an audible bell on no packets, alas.
+
+trap "exit" INT 
+errors=0
+
+RING_ON_UP=0
+INTERVAL=5
+
+# OpenBSD ping uses -E for bell when there is no packet and -e for
+# bell when there is a packet.
+while getopts "dEei:" opt
+do
+    case "$opt" in
+        (\?) ((errors++)) ;;
+        (d) DEBUG=1 ;;
+        (E) RING_ON_UP=1 ;;
+        (e) RING_ON_UP=0 ;;
+        (i) INTERVAL=$OPTARG ;;
+    esac
+done
+
+((DO_HELP)) && HELPOUT=/dev/stdout || HELPOUT=/dev/stderr
+((DO_HELP || errors)) && {
+    cat >$HELPOUT <<EOF
+usage: $0 [-chiu]
+
+Options
+-E      Rings the bell when there is no packet.
+-e      Rings the bell when there is a packet
+-h	Displays this message.
+-in     Interval in seconds to wait between pings.
+EOF
+    exit
+}
+
+shift $((OPTIND-1))
+
+((DEBUG)) && set -x
+
+
+while true; do
+    ping -i$INTERVAL -w$INTERVAL -c1 $1
+    STATUS=$!
+    if ((STATUS && RING_ON_UP)); then
+        echo 
+    elif ((! STATUS && !RING_ON_UP)); then
+        echo 
+    fi
+done
