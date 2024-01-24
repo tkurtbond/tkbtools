@@ -40,7 +40,7 @@ shift $((OPTIND-1))
 
 
 while true; do
-    ping -i$INTERVAL -w$INTERVAL -c1 $1
+    ping -i$INTERVAL -w$INTERVAL -c1 "$@"
     STATUS=$!
     if ((STATUS && RING_ON_UP)); then
         echo 
