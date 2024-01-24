@@ -1,6 +1,9 @@
 #! /usr/bin/env bash
 # Linux ping doesn't have an audible bell on no packets, alas.
 
+echo Something still note right
+exit
+
 trap "exit" INT 
 errors=0
 
@@ -42,10 +45,16 @@ shift $((OPTIND-1))
 while true; do
     date +%Y-%m-%dT%H:%M:%S%z
     ping -i$INTERVAL -w$INTERVAL -c1 "$@"
-    STATUS=$!
+    STATUS=$?
+    echo STATUS: $STATUS RING_ON_UP: $RING_ON_UP
     if ((STATUS && RING_ON_UP)); then
         echo 
+        sleep $INTERVAL
     elif ((! STATUS && !RING_ON_UP)); then
         echo 
+        sleep $INTERVAL
+    else
+        echo What are we doing here?
+        sleep $INTERVAL
     fi
 done
