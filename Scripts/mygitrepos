@@ -39,7 +39,7 @@ REPOS=(
     20 y ~/Repos/sstg                                        git@github.com:tkurtbond/sstg.git
     20 y ~/Repos/sdcl                                        git@github.com:tkurtbond/sdcl.git
     20 y ~/Repos/filetap                                     git@github.com:tkurtbond/filetap.git
-    10 y ~/current/tnolang                                   git@github.com:tkurtbond/tnolang.git
+    10 y ~/current/computer/lang/tnolang                     git@github.com:tkurtbond/tnolang.git
     00 n /usr/local/sw/src/Oberon/tkb/voc                    git@github.com:tkurtbond/voc.git
 )
 
