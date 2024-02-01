@@ -181,6 +181,7 @@ SCRIPTS= \
 	usatime \
 	uwork \
 	winbox-in-wine \
+	worldographer \
 	worldtime \
 	# Nothing Here
 
