@@ -4,8 +4,10 @@ export JAVA_HOME=/usr/lib/jvm/java-17-zulu-openjdk-jdk-fx
 
 repath --start /usr/lib/jvm/java-17-zulu-openjdk-jdk-fx/bin
 
+# This didn't work.  ‐‐class‐path '/usr/local/sw/versions/pdfbox/*'
 
 #JAVAFXLIB='--module-path /usr/lib/jvm/openjfx'
+
 
 # Alas, this crashes on Fedora 39, with openjdk 17, openjdk 21.  openjdk 11 is too old
 java $JAVAFXLIB --add-modules javafx.controls,javafx.web,javafx.swing,javafx.graphics,javafx.fxml -Xmx4G -jar /usr/local/sw/versions/worldographer/Worldographer-1.73.jar -Dprism.maxvran=3G
