@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+echo "Run this in the pandoc-cli source directory!"
+
+time cabal install --overwrite-policy=always --minimize-conflict-set --flags=lua 2>&1 | log cabal-install
