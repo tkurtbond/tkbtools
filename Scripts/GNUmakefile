@@ -66,6 +66,7 @@ SCRIPTS= \
 	devolvepdf \
 	domail \
 	ebook \
+	embed-fonts \
 	endsound \
 	export-tools \
 	fg-backup-campaigns \

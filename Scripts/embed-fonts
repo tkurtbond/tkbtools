@@ -1,0 +1,3 @@
+#! /usr/bin/env
+
+ps2pdf -dEmbedAllFonts=true -dSubsetFonts=true -dEPSCrop=true -dPDFSETTINGS=/prepress "$@"
