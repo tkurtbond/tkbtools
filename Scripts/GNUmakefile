@@ -157,6 +157,7 @@ SCRIPTS= \
 	sort-words \
 	spotify-flatpack \
 	ssh-xauth.sh \
+	ssh2repo \
 	sshenv \
 	sshgo \
 	start-gpodder \
