@@ -1,0 +1,12 @@
+#! /usr/bin/env bash
+# You have source this file, not exectute it!!!
+
+# Does this work yet?
+
+repath --warn --var LD_LIBRARY_PATH \
+       $(find /usr/local/sw/versions/chibi-scheme/ -iname \*.so |
+             while read fn
+             do
+                 echo $(dirname $fn)
+             done |
+             sort -u)
