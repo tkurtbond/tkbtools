@@ -15,6 +15,7 @@ REPOS=(
     70 y ~/Notes                                             git@github.com:tkurtbond/general-notes.git
     50 y ~/Repos/tkurtbond.github.io                         git@github.com:tkurtbond/tkurtbond.github.io.git
     50 y ~/Repos/microblog                                   git@github.com:tkurtbond/microblog.git
+    48 y ~/Repos/pstk-tutorial                               git@github.com:tkurtbond/pstk-tutorial.git
     45 y ~/Repos/scratch                                     git@github.com:tkurtbond/scratch.git
     43 y ~/Repos/learn-htmx/                                 git@github.com:tkurtbond/learn-htmx.git
     40 y ~/Repos/VTIL-pictures                               git@github.com:tkurtbond/VTIL-pictures.git
