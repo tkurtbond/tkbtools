@@ -56,11 +56,11 @@ do
         ((DO_INTERACTIVE)) && {
             read -p "Create repo? (y/n/q)" ynq </dev/tty
             echo ynq: $ynq
-            [[ $ynq == q* ]] && {
-                echo 1>&1 "User requested quit, exiting."
+            [[ $ynq == [Qq]* ]] && {
+                echo 1>&2 "User requested quit, exiting."
                 exit 1
             }
-            [[ $ynq == y* ]] && CREATE_REPO=1
+            [[ $ynq == [Yy]* ]] && CREATE_REPO=1
         } || {
             CREATE_REPO=0
         }
