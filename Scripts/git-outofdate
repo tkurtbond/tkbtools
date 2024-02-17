@@ -4,10 +4,11 @@
 
 errors=0
 
-while getopts "chiu" opt
+while getopts "Cchiu" opt
 do
     case "$opt" in
         (\?) ((errors++)) ;;
+        (C) DO_CREATE=1 ;;
         (c) DO_CLEAR=1 ;;
         (h) DO_HELP=1 ;;
         (i) DO_INTERACTIVE=1 ;;
@@ -21,6 +22,7 @@ done
 usage: $0 [-chiu]
 
 Options
+-C      Asks the user if they want to create missing repos.
 -c      Clears the screen.
 -h	Displays this message.
 -i      Asks the user first when updating repos.
@@ -57,7 +59,16 @@ time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')"
           MAY_NEED_CHECKIN=0
           [[ -d $DIR ]] || {
               printf "===> ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" "Does not exist!"
-              continue
+              if ((DO_CREATE)); then
+                  read -p "Create it? (y/n/q) " ynq </dev/tty
+                  [[ $ynq == [Qq]* ]] && {
+                      echo 1>&2 "User requested quit, exiting."
+                      break
+                  }
+                  [[ $ynq == [Yy]* ]] && git clone $REPO $DIR
+              else 
+                  continue
+              fi
           }
           [[ -d $DIR/.git ]] || {
               printf "===> ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" "Not a git repo!"
