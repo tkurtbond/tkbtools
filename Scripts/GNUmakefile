@@ -162,6 +162,7 @@ SCRIPTS= \
 	sshenv \
 	sshgo \
 	start-gpodder \
+	start-sway \
 	strip-leading-hash \
 	sum-bp \
 	sum-cp \

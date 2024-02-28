@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# https://www.reddit.com/r/swaywm/comments/f98jlp/comment/fivcb18/
+# startup script for sway from console
+# Get to a console.
+# systemctl stop gdm
+# systemctl disable gdm
+
+exec &> ~/.wsession-errors
+
+# for mythtv:
+unset QT_QPA_PLATFORM
+
+# do it here so all programs can run the wayland version eg keepassxc:
+export MOZ_ENABLE_WAYLAND=1
+
+dbus-launch --sh-syntax --exit-with-session sway 
