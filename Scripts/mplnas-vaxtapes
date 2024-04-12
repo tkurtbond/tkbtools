@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+# Mount vaxtapes home for VAX backup tape files.
+
+mount.smb3 '\\192.168.1.26\home' /media/tkb/vaxtapes -o user=vaxtapes,uid=tkb
