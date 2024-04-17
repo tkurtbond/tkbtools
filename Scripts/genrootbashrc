@@ -1,0 +1,10 @@
+#! /usr/bin/env bash
+TEMPFILE=$(mktemp)
+oecho $TEMPFILE
+cp -v ~/.root.bashrc /tmp/save.root.bashrc
+
+sed -n  -e '1,/^# Setting Prompt/p' -e '/^# End Setting Prompt/,$p' \
+    <~/.root.bashrc  |
+    sed -e "/^# Setting Prompt/r$(echo ~/.bashrc_prompt)" >$TEMPFILE
+cp -v $TEMPFILE ~/.root.bashrc
+rm -v $TEMPFILE
