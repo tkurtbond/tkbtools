@@ -2,3 +2,7 @@
   (Get-WmiObject -query 'select * from SoftwareLicensingService').OA3xOriginalProductKey
 * In cmd run as Administrator:
   wmic path softwarelicensingservice get OA3xOriginalProductKey
+* using vbs
+From: https://gist.githubusercontent.com/craigtp/dda7d0fce891a087a962d29be960f1da/raw/a6cc06ba07d9d6a3aa47cf18d2df0ea978e87b42/GetWindowsProductKey.vbs
+
+cscript /nologo GetWindowsProductKey.vbs
