@@ -64,6 +64,7 @@ SCRIPTS= \
 	dedos.py \
 	deslash \
 	devolvepdf \
+	dmenu_emoji \
 	domail \
 	ebook \
 	embed-fonts \
