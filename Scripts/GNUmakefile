@@ -148,6 +148,7 @@ SCRIPTS= \
 	run-chickadee \
 	run-discord \
 	run-duckling-run \
+	run-fantasygrounds \
 	run-spotify \
 	scream \
 	setup-gerbil \
