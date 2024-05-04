@@ -1,0 +1,15 @@
+# start-ssh-agent -- Start the SSH agent unless it is already running.
+#
+# source this, don't execute it.
+#
+# From: https://www.reddit.com/r/voidlinux/comments/csgl5p/comment/exem08y/
+# which used: export SSH_AUTH_SOCK=${HOME}/.ssh/agent
+# But shouldn't we use XDG_RUNTIME_DIR?
+# Fedora uses $XDG_RUNTIME_DIR/ssh-agent.socket
+export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
+if ! pgrep -u ${USER} ssh-agent > /dev/null; then
+    rm -f ${SSH_AUTH_SOCK}
+fi
+if [ ! -S ${SSH_AUTH_SOCK} ]; then
+    eval $(ssh-agent -a ${SSH_AUTH_SOCK} 2> /dev/null)
+fi
