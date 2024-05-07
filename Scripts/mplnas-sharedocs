@@ -1,4 +1,4 @@
 #! /usr/bin/env bash
 # Mount ShareDocs from the MPL NAS for syncing subdirectorys with unison.
 
-mount.smb3 '\\192.168.1.26\ShareDocs' /media/tkb/ShareDocs -o user=kbond,uid=tkb
+mount.smb3 '\\192.168.1.26\ShareDocs' ~tkb/mnt/ShareDocs -o user=kbond,uid=tkb
