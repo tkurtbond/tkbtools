@@ -3,15 +3,21 @@
 HOSTNAME=$(hostname)
 echo HOSTNAME: $HOSTNAME
 
+if [[ $HOSTNAME = helblindi ]]; then
+    export MEDIA=/media/tkb
+else
+    export MEDIA=/run/media/tkb
+fi
+
 unison $HOSTNAME-tkb-to-oone &
 unison $HOSTNAME-tkb-to-oone-muspelheim &
 
 
-if [[ -d /var/run/media/tkb/Kormt ]]; then
+if [[ -d $MEDIA/Kormt ]]; then
     unison $HOSTNAME-kormt-to-oone-muspelheim &
     unison $HOSTNAME-tkb-kormt &
 fi
 
-if [[ -d /var/run/media/tkb/Sindri ]]; then
+if [[ -d $MEDIA/Sindri ]]; then
     unison $HOSTNAME-tkb-sindri &
 fi
