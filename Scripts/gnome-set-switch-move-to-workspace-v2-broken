@@ -1,0 +1,16 @@
+#! /usr/bin/env bash
+
+for ws_num in {1..20}; do
+    ws_key=$(( ws_num % 10 ))
+    echo ws_num: $ws_num ws_key: $ws_key
+    if ((ws_num > 10)); then
+        ALT='<Alt>'
+    else
+        ALT=''
+    fi
+    
+    # gsettings get "org.gnome.desktop.wm.keybindings" \
+    #          "switch-to-workspace-$ws_num"
+    gsettings set "org.gnome.desktop.wm.keybindings" \
+              "switch-to-workspace-$ws_num" "['<Super>$ALT$ws_key']"
+done
