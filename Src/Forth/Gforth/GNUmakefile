@@ -7,7 +7,7 @@ all: build $(foreach f,$(MYGFORTHS),build/$(f))
 build:
 	mkdir build
 
-build/gforth-tkb-0.7.3: anew.fs
+build/gforth-tkb-0.7.3: tkb.fs
 	gforthmi-0.7.3 build/gforth-tkb-0.7.3 tkb.fs
 
 

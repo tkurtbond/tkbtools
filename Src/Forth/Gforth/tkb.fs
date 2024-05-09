@@ -5,3 +5,8 @@
 locals-types definitions
 ' } alias :}
 forth definitions
+
+variable stack-depth
+
+: (* depth stack-depth ! ;
+: *) depth stack-depth @ - ;
