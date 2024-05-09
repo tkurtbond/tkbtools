@@ -1,17 +1,17 @@
 BINDIR=$(HOME)/local/bin
 CP=cp
-MYGFORTHS=gforth-tkb
+MYGFORTHS=gforth-tkb-0.7.3
 
 all: build $(foreach f,$(MYGFORTHS),build/$(f))
 
 build:
 	mkdir build
 
-build/gforth-tkb: anew.fs
-	gforthmi build/gforth-tkb anew.fs
+build/gforth-tkb-0.7.3: anew.fs
+	gforthmi-0.7.3 build/gforth-tkb-0.7.3 tkb.fs
 
 
-install: $(foreach f,$(MYGFORTHS),$(BINDIR)/$(f))
+install: all $(foreach f,$(MYGFORTHS),$(BINDIR)/$(f))
 
 $(BINDIR)/% : build/%
 	[ -d $(BINDIR) ] || (mkdir -p $(BINDIR) && echo built $(BINDIR))
