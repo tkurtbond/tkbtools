@@ -2,25 +2,25 @@
 
 (
     echo "* $(date -Iseconds)"
-    { echo '* lscpu'
+    { echo '** lscpu'
       lscpu | sed 's/^/  /'
     }
-    { echo '* memory'
+    { echo '** memory'
       echo $(( 1024 * $(grep MemTotal /proc/meminfo  | gawk '{ print $2; }') )) | tounits | sed 's/^/  /'
     }
-    { echo '* disks'
+    { echo '** disks'
       lsblk | sed 's/^/  /'
     }
-    { echo '* display'
+    { echo '** display'
       xdpyinfo | sed -n -e '/screen #/,+3p' \
                      -e '/number of extensions:/,/default screen number/p' |
           sed 's/^/  /'
     }
     # This shows, among other things, the scaling.
     [[ "$XDG_SESSION_DESKTOP" == "KDE" ]] && {
-        echo '* kscreen-doctor'
+        echo '** kscreen-doctor'
         kscreen-doctor -o | ansifilter | sed 's/^/  /'
     }
-    # What would the gnome equivalent be?
+    # What would the gnome equivalent be?  Or the sway?
     
 ) | tee ~/Repos/tkb-notes/Computer/Capabilities/$(hostname)-capabilities.org
