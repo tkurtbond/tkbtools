@@ -14,3 +14,5 @@ type -p clang 1>/dev/null 2>&1 && {
 
 [[ -r /etc/lsb-release ]] && cat /etc/lsb-release
 
+[[ -r /etc/os-release ]] && cat /etc/os-release
+
