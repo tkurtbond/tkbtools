@@ -167,6 +167,7 @@ SCRIPTS= \
 	sshgo \
 	start-gpodder \
 	start-sway \
+	start-swayidle \
 	strip-leading-hash \
 	sum-bp \
 	sum-cp \

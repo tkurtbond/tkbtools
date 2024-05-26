@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+
+swayidle -w \
+         timeout 300 'swaylock -l -f -c 4169e1' \
+         timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+         before-sleep 'swaylock -l -f -c 4169e1' &
