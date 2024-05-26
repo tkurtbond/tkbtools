@@ -697,7 +697,10 @@ let () =
   let wayland_rx = Str.regexp_case_fold "wayland.*" in begin 
   try
     let wayland_env = Sys.getenv "WAYLAND_DISPLAY" in
-    if Str.string_match wayland_rx wayland_env 0 then using_wayland := true
+    if Str.string_match wayland_rx wayland_env 0 then begin
+      using_wayland := true;
+      prerr_endline ("Using wayland")
+    end
   with Not_found -> ()
   end; 
   create_main ()
