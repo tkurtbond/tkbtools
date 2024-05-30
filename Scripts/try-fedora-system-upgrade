@@ -4,13 +4,15 @@
 # it since dnf caught the SIGINT and the loop started the dnf command over
 # again before I could C-c the shell.  This way there is a prompt and an
 # option to quit, before it times out and continues.
+
+RELEASEVER=40
 while true
 do
     ((i++))
     echo "Run #$i of dnf system-upgrade download at $(date -Iseconds)"
 
     # Exit loop if successful
-    dnf -y system-upgrade download --refresh --releasever=39 && break
+    dnf -y system-upgrade download --refresh --releasever=$RELEASEVER && break
 
     # This allows the user to exit if necessary.
     read -t 30 -p "Continue? (y/n) " reply
