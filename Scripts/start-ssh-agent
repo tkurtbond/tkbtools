@@ -1,3 +1,4 @@
+# -*- sh -*-
 # start-ssh-agent -- Start the SSH agent unless it is already running.
 #
 # source this, don't execute it.
