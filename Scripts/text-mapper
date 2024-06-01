@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+cd /usr/local/sw/src/gaming/text-mapper &&
+    podman run --publish=3010:3010 test/text-mapper \
+           text-mapper daemon --listen "http://*:3010"

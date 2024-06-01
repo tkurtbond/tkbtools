@@ -175,6 +175,7 @@ SCRIPTS= \
 	sumlines \
 	tarit \
 	test-email.sh \
+	text-mapper \
 	tkb-sync \
 	tkbput.sh \
 	troff-depends \
