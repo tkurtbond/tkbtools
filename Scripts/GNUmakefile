@@ -189,6 +189,7 @@ SCRIPTS= \
 	unwrap-paras \
 	usatime \
 	uwork \
+	vms-size \
 	winbox-in-wine \
 	worldographer \
 	worldtime \

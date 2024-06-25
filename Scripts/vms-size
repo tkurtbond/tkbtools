@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+eval $(resize)
+echo "
+set term/page=$LINES/width=$COLUMNS
+"
