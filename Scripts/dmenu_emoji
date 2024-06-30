@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-cat <<HERE | dmenu -i | cut -c1 | wl-copy
+cat <<HERE | dmenu -i | cut -c1 | wl-copy -n
 😀 grinning face
 😃 grinning face with big eyes
 😄 grinning face with smiling eyes
