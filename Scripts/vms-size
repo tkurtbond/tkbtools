@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-eval $(resize)
+
+COLUMNS=$(tput cols)
+LINES=$(tput lines)
+
 echo "
-set term/page=$LINES/width=$COLUMNS
+set term/inq/insert/page=$LINES/width=$COLUMNS
 "
