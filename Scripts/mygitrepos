@@ -27,7 +27,7 @@ REPOS=(
     30 y ~/current/RPG/Mini-Six/m6charcost                   git@github.com:tkurtbond/m6charcost.git
     30 y ~/current/RPG/Mini-Six/SRD                          git@github.com:tkurtbond/Minimal-OpenD6.git
     30 y ~/current/RPG/Kids/Story-Engine/Maelstrom           git@github.com:tkurtbond/Maelstrom.git
-    30 y ~/current/RPG/Kids/OVA/The-Lost-Worlds              git@github.com:tkurtbond/The-Lost-Worlds.git
+    30 y ~/current/RPG/Kids/OVA/Lost-Worlds                  git@github.com:tkurtbond/Lost-Worlds.git
     30 y ~/current/RPG/Kids/Mini-Six/Middle-Sea              git@github.com:tkurtbond/Middle-Sea.git
     30 y ~/current/RPG/Campaigns/Alusia/Partyhist-xml        git@github.com:tkurtbond/partyhist.git
     30 y ~/Repos/RPG/Red-Planet-Blue-Helmets                 git@github.com:tkurtbond/Red-Planet-Blue-Helmets.git
