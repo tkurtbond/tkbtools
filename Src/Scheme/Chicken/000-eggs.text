@@ -20,10 +20,12 @@ http-client
 ioctl                           # This is for schemepunk, which is for show.
 loop
 matchable
+math                            # For sum
 medea
 ncurses
 pathname-expand
 r7rs
+sequences                       # for take and drop
 simple-loops
 simple-timer
 srfi-18                         # Multithreading support
@@ -40,6 +42,7 @@ srfi-25                         # Multi-dimensional Array Primitives
 srfi-41                         # Streams
 srfi-69                         # Basic hash tables
 srfi-99                         # ERR5RS Record Syntax
+sxml-serializer
 sxpath
 system-information
 tabular
