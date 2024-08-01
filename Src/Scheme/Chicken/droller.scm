@@ -35,7 +35,10 @@
 	    (seq (submatch-named keep (or #\l #\h))
 		 (submatch-named keep-n (+ (/ #\0 #\9))))))
 	(? (submatch
-	    (seq (submatch-named operation (/ #\- #\- #\+ #\+ #\* #\*))
+	    (seq (submatch-named operation (/ #\- #\- #\+ #\+ #\* #\*
+;; Doesn't work yet.
+;;                                              #\/ #\/
+                                              ))
 		 (submatch-named operand (+ (/ #\0 #\9))))))))
 
 (define roller-regex (sre->irregex roller-sre 'i))
@@ -75,6 +78,9 @@
 	     (- n operand))
 	    ((string=? operation "*")
 	     (* n operand))
+;; Doesn't work yet.
+;;            ((string=? operation "/")
+;;             (/ (exact->inexact n) (exact->inexact operand)))
 	    (else
 	     (error "Unknown operand")))
       n))
