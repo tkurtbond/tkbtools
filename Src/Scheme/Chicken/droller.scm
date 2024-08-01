@@ -36,8 +36,7 @@
 		 (submatch-named keep-n (+ (/ #\0 #\9))))))
 	(? (submatch
 	    (seq (submatch-named operation (/ #\- #\- #\+ #\+ #\* #\*
-;; Doesn't work yet.
-;;                                              #\/ #\/
+                                              #\/ #\/
                                               ))
 		 (submatch-named operand (+ (/ #\0 #\9))))))))
 
@@ -78,9 +77,8 @@
 	     (- n operand))
 	    ((string=? operation "*")
 	     (* n operand))
-;; Doesn't work yet.
-;;            ((string=? operation "/")
-;;             (/ (exact->inexact n) (exact->inexact operand)))
+            ((string=? operation "/")
+             (/ (exact->inexact n) (exact->inexact operand)))
 	    (else
 	     (error "Unknown operand")))
       n))
@@ -88,8 +86,11 @@
 (define (rolls num-sides num-dice num-rolls keep keep-n operation operand)
   (let loop ((i 1))
     (if (> i 1) (format #t ", "))
-    (format #t "~D" (do-operation operation operand 
-				  (nD num-sides num-dice keep keep-n)))
+    (let ((result (do-operation operation operand 
+				(nD num-sides num-dice keep keep-n))))
+      (if (exact? result)
+          (format #t "~d" result)
+          (format #t "~f" result)))
     (if (= i num-rolls)
 	(format #t "~%")
 	(loop (+ 1 i)))))
