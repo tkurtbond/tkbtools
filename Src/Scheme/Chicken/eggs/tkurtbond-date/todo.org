@@ -1,2 +1,0 @@
-* tktc3.scm
-** Add differeence to treeview
