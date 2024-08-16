@@ -111,6 +111,9 @@ SCRIPTS= \
 	machine-characteristics \
 	mfcleanup \
 	mkignores \
+	mpl-rename-mail \
+	mplnas-sharedocs \
+	mplnas-vaxtapes \
 	mrp \
 	music-report \
 	mygitrepos \
