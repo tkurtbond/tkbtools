@@ -42,6 +42,7 @@ srfi-25                         # Multi-dimensional Array Primitives
 srfi-41                         # Streams
 srfi-69                         # Basic hash tables
 srfi-99                         # ERR5RS Record Syntax
+srfi-216                        # Random
 sxml-serializer
 sxpath
 system-information
