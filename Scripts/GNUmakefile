@@ -153,6 +153,7 @@ SCRIPTS= \
 	run-discord \
 	run-duckling-run \
 	run-fantasygrounds \
+	run-nyxt \
 	run-spotify \
 	scream \
 	setup-gerbil \
