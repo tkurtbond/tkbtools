@@ -1,3 +1,4 @@
+### ll.icn -- Giet the lengths of the shortest and longest lines in files.
 procedure die (status, msg)
    write (&errout, msg)
    exit (status)
