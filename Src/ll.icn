@@ -1,0 +1,36 @@
+procedure die (status, msg)
+   write (&errout, msg)
+   exit (status)
+end # die
+
+procedure process_filename (filename)
+   local length, min, max
+
+   if /filename then {
+      f := &input
+      filename := "(standard input)"
+   }
+   else {
+      f := open (filename, "r") | 
+         die (1, "ll: unable to open filename \"" || filename || "\"")
+   }
+
+   max := 0
+   min := 2 ^ 31			#  good enough ...
+
+   while length := *read (f) do {
+      max <:= length
+      min >:= length
+   }
+
+   write (min, " ", max, " ", \filename)
+
+   if \filename then close (f)
+end # process_file
+
+
+procedure main (args)
+   local filename
+   if *args = 0 then process_filename (&null)
+   else every filename := !args do process_filename (filename)
+end # main
