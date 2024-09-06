@@ -50,15 +50,17 @@ if [[ -t 0 ]]; then
     NC='\033[0m'                # No Color.
 fi
 
+NUM_REPOS=0
 time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')" "$(hostname)"
       mygitrepos --all-columns | while read PRIO INCL DIR REPO
       do
+          ((NUM_REPOS++))
           NEED_TO_PULL=0
           NEED_TO_PUSH=0
           NEED_TO_CREATE=0
           MAY_NEED_CHECKIN=0
           [[ -d $DIR ]] || {
-              printf "===> ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" "Does not exist!"
+              printf "===> %3d ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" $NUM_REPOS "Does not exist!"
               if ((DO_CREATE)); then
                   read -p "Create it? (y/n/q) " ynq </dev/tty
                   [[ $ynq == [Qq]* ]] && {
@@ -71,7 +73,7 @@ time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')"
               fi
           }
           [[ -d $DIR/.git ]] || {
-              printf "===> ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" "Not a git repo!"
+              printf "===> %3d ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" $NUM_REPOS  "Not a git repo!"
               continue
           }
           STATUS=$(cd $DIR && git-uptodate)
@@ -95,11 +97,11 @@ time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')"
                   STATCOLOR="$BRIGHTWHITE"
                   ;;
           esac
-          printf "===> $STATCOLOR%20s ${CYAN}Repo $DIR$NC\n" "$STATUS"
+          printf "===> %3d $STATCOLOR%20s ${CYAN}Repo $DIR$NC\n" $NUM_REPOS "$STATUS"
 
           STATUS=$(cd $DIR && git status --short)
           [[ -n "$STATUS" ]] && {
-              printf "===> ${RED}%20s ${CYAN}Repo $DIR $NC\n" "May need checkin!"
+              printf "===> %3d ${RED}%20s ${CYAN}Repo $DIR $NC\n" $NUM_REPOS "May need checkin!"
               MAY_NEED_CHECKIN=1
           }
 
