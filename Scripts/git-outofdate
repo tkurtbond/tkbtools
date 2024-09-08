@@ -4,7 +4,7 @@
 
 errors=0
 
-while getopts "Cchiu" opt
+while getopts "Cchiux" opt
 do
     case "$opt" in
         (\?) ((errors++)) ;;
@@ -13,8 +13,11 @@ do
         (h) DO_HELP=1 ;;
         (i) DO_INTERACTIVE=1 ;;
         (u) DO_UPDATE=1 ;;
+        (x) DO_TRACE=1 ;;
     esac
 done
+
+((DO_TRACE)) && set -x
 
 ((DO_HELP)) && HELPOUT=/dev/stdout || HELPOUT=/dev/stderr
 ((DO_HELP || errors)) && {
@@ -27,6 +30,7 @@ Options
 -h	Displays this message.
 -i      Asks the user first when updating repos.
 -u      Update repos that need pulled.
+-x      Trace (bash's "set -x").
 EOF
     exit
 }
