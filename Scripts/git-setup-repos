@@ -57,7 +57,7 @@ do
         echo DO_INTERACTIVE: $DO_INTERACTIVE
         ((DO_INTERACTIVE)) && echo interactive || echo non-interactive
         ((DO_INTERACTIVE)) && {
-            read -p "Create repo? (y/n/q)" ynq </dev/tty
+            read -p "Create repo? (y/n/q) " ynq </dev/tty
             echo ynq: $ynq
             [[ $ynq == [Qq]* ]] && {
                 echo 1>&2 "User requested quit, exiting."
