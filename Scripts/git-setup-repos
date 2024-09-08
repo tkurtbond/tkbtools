@@ -1,15 +1,17 @@
 #! /usr/bin/env bash
-DO_INTERACTIVE=0
 errors=0
 
-while getopts "hi" opt
+while getopts "chi" opt
 do
     case "$opt" in
         (\?) ((errors++)) ;;
+        (c) DO_CLEAR=1 ;;
         (h) DO_HELP=1 ;;
         (i) DO_INTERACTIVE=1 ;;
     esac
 done
+
+((DO_CLEAR)) && clear 
 
 ((DO_HELP)) && HELPOUT=/dev/stdout || HELPOUT=/dev/stderr
 ((DO_HELP || errors)) && {
@@ -19,6 +21,7 @@ usage: $0 [-ln]
 Options
 -c      Clears the screen.
 -h	Displays this message.
+-i      Interactive: Ask the user if they want to create the repo.
 EOF
     exit
 }
