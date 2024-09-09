@@ -25,6 +25,7 @@ REPOS=(
     30 y ~/current/RPG/Tools/OVA                             git@github.com:tkurtbond/ova-tools.git
     30 y ~/current/RPG/Tools/Generators                      git@github.com:tkurtbond/Generators.git
     30 y ~/current/RPG/Tools/BESM                            git@github.com:tkurtbond/besm-tools.git
+    30 y ~/current/RPG/Tools/Barrowmaze                      git@github.com:tkurtbond/barrowmaze-tools.git
     30 y ~/current/RPG/Mini-Six/m6charcost                   git@github.com:tkurtbond/m6charcost.git
     30 y ~/current/RPG/Mini-Six/SRD                          git@github.com:tkurtbond/Minimal-OpenD6.git
     30 y ~/current/RPG/Kids/Story-Engine/Maelstrom           git@github.com:tkurtbond/Maelstrom.git
