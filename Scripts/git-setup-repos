@@ -1,16 +1,19 @@
 #! /usr/bin/env bash
 errors=0
 
-while getopts "chi" opt
+while getopts "chIix" opt
 do
     case "$opt" in
         (\?) ((errors++)) ;;
         (c) DO_CLEAR=1 ;;
         (h) DO_HELP=1 ;;
+        (I) DO_IGNORED=1 ;;
         (i) DO_INTERACTIVE=1 ;;
+        (x) DO_TRACE=1
     esac
 done
 
+((DO_TRACE)) && set -x
 ((DO_CLEAR)) && clear 
 
 ((DO_HELP)) && HELPOUT=/dev/stdout || HELPOUT=/dev/stderr
@@ -21,7 +24,9 @@ usage: $0 [-ln]
 Options
 -c      Clears the screen.
 -h	Displays this message.
+-I	Even ask the user if they want to clone the ignored repositories.
 -i      Interactive: Ask the user if they want to create the repo.
+-x      Turn on tracing of commands.
 EOF
     exit
 }
@@ -46,7 +51,9 @@ mygitrepos --all-columns | while read PRIORITY INCLUDE DIR REPO
 do
     if ! [[ -d $DIR ]]; then 
         printf "===> ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" "Does not exist!"
-        [[ $INCLUDE != y ]] && {
+        [[ $INCLUDE != y ]] && DO_INCLUDE=0 || DO_INCLUDE=1
+        ## echo REPO: $REPO DBG: DO_INCLUDE: $DO_INCLUDE DO_IGNORED: $DO_IGNORED
+        ((! DO_INCLUDE && ! DO_IGNORED)) && {
             printf "     ${BRIGHTWHITE}But we are ignoring it!$NC\n"
             continue
         }
