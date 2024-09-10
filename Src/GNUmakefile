@@ -42,10 +42,6 @@ OCAMLCFLAGS+=$(OCAMLDEBUG)
 LIBSTR=#-cclib -lstr
 LIBUNIX=#-cclib -lunix
 
-ifndef ICONT
-ICONT=unicont
-endif
-
 ## The things that differ from Unix to Windows NT.
 #OPSYS=unix
 ifeq ($(OPSYS),UNIX)
@@ -119,7 +115,7 @@ EXES=	\
 	grepgroup$(EXE) \
 	increment$(EXE) \
 	iso8601$(EXE) \
-	ll$(EXE) \
+	llc$(EXE) \
 	md5tree$(EXE) \
 	nicepath$(EXE) \
 	nospaces$(EXE) \
@@ -201,10 +197,6 @@ build:
 	mkdir build
 
 test_exes: $(TEST_EXES)
-
-build/% : %.icn
-	$(ICONT) -o $@ $<
-
 
 build/%$(EXE): %.ml
 	$(OCAMLC) $(OCAMLCFLAGS) -o $@ $<
