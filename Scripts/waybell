@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+ogg123 /usr/share/sounds/freedesktop/stereo/bell.oga </dev/null >/dev/null 2>&1
