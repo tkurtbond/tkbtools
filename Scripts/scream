@@ -32,7 +32,11 @@ EOF
 let n=0
 while ((CONTINUOUS || n < LIMIT))
 do
-  printf "\a"
-  sleep 1
-  ((n++))
+    if [[ -n "$WAYLAND_DISPLAY" ]]; then
+        waybell
+    else
+        printf "\a"
+    fi
+    sleep 1
+    ((n++))
 done

@@ -194,6 +194,7 @@ SCRIPTS= \
 	usatime \
 	uwork \
 	vms-size \
+	waybell \
 	winbox-in-wine \
 	worldographer \
 	worldtime \
