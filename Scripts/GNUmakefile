@@ -198,6 +198,7 @@ SCRIPTS= \
 	winbox-in-wine \
 	worldographer \
 	worldtime \
+	wscream \
 	# Nothing Here
 
 HOME_SCRIPTS=\
