@@ -1734,7 +1734,6 @@ function magic_readline(&$mm, $title)
 				$in==special_keys['end_alternative1'] ||
 				$in==special_keys['end_alternative2'] ||
 				$in==special_keys['end_alternative3'] ||
-                $in==special_keys['end'] ||
 				$in==special_keys['ctrl_n'] ||
 				$in==special_keys['ctrl_e']
 			)
