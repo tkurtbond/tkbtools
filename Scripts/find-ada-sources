@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+find . \( -iname \*.ads -o -iname \*.adb \) \
+     -a ! -iname b__\*.ads -a ! -iname b__\*.adb \
+     -a ! -iname b~\*.ads -a ! -iname b~\*.adb -print
