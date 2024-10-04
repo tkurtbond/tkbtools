@@ -39,6 +39,7 @@ REPOS=(
     20 y ~/job/MPL/MHST/dmsfields                            git@github.com:tkurtbond/dmsfields.git
     20 y ~/job/MPL/MHST/SIS-data                             git@github.com:tkurtbond/SIS-data.git
     20 y ~/job/MPL/MHST/Processes                            git@github.com:tkurtbond/mhst-processes.git
+    20 y ~/job/MPL/Processes                                 git@github.com:tkurtbond/MPL-processes.git 
     20 y ~/current/programming/trampolines                   git@github.com:tkurtbond/trampolines.git
     20 y ~/Repos/sstg                                        git@github.com:tkurtbond/sstg.git
     20 y ~/Repos/sdcl                                        git@github.com:tkurtbond/sdcl.git
