@@ -1,0 +1,15 @@
+#! /usr/bin/env bash
+
+trap 'echo "trap hit, exiting..."; exit' SIGINT
+
+HOSTS=(ilian
+       konrad
+       elric
+       ulrich
+      )
+for host in "${HOSTS[@]}"; do
+    # [[ $(hostname) == $host ]] && next
+    echo "====> Working on $host"
+    ssh -t tkb@$host "bash -l git-outofdate -u"
+done
+
