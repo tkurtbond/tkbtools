@@ -13,9 +13,9 @@ REPOS=(
     90 y ~/comp/tkbtools                                     git@github.com:tkurtbond/tkbtools.git
     80 y ~/Repos/tkb-notes                                   git@gitlab.com:t-kurt-bond/tkb-notes.git
     70 y ~/Notes                                             git@github.com:tkurtbond/general-notes.git
-    50 y ~/Repos/tkurtbond.github.io                         git@github.com:tkurtbond/tkurtbond.github.io.git
-    50 y ~/Repos/microblog                                   git@github.com:tkurtbond/microblog.git
-    50 y ~/Repos/scratch                                     git@github.com:tkurtbond/scratch.git
+    60 y ~/Repos/tkurtbond.github.io                         git@github.com:tkurtbond/tkurtbond.github.io.git
+    60 y ~/Repos/microblog                                   git@github.com:tkurtbond/microblog.git
+    60 y ~/Repos/scratch                                     git@github.com:tkurtbond/scratch.git
     43 y ~/Repos/learn-htmx/                                 git@github.com:tkurtbond/learn-htmx.git
     42 y ~/Repos/tkbvmslib                                   git@github.com:tkurtbond/tkbvmslib.git
     40 y ~/Repos/VTIL-pictures                               git@github.com:tkurtbond/VTIL-pictures.git
