@@ -4,7 +4,7 @@
 
 errors=0
 
-while getopts "Cchiux" opt
+while getopts "Cchip:ux" opt
 do
     case "$opt" in
         (\?) ((errors++)) ;;
@@ -12,6 +12,7 @@ do
         (c) DO_CLEAR=1 ;;
         (h) DO_HELP=1 ;;
         (i) DO_INTERACTIVE=1 ;;
+        (p) LOWEST_PRIO="$OPTARG" ;;
         (u) DO_UPDATE=1 ;;
         (x) DO_TRACE=1 ;;
     esac
@@ -29,6 +30,7 @@ Options
 -c      Clears the screen.
 -h	Displays this message.
 -i      Asks the user first when updating repos.
+-p p    Lowest priority to pull.
 -u      Update repos that need pulled.
 -x      Trace (bash's "set -x").
 EOF
@@ -58,6 +60,10 @@ NUM_REPOS=0
 time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')" "$(hostname)"
       mygitrepos --all-columns | while read PRIO INCL DIR REPO
       do
+          [[ -n "$LOWEST_PRIO" ]] && (($PRIO < $LOWEST_PRIO)) && {
+              echo 1>&2 "*** Quitting after priority $LOWEST_PRIO"
+              break
+          }
           ((NUM_REPOS++))
           NEED_TO_PULL=0
           NEED_TO_PUSH=0
