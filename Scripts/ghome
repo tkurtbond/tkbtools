@@ -2,6 +2,29 @@
 
 trap 'echo "trap hit, exiting..."; exit' SIGINT
 
+while getopts "hp:" opt
+do
+    case "$opt" in
+        (\?) ((errors++)) ;;
+        (h) DO_HELP=1 ;;
+        (p) LOWEST_PRIO="$OPTARG" ;;
+    esac
+done
+
+((DO_HELP)) && HELPOUT=/dev/stdout || HELPOUT=/dev/stderr
+((DO_HELP || errors)) && {
+    cat >$HELPOUT <<EOF
+usage: $0 [-chiu]
+
+Options
+-h	Displays this message.
+-pP     Number P is lowest priority to pull.
+EOF
+    exit
+}
+
+[[ -n "$LOWEST_PRIO" ]] && USEPRIO=-p$LOWEST_PRIO
+
 HOSTS=(ilian
        konrad
        elric
@@ -10,6 +33,6 @@ HOSTS=(ilian
 for host in "${HOSTS[@]}"; do
     # [[ $(hostname) == $host ]] && next
     echo "====> Working on $host"
-    ssh -t tkb@$host "bash -l git-outofdate -u"
+    ssh -t tkb@$host "bash -l git-outofdate -u $USEPRIO"
 done
 
