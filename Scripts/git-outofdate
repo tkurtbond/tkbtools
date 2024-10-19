@@ -30,7 +30,7 @@ Options
 -c      Clears the screen.
 -h	Displays this message.
 -i      Asks the user first when updating repos.
--p p    Lowest priority to pull.
+-pP     Number P is lowest priority to pull.
 -u      Update repos that need pulled.
 -x      Trace (bash's "set -x").
 EOF
