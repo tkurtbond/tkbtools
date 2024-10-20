@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-### NOTE: use git-setup-repos to set up the repos!
+### NOTE: use -C or git-setup-repos to set up the repos!
 
 errors=0
 
