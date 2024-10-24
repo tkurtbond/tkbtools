@@ -33,7 +33,8 @@ build:
 
 
 build/smodpath$(EXE) \
-build/list-chicken-imports$(EXE): CSCFLAGS+=$(STATIC)
+build/list-chicken-imports$(EXE) \
+build/snewver$(EXE): CSCFLAGS+=$(STATIC)
 
 build/%$(EXE) : %.scm
 	$(TIME) $(CSC) $(CSCFLAGS) -o $@ $^
