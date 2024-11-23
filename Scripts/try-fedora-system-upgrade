@@ -5,7 +5,7 @@
 # again before I could C-c the shell.  This way there is a prompt and an
 # option to quit, before it times out and continues.
 
-RELEASEVER=40
+RELEASEVER=41
 while true
 do
     ((i++))
