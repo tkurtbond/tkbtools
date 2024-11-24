@@ -1,0 +1,23 @@
+project Tools is
+      
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Exec_Dir use "bin";
+
+   package Compiler is 
+      for Default_Switches ("Ada") use (
+        "-gnatef",                      --  use full pathnames in erro messages
+        "-gnat2022",                    --  Ada 2022 by default
+        "-gnatf");                      --  full error messages
+   end Compiler;
+   package Binder is 
+   end Binder;
+   package Linker is
+   end Linker;
+   for Main use (
+     "ruler"
+     );
+end Tools;
+-- Local Variables:
+-- compile-command: "gprbuild -P tools.gpr"
+-- End:
