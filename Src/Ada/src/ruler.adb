@@ -31,8 +31,8 @@ procedure Ruler is
 
 begin
    Define_Switch (Config, "-e", Help => "Output extra header and trailer lines.");
-   Getopt (Config, Callback'Unrestricted_access);
    Set_Usage (Config, "[-e] [ruler_length]");
+   Getopt (Config, Callback'Unrestricted_access);
    
    loop 
       declare 
@@ -66,4 +66,7 @@ begin
    Extra_Line;
    
    GNAT.OS_Lib.OS_Exit (0);
+exception
+   when EXIT_FROM_COMMAND_LINE =>
+      GNAT.OS_Lib.OS_Exit (4);
 end Ruler;
