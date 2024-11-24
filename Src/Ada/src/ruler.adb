@@ -1,5 +1,5 @@
 with Ada.Text_IO; use Ada.Text_IO;
-with GNAT.OS_LIb;
+with GNAT.OS_LIb; use Gnat.OS_Lib;
 with GNAT.Strings; use GNAT.Strings;
 with GNAT.Command_Line; use GNAT.Command_Line;
 with GNAT.Formatted_String; use GNAT.Formatted_String;
@@ -42,14 +42,14 @@ begin
          Number_Of_Arguments := @ + 1;
          if Number_Of_Arguments > 1 then 
             Put_Line (Standard_Error, "ruler: only one argument is allowed.");
-            GNAT.OS_Lib.OS_Exit (2);
+            OS_Exit (2);
          end if;
          Ruler_Length := Positive'Value (Argument);
       exception
          when Constraint_Error =>
             Put_Line (Standard_Error, 
               -(+"ruler: ""%s"" is an invalid value for ruler length." & Argument));
-            GNAT.OS_Lib.OS_Exit (3);
+            OS_Exit (3);
       end;
    end loop;
    
@@ -65,8 +65,8 @@ begin
    New_Line;
    Extra_Line;
    
-   GNAT.OS_Lib.OS_Exit (0);
+   OS_Exit (0);
 exception
    when EXIT_FROM_COMMAND_LINE =>
-      GNAT.OS_Lib.OS_Exit (4);
+      OS_Exit (4);
 end Ruler;
