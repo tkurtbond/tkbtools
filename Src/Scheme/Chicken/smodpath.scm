@@ -260,6 +260,7 @@ in your .bashrc or its equivalent and always execute srepath.")
 		   ('unix 'out-sh)
 		   ('windows 'out-cmd)))
 
+(define (main)
   (receive (options operands)
       (args:parse (command-line-arguments)
 		  +command-line-options+
@@ -272,6 +273,12 @@ in your .bashrc or its equivalent and always execute srepath.")
       ('out-cmd    (print "path " path))
       ('out-csh    (print "setenv " path-var " " path))
       ('out-sh     (print path-var "=" path "\nexport " path-var))
-      ('out-quiet  #f)))
+      ('out-quiet  #f))))
 
-  )
+;; Only invoke main if this has been compiled.  That way we can load the
+;; module into csi and debug it. 
+(cond-expand
+  ((and chicken-5 compiling)
+   (main))
+  ((and chicken-5 csi)))
+)
