@@ -33,3 +33,10 @@ Src/OcamlTk/startbrowser
 Src/Forth/Gforth/build
 \#*\#
 \#*\#
+*.adb.stderr
+*.adb.stdout
+*.ali
+*.bexch
+b__*.adb
+b__*.ads
+**/bin/**
