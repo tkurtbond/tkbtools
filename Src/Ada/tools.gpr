@@ -18,6 +18,7 @@ project Tools is
       for Prefix use External ("HOME") & "/local";
    end Install;
    for Main use (
+     "amodpath",
      "ruler"
      );
 end Tools;
