@@ -32,7 +32,7 @@ procedure AModPath is
 
    procedure Warning (Message : String) is
       Message_Type : String := 
-        (if Warnings_Are_Fatal then "error" else "warning");
+        (if Warnings_Are_Fatal then "fatal error" else "warning");
    begin
       Put (Standard_Error, Program_Name & ": " & Message_Type & ": ");
       Put_Line (Standard_Error, Message);
@@ -41,13 +41,6 @@ procedure AModPath is
          OS_Exit (1);
       end if;
    end Warning;
-
-   procedure Error (Message : String) is
-   begin
-      Put (Standard_Error, Program_Name & ": error: ");
-      Put_Line (Standard_Error, Message);
-      Flush (Standard_Error);
-   end Error;
 
    procedure Fatal_Error (Exit_Code : Natural; Message : String) is
    begin
@@ -98,20 +91,20 @@ procedure AModPath is
          I      : Natural  := 0;
          Start  : Positive := 1;
       begin
-         Debug
-           ("Result'First: " & Result'First'Image & " Result'Last: " &
-            Result'Last'Image);
+         -- Debug
+         --   ("Result'First: " & Result'First'Image & " Result'Last: " &
+         --    Result'Last'Image);
          for E of V loop
             declare
                E_Length : Integer := Length (E);
             begin
                I := @ + 1;
-               Debug
-                 ("Start: " & Start'Image & " Start+E_Length-1: " &
-                  Integer'Image (Start + E_Length - 1));
+               -- Debug
+               --   ("Start: " & Start'Image & " Start+E_Length-1: " &
+               --    Integer'Image (Start + E_Length - 1));
                Result (Start .. Start + E_Length - 1) := To_String (E);
                Start                                  := @ + E_Length;
-               if I > 1 and I < Vector_Length then
+               if I < Vector_Length then
                   Result (Start .. Start + Separator'Length - 1) := Separator;
                   Start := @ + Separator'Length;
                end if;
@@ -166,6 +159,7 @@ procedure AModPath is
       Path_Variable := Variable;
       Path_String := Null_Unbounded_String;
       Path_String := +Value (Path_Variable_String);
+      Path_Vector := Split (Path_String, +Path_Separator);
    exception
       when Constraint_Error =>
          Warning ("unable to set path from " & Path_Variable_String & ".");
@@ -215,6 +209,7 @@ procedure AModPath is
    procedure Add_After (After, Part: Unbounded_String) is 
       C : Cursor := Find (Path_Vector, After);
    begin
+      -- Debug ("in Add_After: After: " & To_String (After) & " Part: " & To_String (Part));
       if C = No_Element then 
          Warning ("unable to find """ & To_String (After) & """ to insert """ &
                     To_String (Part) & """ after it.");
@@ -240,7 +235,7 @@ procedure AModPath is
    begin
       loop 
          C := Find (Path_Vector, Part);
-         exit when C /= No_Element;
+         exit when C = No_Element;
          Delete (Path_Vector, C);
       end loop;
    end Delete;
@@ -251,10 +246,24 @@ procedure AModPath is
       Out_Path_Separator := Separator;
    end Set_Separators;
    
+   function Make_Absolute (Part: String) return String is 
+   begin
+      begin
+         declare 
+            Item : String := Compose (Current_Directory, Part);
+         begin
+            return Item;
+         end;
+      exception
+         when Ada.Directories.NAME_ERROR => -- The part is already absolute.
+            return Part;
+      end;         
+   end Make_Absolute;
+   
    procedure Anonymous_Arg (Part: String) is 
-      Item: String := 
+      Item : String := 
         (if Relative_Flag then part 
-          else Compose (Current_Directory, Part));
+          else Make_Absolute (Part));
    begin
       if not Exists_Flag or else Ada.Directories.Exists (Item) then 
          case Todo.Mode is 
@@ -349,25 +358,18 @@ begin
             Warnings_Are_Fatal := False;
          elsif Arg = "--version" then 
             Print_Version;
+         elsif Arg(1) = '-' then
+            Fatal_Error (1, "unknown option """ & Arg & """.");
          else                           --  Bare argument, not option.
-            case Todo.Mode is
-               when After =>
-                  Set_Add_After (+Arg);
-               when Before =>
-                  Set_Add_Before (+Arg);
-               when Front =>
-                  Set_Add_Start;
-               when Back =>
-                  Set_Add_End;
-            end case;
-            Todo := (Mode => Back);
+            Anonymous_Arg (Arg);
          end if;
       exception
          when Constraint_Error =>
             Fatal_Error (1, Program_Name & ": " & Arg & " missing parameter.");
       end;
    end loop;
-
-   Put_Line ("PATH: " & Join (Path_Vector, +Path_Separator));
+   
+   Put ("Preliminary results: ");
+   Put_Line (To_String (Path_Variable) & ": " & Join (Path_Vector, +Path_Separator));
 
 end AModPath;

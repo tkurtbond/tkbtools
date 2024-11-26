@@ -11,6 +11,7 @@ project Tools is
         "-gnatf");                      --  full error messages
    end Compiler;
    package Binder is 
+      -- for Default_Switches ("Ada") use ("-E");
    end Binder;
    package Linker is
    end Linker;
