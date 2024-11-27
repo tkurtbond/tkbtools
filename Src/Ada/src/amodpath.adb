@@ -92,17 +92,11 @@ procedure AModPath is
          I      : Natural  := 0;
          Start  : Positive := 1;
       begin
-         -- Debug
-         --   ("Result'First: " & Result'First'Image & " Result'Last: " &
-         --    Result'Last'Image);
          for E of V loop
             declare
                E_Length : Integer := Length (E);
             begin
                I := @ + 1;
-               -- Debug
-               --   ("Start: " & Start'Image & " Start+E_Length-1: " &
-               --    Integer'Image (Start + E_Length - 1));
                Result (Start .. Start + E_Length - 1) := To_String (E);
                Start                                  := @ + E_Length;
                if I < Vector_Length then
@@ -150,15 +144,15 @@ procedure AModPath is
       Normal_Path_Separator: String) return String is 
      (if Length (Alternate_Path_Separator) = 0 
       then Normal_Path_Separator 
-      else To_String (Out_Path_Separator));
+      else To_String (Alternate_Path_Separator));
 
    type Output_Type is (Nice, Simple, Cmd, Csh, Sh, Quiet);
    Output : Output_Type := Sh;
 
    procedure Set_Path (Path : Unbounded_String) is
-      Separator : String := (if Length (In_Path_Separator) = 0 
-                             then String'([Path_Separator])
-                             else To_String (In_Path_Separator));
+      Separator : String := 
+        Get_Alternate_Path_Separator (In_Path_Separator,
+                                      String'([Path_Separator]));
    begin
       Path_String := Path;
       Path_Vector := Split (Path, Separator);
@@ -166,18 +160,18 @@ procedure AModPath is
 
    procedure Set_Path_From_Variable (Variable : Unbounded_String) is
       Path_Variable_String : String := To_String (Variable);
-      Separator : String := (if Length (In_Path_Separator) = 0 
-                             then String'([Path_Separator])
-                             else To_String (In_Path_Separator));
    begin
-      Path_Variable := Variable;
-      -- Set the path string to the null string and the path vector to
-      -- the empty vector so the previous path is not used by mistake
-      -- if there is CONSTRAINT_ERROR get the enviroment variable.
-      Path_String := Null_Unbounded_String;
-      Path_Vector := Empty_Vector;
-      Path_String := +Value (Path_Variable_String);
-      Path_Vector := Split (Path_String, Separator);
+      declare 
+         Separator : String := 
+           Get_Alternate_Path_Separator (In_Path_Separator,
+                                         String'([Path_Separator]));
+      begin
+         Path_Variable := Variable;
+         Path_String := Null_Unbounded_String;
+         Path_Vector := Empty_Vector;
+         Path_String := +Value (Path_Variable_String);
+         Path_Vector := Split (Path_String, Separator);
+      end;
    exception
       when CONSTRAINT_ERROR =>
          Warning ("unable to set path from " & Path_Variable_String & ".");
@@ -227,7 +221,6 @@ procedure AModPath is
    procedure Add_After (After, Part: Unbounded_String) is 
       C : Cursor := Find (Path_Vector, After);
    begin
-      -- Debug ("in Add_After: After: " & To_String (After) & " Part: " & To_String (Part));
       if C = No_Element then 
          Warning ("unable to find """ & To_String (After) & """ to insert """ &
                     To_String (Part) & """ after it.");
@@ -398,9 +391,9 @@ begin
    end loop;
    
    declare 
-      Separator : String := (if Length (Out_Path_Separator) = 0 
-                             then String'([Path_Separator])
-                             else To_String (Out_Path_Separator));
+      Separator : String := 
+        Get_Alternate_Path_Separator (Out_Path_Separator, 
+                                      String'([Path_Separator]));
    begin
       case Output is 
          when Nice => 
@@ -415,9 +408,8 @@ begin
             end;
          when Cmd => null;
             declare 
-               Separator : String := (if Length (Out_Path_Separator) = 0 
-                                      then ";"
-                                      else To_String (Out_Path_Separator));
+               Separator : String := 
+                 Get_Alternate_Path_Separator (Out_Path_Separator, ";");
                Final_Path : String := "path " & Join (Path_Vector, Separator);
             begin
                Put_Line (Final_Path);
@@ -442,5 +434,4 @@ begin
          when Quiet => null;
       end case;
    end;
-
 end AModPath;
