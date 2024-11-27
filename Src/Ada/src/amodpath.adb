@@ -1,3 +1,4 @@
+with Ada.Exceptions;            use Ada.Exceptions;
 with Ada.Containers;            use Ada.Containers;
 with Ada.Containers.Vectors;
 with Ada.Environment_Variables; use Ada.Environment_Variables;
@@ -143,25 +144,42 @@ procedure AModPath is
             null;
       end case;
    end Check_Todo;
+   
+   function Get_Alternate_Path_Separator 
+     (Alternate_Path_Separator: Unbounded_String;
+      Normal_Path_Separator: String) return String is 
+     (if Length (Alternate_Path_Separator) = 0 
+      then Normal_Path_Separator 
+      else To_String (Out_Path_Separator));
 
    type Output_Type is (Nice, Simple, Cmd, Csh, Sh, Quiet);
    Output : Output_Type := Sh;
 
    procedure Set_Path (Path : Unbounded_String) is
+      Separator : String := (if Length (In_Path_Separator) = 0 
+                             then String'([Path_Separator])
+                             else To_String (In_Path_Separator));
    begin
       Path_String := Path;
-      Path_Vector := Split (Path, +Path_Separator);
+      Path_Vector := Split (Path, Separator);
    end Set_Path;
 
    procedure Set_Path_From_Variable (Variable : Unbounded_String) is
       Path_Variable_String : String := To_String (Variable);
+      Separator : String := (if Length (In_Path_Separator) = 0 
+                             then String'([Path_Separator])
+                             else To_String (In_Path_Separator));
    begin
       Path_Variable := Variable;
+      -- Set the path string to the null string and the path vector to
+      -- the empty vector so the previous path is not used by mistake
+      -- if there is CONSTRAINT_ERROR get the enviroment variable.
       Path_String := Null_Unbounded_String;
+      Path_Vector := Empty_Vector;
       Path_String := +Value (Path_Variable_String);
-      Path_Vector := Split (Path_String, +Path_Separator);
+      Path_Vector := Split (Path_String, Separator);
    exception
-      when Constraint_Error =>
+      when CONSTRAINT_ERROR =>
          Warning ("unable to set path from " & Path_Variable_String & ".");
    end Set_Path_From_Variable;
 
@@ -231,12 +249,17 @@ procedure AModPath is
    end Add_Before;
    
    procedure Delete (Part: Unbounded_String) is 
-      C : Cursor;
+      C : Cursor := Find (Path_Vector, Part);
    begin
+      if C = No_Element then
+         Warning ("unable to find element """ & To_String (Part) & 
+                    """ to delete it.");
+         return;
+      end if;
       loop 
+         Delete (Path_Vector, C);
          C := Find (Path_Vector, Part);
          exit when C = No_Element;
-         Delete (Path_Vector, C);
       end loop;
    end Delete;
    
@@ -273,15 +296,18 @@ procedure AModPath is
             when Back => Add_End (+Item);
          end case;
       else 
-         Warning ("pathname """ & Item & """ does not exist.");
+         Warning ("path element """ & Item & """ does not exist.");
       end if;
       Exists_Flag := False;
       Todo := (Mode => Back);
    end Anonymous_Arg;
    
    procedure Add_Current is 
+      Current : String := (if Relative_Flag 
+                           then Simple_Name (Current_Directory)
+                           else Current_Directory);
    begin
-      Anonymous_Arg (Current_Directory);
+      Anonymous_Arg (Current);
    end Add_Current;
    
    procedure Add_Empty is 
@@ -305,58 +331,60 @@ begin
          elsif Arg = "--before" or Arg = "-b" then
             I := @ + 1;
             Set_Add_Before (+Argument (I));
-         elsif Arg = "--cmd" then
+         elsif Arg = "--cmd" or Arg = "-D" then -- DOS/Windows style, for cmd.exe.
             Output := Cmd;
-         elsif Arg = "--csh" then
-            Output := Cmd;
-         elsif Arg = "--current" then
+         elsif Arg = "--csh" or Arg = "-C" then
+            Output := Csh;
+         elsif Arg = "--current" or Arg = "-c" then
             Add_Current;
          elsif Arg = "--delete" or Arg = "-d" then 
             I := @ + 1;
             Delete (+Argument (I));
-         elsif Arg = "--empty" then
+         elsif Arg = "--empty" or Arg = "-E" then
             Add_Empty;
          elsif Arg = "--end" or Arg = "-e" then
             Set_Add_End;
-         elsif Arg = "--exists" then 
+         elsif Arg = "--exists" or Arg = "-X" then 
             Exists_Flag := True;
-         elsif Arg = "--insep" then
+         elsif Arg = "--insep" or Arg = "-I" then
             I := @ + 1;
             In_Path_Separator := +Argument (I);
-         elsif Arg = "-outsep" then
+         elsif Arg = "--fatal" or Arg = "-f" then 
+            Warnings_Are_Fatal := True;
+         elsif Arg = "--outsep" or Arg = "-O" then
             I := @ + 1;
             Out_Path_Separator := +Argument (I);
-         elsif Arg = "--msys" then 
+         elsif Arg = "--msys" or Arg = "-M" then 
             Fatal_Error (10, "--msys not yet implemented");
          elsif Arg = "--name" or Arg = "-n" then
             I := I + 1;
             Path_Variable := +Argument (I);
-         elsif Arg = "--nice" then
+         elsif Arg = "--nice" or Arg = "-N" then
             Output := Nice;
          elsif Arg = "--path" or Arg = "-p" then 
             I := @ + 1;
             Set_Path (+Argument (I));
-         elsif Arg = "--quiet" then 
+         elsif Arg = "--quiet" or Arg = "-Q" then 
             Output := Quiet;
-         elsif Arg = "--relative" then
+         elsif Arg = "--relative" or Arg = "-R" then
             Relative_Flag := True;
-         elsif Arg = "--sep" then 
+         elsif Arg = "--sep" or Arg = "-S" then 
             I := @ + 1;
             Set_Separators (+Argument (I));
-         elsif Arg = "--sh" then 
+         elsif Arg = "--sh" or Arg = "-U" then 
             Output := Sh;
-         elsif Arg = "--simple" then
+         elsif Arg = "--simple" or Arg = "-P" then -- plain
             Output := Simple;
          elsif Arg = "--start" or Arg = "-s" then 
             Set_Add_Start;
-         elsif Arg = "--unique" then 
+         elsif Arg = "--unique" or Arg = "-u" then 
             Unique;
          elsif Arg = "--var" or Arg = "-v" then 
             I := @ + 1;
             Set_Path_From_Variable (+Argument (I));
-         elsif Arg = "--warn" then 
+         elsif Arg = "--warn" or Arg = "-w" then 
             Warnings_Are_Fatal := False;
-         elsif Arg = "--version" then 
+         elsif Arg = "--version" or Arg = "-V" then 
             Print_Version;
          elsif Arg(1) = '-' then
             Fatal_Error (1, "unknown option """ & Arg & """.");
@@ -369,7 +397,50 @@ begin
       end;
    end loop;
    
-   Put ("Preliminary results: ");
-   Put_Line (To_String (Path_Variable) & ": " & Join (Path_Vector, +Path_Separator));
+   declare 
+      Separator : String := (if Length (Out_Path_Separator) = 0 
+                             then String'([Path_Separator])
+                             else To_String (Out_Path_Separator));
+   begin
+      case Output is 
+         when Nice => 
+            for E of Path_Vector loop
+               Put_Line (To_String (E));
+            end loop;
+         when Simple => null;
+            declare 
+               Final_Path : String := Join (Path_Vector, Separator);
+            begin
+               Put_Line (Final_Path);
+            end;
+         when Cmd => null;
+            declare 
+               Separator : String := (if Length (Out_Path_Separator) = 0 
+                                      then ";"
+                                      else To_String (Out_Path_Separator));
+               Final_Path : String := "path " & Join (Path_Vector, Separator);
+            begin
+               Put_Line (Final_Path);
+            end;
+         when Csh => null;
+            declare 
+               Final_Path : String := 
+                 ("setenv " & To_String (Path_Variable) & " " &
+                    Join (Path_Vector, Separator));
+            begin
+               Put_Line (Final_Path);
+            end;
+         when Sh =>
+            declare 
+               Name : String := To_String (Path_Variable);
+               Final_Path : String := 
+                 (Name & "='" & Join (Path_Vector, Separator) & "'");
+            begin
+               Put_Line (Final_Path);
+               Put_Line ("export " & Name);
+            end;
+         when Quiet => null;
+      end case;
+   end;
 
 end AModPath;
