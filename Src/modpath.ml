@@ -231,7 +231,7 @@ let add_empty () = anonymous_arg ""
 let is_letter c =
   (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
 
-let drive_rx = Str.regexp_case_fold "\\([a-z]\\):\\(.*\\)";;
+let drive_rx = Str.regexp_case_fold "\\([a-z]\\):\\(.*\\)"
 (* MSYS uses "/<drive-letter>" instead of "<drive-letter>:". *)
 let msysize_path path_list =
   List.map
@@ -274,6 +274,8 @@ let main () =
     ("-d", Arg.String delete,
      "item\tDelete all occurances of item in path");
     ("--empty", Arg.Unit add_empty,
+     "\tAdd an empty element to the path");
+    ("-E", Arg.Unit add_empty,
      "\tAdd an empty element to the path");
     ("--end", Arg.Unit set_add_end_mode,
      "\t\tAdd next argument to the end of the path");
@@ -357,7 +359,5 @@ let main () =
 				^ !path_var)
   | Out_quiet  -> ()
   end
-      
 
-let _ =
-  Printexc.catch main ()
+let _ = main ()

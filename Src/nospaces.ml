@@ -10,4 +10,4 @@ let rename_file filename =
 let main () =
   Arg.parse [] rename_file ("\nusage: " ^ Sys.argv.(0) ^ " files...\n")
 
-let _ = Printexc.catch main ()
+let _ = main ()

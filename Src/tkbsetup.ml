@@ -115,9 +115,9 @@ let move_file src dst =
   and dst =
     if Filename.is_relative dst then Filename.concat !dst_dir dst else dst
   in
-  let src_dir = Filename.dirname src
-  and dst_dir = Filename.dirname dst
-  and rel_src = relativeize src dst
+  (* let src_dir = Filename.dirname src
+  and dst_dir = Filename.dirname dst *)
+  let rel_src = relativeize src dst
   and rel_dst = relativeize dst src in
   if !debug_flag then begin
     name_verbose "src" src;
@@ -206,5 +206,4 @@ let main () =
     Printf.eprintf "tkbsetup: warning: unix errors: %d\n" !unix_errors;
   flush stderr
 
-let _ =
-  Printexc.catch main ()
+let _ = main ()

@@ -34,5 +34,4 @@ let main () =
   if (List.length !segments) = 0 then process_chnl stdin;
   print_endline (String.concat path_sep (List.rev !segments))
 
-let _ = 
-  Printexc.catch main ()
+let _ = main ()
