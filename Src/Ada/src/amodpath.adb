@@ -160,18 +160,15 @@ procedure AModPath is
 
    procedure Set_Path_From_Variable (Variable : Unbounded_String) is
       Path_Variable_String : String := To_String (Variable);
-   begin
-      declare 
-         Separator : String := 
-           Get_Alternate_Path_Separator (In_Path_Separator,
+      Separator : String := 
+        Get_Alternate_Path_Separator (In_Path_Separator,
                                          String'([Path_Separator]));
-      begin
-         Path_Variable := Variable;
-         Path_String := Null_Unbounded_String;
-         Path_Vector := Empty_Vector;
-         Path_String := +Value (Path_Variable_String);
-         Path_Vector := Split (Path_String, Separator);
-      end;
+   begin
+      Path_Variable := Variable;
+      Path_String := Null_Unbounded_String;
+      Path_Vector := Empty_Vector;
+      Path_String := +Value (Path_Variable_String);
+      Path_Vector := Split (Path_String, Separator);
    exception
       when CONSTRAINT_ERROR =>
          Warning ("unable to set path from " & Path_Variable_String & ".");
