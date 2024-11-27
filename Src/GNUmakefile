@@ -202,8 +202,8 @@ spwn$(EXE): spwn.$(OBJ)
 # MingW Sys.getenv doesn't pick up Cygwin environment variables of course,
 # so this is variant.
 
-# %$(EXE) : %.c
-# 	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+%$(EXE) : %.c
+	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
 
 # %.o : %.c
 # 	$(CC) $(CFLAGS) -c -o $@ $<
