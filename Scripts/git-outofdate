@@ -70,7 +70,7 @@ time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')"
           NEED_TO_CREATE=0
           MAY_NEED_CHECKIN=0
           [[ -d $DIR ]] || {
-              printf "===> %3d ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" $NUM_REPOS "Does not exist!"
+              printf "===> n:%3d p:%3d ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" $NUM_REPOS $PRIO "Does not exist!"
               if ((DO_CREATE)); then
                   read -p "Create it? (y/n/q) " ynq </dev/tty
                   [[ $ynq == [Qq]* ]] && {
@@ -83,7 +83,7 @@ time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')"
               fi
           }
           [[ -d $DIR/.git ]] || {
-              printf "===> %3d ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" $NUM_REPOS  "Not a git repo!"
+              printf "===> n:%3d p:%3d ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" $NUM_REPOS  $PRIO "Not a git repo!"
               continue
           }
           STATUS=$(cd $DIR && git-uptodate)
@@ -107,11 +107,11 @@ time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')"
                   STATCOLOR="$BRIGHTWHITE"
                   ;;
           esac
-          printf "===> %3d $STATCOLOR%20s ${CYAN}Repo $DIR$NC\n" $NUM_REPOS "$STATUS"
+          printf "===> n:%3d p:%3d $STATCOLOR%20s ${CYAN}Repo $DIR$NC\n" $NUM_REPOS $PRIO "$STATUS"
 
           STATUS=$(cd $DIR && git status --short)
           [[ -n "$STATUS" ]] && {
-              printf "===> %3d ${RED}%20s ${CYAN}Repo $DIR $NC\n" $NUM_REPOS "May need checkin!"
+              printf "===> n:%3d p:%3d ${RED}%20s ${CYAN}Repo $DIR $NC\n" $NUM_REPOS $PRIO "May need checkin!"
               MAY_NEED_CHECKIN=1
           }
 
