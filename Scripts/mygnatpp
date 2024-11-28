@@ -1,0 +1,8 @@
+#! /usr/bin/env bash
+
+set -x
+
+# Turn all alignment off, turn on alignment of colons in declarations,
+# turn on alignment of := in initializations in declarations.
+
+gnatpp -A0 -A1 -A2  "$@"
