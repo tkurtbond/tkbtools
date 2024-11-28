@@ -70,7 +70,7 @@ procedure AModPath is
          Position := Index (S, Pattern, Start);
          exit when Position = 0;
          Append (V, Unbounded_Slice (S, Start, Position - 1));
-         -- The pattern can be longer than one character.
+         --  The pattern can be longer than one character.
          Start := Position + Pattern'Length;
       end loop;
       Num_Parts := Num_Parts + 1;
@@ -325,8 +325,8 @@ begin
          elsif Arg = "--before" or Arg = "-b" then
             I := @ + 1;
             Set_Add_Before (+Argument (I));
-         elsif Arg = "--cmd" or Arg = "-D"
-         then -- DOS/Windows style, for cmd.exe.
+         elsif Arg = "--cmd" or Arg = "-D" then 
+            -- DOS/Windows style, for cmd.exe.
             Output := Cmd;
          elsif Arg = "--csh" or Arg = "-C" then
             Output := Csh;
@@ -368,7 +368,7 @@ begin
             Set_Separators (+Argument (I));
          elsif Arg = "--sh" or Arg = "-U" then
             Output := Sh;
-         elsif Arg = "--simple" or Arg = "-P" then -- plain
+         elsif Arg = "--simple" or Arg = "-P" then -- Plain
             Output := Simple;
          elsif Arg = "--start" or Arg = "-s" then
             Set_Add_Start;
