@@ -403,14 +403,12 @@ begin
                Put_Line (To_String (E));
             end loop;
          when Simple =>
-            null;
             declare
                Final_Path : String := Join (Path_Vector, Separator);
             begin
                Put_Line (Final_Path);
             end;
          when Cmd =>
-            null;
             declare
                Separator  : String :=
                  Get_Alternate_Path_Separator (Out_Path_Separator, ";");
@@ -419,7 +417,6 @@ begin
                Put_Line (Final_Path);
             end;
          when Csh =>
-            null;
             declare
                Final_Path : String :=
                  ("setenv " & To_String (Path_Variable) & " " &
@@ -436,7 +433,7 @@ begin
                Put_Line (Final_Path);
                Put_Line ("export " & Name);
             end;
-         when Quiet =>
+         when Quiet =>          -- Do nothing.
             null;
       end case;
    end;
