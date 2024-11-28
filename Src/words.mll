@@ -72,6 +72,6 @@ let main () =
     eprintf "files processed: %d\n" !files_processed
 
 
-let _ = Printexc.catch main ()
+let _ = main ()
 } 
 

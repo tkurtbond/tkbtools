@@ -66,17 +66,43 @@ endif
 
 .PHONY: clean tidy realclean zipit install install-normal install-variant variantclean
 
-$(BINDIR)/% : %
+$(BINDIR)/% : build/%
 	[ -d $(BINDIR) ] || (mkdir -p $(BINDIR) && echo built $(BINDIR))
 	$(CP) $< $@
 
 ifdef VARIANT_BINDIR
-$(VARIANT_BINDIR)/% : %
+$(VARIANT_BINDIR)/% : build/%
 	[ -d $(VARIANT_BINDIR) ] || (mkdir -p $(VARIANT_BINDIR) && echo built $(VARIANT_BINDIR))
 	$(CP) $< $@
 endif
 
-XFLAGS=
+build/%.$(CMO): %.ml
+	$(OCAMLC) $(OCAMLCFLAGS) -c -o $@ $<
+
+build/%.$(CMO): build/%.ml
+	$(OCAMLC) $(OCAMLCFLAGS) -c -o $@ $<
+
+build/%.cmi: %.mli
+	$(OCAMLC) $(OCAMLCFLAGS) -c -o $@ $<
+
+build/%.ml: %.mll
+	ocamllex -o $@ $<
+
+build/%$(EXE) : %.c
+	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+
+build/%.o : %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+build/%.o : %.cc
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+
+# 2009-01-27: gack: match-anything-rules restrictions.
+build/%$(EXE):: %.ml
+	$(OCAMLC) $(OCAMLCFLAGS) -o $@ $<
+
+
 
 EXES=	\
 	changecase$(EXE) \
@@ -150,9 +176,9 @@ endif
 
 # TEST_EXES=re$(EXE) re2$(EXE)
 
-ALL_EXES=$(BUILD_EXES) $(VARIANT_BUILD_EXES%)
+ALL_EXES=$(BUILD_EXES:%=build/%) $(VARIANT_BUILD_EXES:%=build/%)
 
-NOTSRC=words.ml
+NOTSRC=build/words.ml
 
 #tmp: 
 #	@echo OPSYS=$(OPSYS) OPVAR=$(OPVAR) >x.1 QQQ=$(QQQ)
@@ -172,71 +198,112 @@ build:
 
 test_exes: $(TEST_EXES)
 
-tounits$(EXE): LDLIBS+=-lm
+build/%$(EXE): %.ml
+	$(OCAMLC) $(OCAMLCFLAGS) -o $@ $<
 
-tounits$(EXE): tounits.o
+build/tounits$(EXE): LDLIBS+=-lm
+
+build/tounits$(EXE): build/tounits.o
 	$(CC) -g -o $@ $< $(LDLIBS)
 
-cygmodpath$(EXE): cygmodpath.$(OBJ)
+build/changecase$(EXE): build/changecase.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@  $<
+
+build/chopext$(EXE): build/chopext.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@  $<
+
+build/cygmodpath$(EXE): build/cygmodpath.$(OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
+build/gethostnames$(EXE): build/gethostnames.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@  \
+		unix.$(CMA) build/gethostnames.$(CMO) $(LIBUNIX)
+
+build/grepgroup$(EXE): build/grepgroup.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@ str.$(CMA) $<
+
+build/increment$(EXE): build/increment.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@  \
+		unix.$(CMA) build/increment.$(CMO) $(LIBUNIX)
+
+build/modpath$(EXE):  build/modpath.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@  \
+		str.$(CMA) build/modpath.$(CMO) $(LIBSTR)
+
+build/md5tree$(EXE): build/md5tree.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@  \
+		unix.$(CMA) build/md5tree.$(CMO) $(LIBUNIX)
+
+build/nicepath$(EXE):  build/nicepath.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@  \
+		str.$(CMA) build/nicepath.$(CMO) $(LIBSTR)
+
+build/nxt$(EXE):  build/nxt.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@ unix.$(CMA) str.$(CMA)  \
+		build/nxt.$(CMO) $(LIBUNIX) $(LIBSTR)
+
+build/nospaces$(EXE):  build/nospaces.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@ unix.$(CMA) str.$(CMA)  \
+		build/nospaces.$(CMO) $(LIBUNIX) $(LIBSTR)
 
 # This is always bytecode.
-ocaml_su$(EXE):
-	ocamlmktop $(CUSTOM) -o $@ -I +unix unix.cma -I +str str.cma
+build/ocaml_su$(EXE):
+	ocamlmktop $(CUSTOM) -o $@ unix.cma str.cma -cclib -lunix
 
-pad$(EXE): pad.$(OBJ)
+build/pad$(EXE): build/pad.$(OBJ)
 	$(CC) -o $@ $<
 
-split$(EXE): split.$(OBJ)
+build/randomn$(EXE): build/randomn.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) -o $@ $<
+
+build/randomline$(EXE): build/randomline.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) -o $@ $<
+
+build/spawn$(EXE): build/spawn.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) -o $@ unix.$(CMA) $<
+
+build/split$(EXE): build/split.$(OBJ)
 	$(CC) -o $@ $<
 
-spwn$(EXE): spwn.$(OBJ)
+build/spwn$(EXE): build/spwn.$(OBJ)
 	$(CC) -o $@ $<
+
+build/timer$(EXE):  build/timer.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@  unix.$(CMA) str.$(CMA) \
+		build/timer.$(CMO) $(LIBUNIX) $(LIBSTR)
+
+build/tkbsetup$(EXE): build/tkbsetup.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@ str.$(CMA) unix.$(CMA) $< \
+		$(LIBSTR) $(LIBUNIX)
+
+build/topath$(EXE):  build/topath.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@  \
+		str.$(CMA) build/topath.$(CMO) $(LIBSTR)
 
 # truncate is not implemented under windows.
 #truncfile$(EXE):  truncfile.$(CMO)
 #	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o truncfile$(EXE)  \
 #		unix.$(CMA) truncfile.$(CMO) $(LIBSTR)
 
+build/unixtime$(EXE):  build/unixtime.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@  \
+		unix.$(CMA) build/unixtime.$(CMO) $(LIBSTR)
+
 # MingW Sys.getenv doesn't pick up Cygwin environment variables of course,
 # so this is variant.
+build/where$(EXE):  build/where.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@  \
+		str.$(CMA) build/where.$(CMO) $(LIBSTR)
 
-%$(EXE) : %.c
-	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+build/wipe$(EXE):  build/wipe.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@  unix.$(CMA) \
+		build/wipe.$(CMO) $(LIBUNIX)
 
-# %.o : %.c
-# 	$(CC) $(CFLAGS) -c -o $@ $<
-
-# %.o : %.cc
-# 	$(CC) $(CFLAGS) -c -o $@ $<
-
-%$(EXE): %.ml
-	$(OCAMLC) $(OCAMLCFLAGS) $(XFLAGS) -o $@ $<
-
-%.ml: %.mll
-	ocamllex -o $@ $<
-
-%.$(CMO): %.ml
-	$(OCAMLC) $(OCAMLCFLAGS) $(XFLAGS) -c -o $@ $<
-
-gethostnames$(EXE): XFLAGS+=-I +unix unix.$(CMA)
-grepgroup$(EXE): XFLAGS+=-I +str str.$(CMA)
-increment$(EXE): XFLAGS+=-I +unix unix.$(CMA)
-md5tree$(EXE): XFLAGS+=-I +unix unix.$(CMA)
-modpath$(EXE): XFLAGS+=-I +str str.$(CMA)
-nicepath$(EXE): XFLAGS+=-I +str str.$(CMA)
-timer$(EXE): XFLAGS+=-I +unix unix.$(CMA) -I +str str.$(CMA)
-tkbsetup$(EXE): XFLAGS+=-I +str str.$(CMA) -I +unix unix.$(CMA)
-truncfile$(EXE): XFLAGS+=-I +unix unix.$(CMA)
-unixtime$(EXE): XFLAGS+=-I +unix unix.$(CMA)
-wipe$(EXE): XFLAGS+=-I +unix unix.$(CMA)
-where$(EXE): XFLAGS+=-I +str str.$(CMA)
+build/words$(EXE):  build/words.$(CMO)
+	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@  str.$(CMA) \
+		build/words.$(CMO) $(LIBSTR)
 
 
-words$(EXE):  words.$(CMO)
-	$(OCAMLC) $(OCAMLCFLAGS) $(CUSTOM) -o $@ -I +str str.$(CMA) \
-		words.$(CMO)
 
 install: install-normal install-variant install-nonmswoe
 install-normal: $(foreach e,$(EXES),$(BINDIR)/$(e)) 
@@ -246,17 +313,17 @@ install-nonmswoe: $(foreach e,$(NONMSWOE_BUILD_EXES),$(BINDIR)/$(e))
 
 
 clean:
-	-$(RM) *.cmo $(wildcard *.cmx) *.cmi *.$(OBJ) \
+	-$(RM) build/*.cmo $(wildcard build/*.cmx) build/*.cmi build/*.$(OBJ) \
 		$(NOTSRC)
 
 variantclean:
-	-$(RM) $(VARIANT_EXES) $(VARIANT_EXES:.exe=.o) what-sys$(EXE) .what-sys.dat
+	-$(RM) $(VARIANT_EXES) $(VARIANT_EXES:.exe=.o) build/what-sys$(EXE) .what-sys.dat
 
 tidy:
 	-$(RM) camlprim0.ob
 
 realclean: clean tidy
-	-$(RM) $(ALL_EXES) $(TEST_EXES) *~ .depend .what-sys.dat what-sys$(EXE)
+	-$(RM) $(ALL_EXES) $(TEST_EXES) *~ .depend .what-sys.dat build/what-sys$(EXE)
 	-$(RM) *.cmi *.cmo *.cmxa *.cmx
 
 ign.ores: 
@@ -266,8 +333,8 @@ ign.ores:
 	ocamldep $(filter-out \*.mli,$(wildcard *.mli)) *.ml >.depend
 include .depend
 
-.what-sys.dat: build what-sys
-	./what-sys $@
+.what-sys.dat: build build/what-sys
+	./build/what-sys $@
 
 # Should I add an export target to create a tar file of the current version
 # of the project?  With the project version???

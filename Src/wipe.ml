@@ -132,5 +132,4 @@ let main () =
      "\t\tPrint version info and exit");
   ] in Arg.parse specs wipe_file usage_message
 
-let _ =
-  Printexc.catch main ()
+let _ = main ()

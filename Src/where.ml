@@ -134,7 +134,4 @@ let main () =
   Arg.parse argdefs process_cmd "usage: where [options] command [...]";
   exit (if !found then 0 else 3)
 
-let _ = 
-  Printexc.catch main ()
-
-print_endline "Endit"
+let _ = main ()

@@ -40,5 +40,4 @@ let main () =
   output_line ()
   
 
-let _ =
-  Printexc.catch main ()
+let _ = main ()

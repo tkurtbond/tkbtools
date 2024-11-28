@@ -50,5 +50,4 @@ let main () =
      "\tPrint a path one item per line, defaulting to PATH.\n\n");
   if !num_ops = 0 then from_var "PATH"
 
-let _ = 
-  Printexc.catch main ()
+let _ = main ()

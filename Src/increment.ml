@@ -128,5 +128,4 @@ let main () =
   done
 
 
-let _ =
-  Printexc.catch main ()
+let _ = main ()

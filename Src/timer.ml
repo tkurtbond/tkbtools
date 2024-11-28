@@ -71,5 +71,4 @@ let main () =
     pause ();
   done
 
-let _ =
-  Printexc.catch main ()
+let _ = main ()

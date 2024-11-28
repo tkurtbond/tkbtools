@@ -130,5 +130,4 @@ let main () =
     List.iter process_filename (List.rev !filenames);
   exit (if !found then 0 else 3)
 
-let _ = 
-  Printexc.catch main ()
+let _ = main ()
