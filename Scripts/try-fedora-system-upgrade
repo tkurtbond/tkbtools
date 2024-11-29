@@ -12,7 +12,8 @@ do
     echo "Run #$i of dnf system-upgrade download at $(date -Iseconds)"
 
     # Exit loop if successful
-    dnf -y system-upgrade download --refresh --releasever=$RELEASEVER && break
+    dnf -y system-upgrade download --refresh --releasever=$RELEASEVER \
+        "$@" && break
 
     # This allows the user to exit if necessary.
     read -t 30 -p "Continue? (y/n) " reply
