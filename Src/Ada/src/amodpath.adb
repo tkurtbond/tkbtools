@@ -11,6 +11,8 @@ with GNAT.OS_Lib;               use GNAT.OS_Lib;
 procedure AModPath is
    Program_Name : String := Command_Name;
 
+   Debugging : constant Boolean := False;
+
    procedure Print_Version is
    begin
       Put_Line (Program_Name & " version 0.1");
@@ -25,7 +27,7 @@ procedure AModPath is
 
    procedure Debug (Message : String) is
    begin
-      if True then
+      if Debugging then
          Put_Line (Standard_Error, Message);
          Flush (Standard_Error);
       end if;
@@ -166,11 +168,13 @@ procedure AModPath is
       Path_Variable := Variable;
       Path_String   := Null_Unbounded_String;
       Path_Vector   := Empty_Vector;
-      Path_String   := +Value (Path_Variable_String);
-      Path_Vector   := Split (Path_String, Separator);
-   exception
-      when Constraint_Error =>
-         Warning ("unable to set path from " & Path_Variable_String & ".");
+      begin
+         Path_String   := +Value (Path_Variable_String);
+         Path_Vector   := Split (Path_String, Separator);
+      exception
+         when Constraint_Error =>
+            Warning ("unable to set path from " & Path_Variable_String & ".");
+      end;
    end Set_Path_From_Variable;
 
    procedure Set_Add_After (Part : Unbounded_String) is
@@ -265,7 +269,7 @@ procedure AModPath is
    begin
       begin
          declare
-            Item : String := Compose (Current_Directory, Part);
+            Item : String := Full_Name (Part);
          begin
             return Item;
          end;
@@ -325,7 +329,7 @@ begin
          elsif Arg = "--before" or Arg = "-b" then
             I := @ + 1;
             Set_Add_Before (+Argument (I));
-         elsif Arg = "--cmd" or Arg = "-D" then 
+         elsif Arg = "--cmd" or Arg = "-D" then
             -- DOS/Windows style, for cmd.exe.
             Output := Cmd;
          elsif Arg = "--csh" or Arg = "-C" then
