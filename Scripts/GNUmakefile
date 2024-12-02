@@ -223,6 +223,7 @@ NETBSD_SCRIPTS=\
 
 LINUX_SCRIPTS=\
 	Linux/linux-capabilities \
+	Linux/linux-screen-resolutions \
 	# Nothing here
 
 EXES=

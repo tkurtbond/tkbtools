@@ -1,0 +1,11 @@
+#! /usr/bin/env bash
+
+for card in  /sys/class/drm/card*
+do
+    echo $card
+    if [[ -e $card/modes ]]; then
+        cat $card/modes
+    else
+        echo No modes file.
+    fi
+done
