@@ -7,6 +7,10 @@
 (import (chicken port))
 (import (chicken process-context))
 
+(define *dry-run* #f)
+(define *label* #f)
+(define *output-directory* #f)
+
 (define (numeric-part n)
   (if (= n 0)
       ""                        ; No numeric part for the zeroth time.
@@ -18,11 +22,14 @@
          (date (current-date))
          (date-string (date->string date "-~Y-~m-~d")))
     (let loop ((i 0))
-      (let ((newname (string-append pathbase date-string
-                                    (if *label* (string-append "-" *label*) "")
-                                    (numeric-part i)
-                                    (if extension (string-append "." extension)
-                                        ""))))
+      (let* ((newname (string-append pathbase date-string
+                                     (if *label* (string-append "-" *label*) "")
+                                     (numeric-part i)
+                                     (if extension (string-append "." extension)
+                                         "")))
+             (newname (if *output-directory*
+                          (make-pathname *output-directory* newname)
+                          newname)))
         (cond ((file-exists? newname)
                (loop (+ i 1)))
               (else
@@ -45,11 +52,10 @@ with that name already exists.")
       (format #t "Current argv: ~s~%" (argv))))
   (exit 1))
 
-(define *dry-run* #f)
-(define *label* #f)
-
 (define +options+
-  (list (args:make-option (h help)    #:none      "Display this text"
+  (list (args:make-option (d output-directory) #:required "Output directory"
+          (set! *output-directory* arg))
+        (args:make-option (h help)    #:none      "Display this text"
 	  (usage))
         (args:make-option (l label)   #:required  "Label to add after the date"
           (set! *label* arg))
