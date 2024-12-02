@@ -49,6 +49,7 @@ Src/increment
 Src/iso8601
 Src/llc
 Src/md5tree
+Src/modpath
 Src/nicepath
 Src/nospaces
 Src/ocaml_su
@@ -70,6 +71,7 @@ Src/truncfile
 Src/unixtime
 Src/unod-b
 Src/what-sys
+Src/where
 Src/wipe
 Src/words
 \#*\#
