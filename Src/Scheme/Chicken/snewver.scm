@@ -10,6 +10,7 @@
 (define *dry-run* #f)
 (define *label* #f)
 (define *output-directory* #f)
+(define *separator* "-")
 
 (define (numeric-part n)
   (if (= n 0)
@@ -18,18 +19,22 @@
 
 (define (process-pathname pathname)
   (let* ((extension (pathname-extension pathname))
-         (pathbase (pathname-strip-extension pathname))
+         (dirname   (pathname-directory pathname))
+         (filename  (pathname-file pathname))
+         (filebase (pathname-strip-extension filename))
          (date (current-date))
-         (date-string (date->string date "-~Y-~m-~d")))
+         (date-string (date->string date "~Y-~m-~d")))
     (let loop ((i 0))
-      (let* ((newname (string-append pathbase date-string
-                                     (if *label* (string-append "-" *label*) "")
+      (let* ((newname (string-append filebase *separator* date-string
+                                     (if *label* (string-append *separator*
+                                                                *label*) "")
                                      (numeric-part i)
                                      (if extension (string-append "." extension)
                                          "")))
-             (newname (if *output-directory*
-                          (make-pathname *output-directory* newname)
-                          newname)))
+             (newname (make-pathname (if *output-directory*
+                                         *output-directory*
+                                         dirname)
+                                     newname)))
         (cond ((file-exists? newname)
                (loop (+ i 1)))
               (else
@@ -60,7 +65,10 @@ with that name already exists.")
         (args:make-option (l label)   #:required  "Label to add after the date"
           (set! *label* arg))
         (args:make-option (n dry-run) #:none      "Don't actually do anything"
-          (set! *dry-run* #t))))
+          (set! *dry-run* #t))
+        (args:make-option (s separator) #:required
+                          "Separator between added parts"
+          (set! *separator* arg))))
 
 (receive (options operands) (args:parse (command-line-arguments) +options+)
   (for-each process-pathname operands))
