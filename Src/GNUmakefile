@@ -150,7 +150,7 @@ endif
 
 # TEST_EXES=re$(EXE) re2$(EXE)
 
-ALL_EXES=$(BUILD_EXES) $(VARIANT_BUILD_EXES%)
+ALL_EXES=$(BUILD_EXES) $(VARIANT_BUILD_EXES)
 
 NOTSRC=words.ml
 
@@ -165,7 +165,7 @@ NOTSRC=words.ml
 #	@echo X,Y is not equal
 #endif
 
-all: build $(ALL_EXES)
+all: $(ALL_EXES)
 
 build:
 	mkdir build
