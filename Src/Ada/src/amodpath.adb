@@ -19,11 +19,12 @@ procedure AModPath is
       OS_Exit (0);
    end Print_Version;
 
-   Warnings_Are_Fatal : Boolean          := False;
-   Relative_Flag      : Boolean          := False;
-   Exists_Flag        : Boolean          := False;
-   In_Path_Separator  : Unbounded_String := Null_Unbounded_String;
-   Out_Path_Separator : Unbounded_String := Null_Unbounded_String;
+   Warnings_Are_Fatal       : Boolean          := False;
+   No_Warnings              : Boolean          := False;
+   Directories_Are_Relative : Boolean          := False;
+   Exists_Flag              : Boolean          := False;
+   In_Path_Separator        : Unbounded_String := Null_Unbounded_String;
+   Out_Path_Separator       : Unbounded_String := Null_Unbounded_String;
 
    procedure Debug (Message : String) is
    begin
@@ -34,16 +35,24 @@ procedure AModPath is
    end Debug;
 
    procedure Warning (Message : String) is
-      Message_Type : String :=
-        (if Warnings_Are_Fatal then "fatal error" else "warning");
    begin
-      Put (Standard_Error, Program_Name & ": " & Message_Type & ": ");
-      Put_Line (Standard_Error, Message);
+      Put_Line (Standard_Error, Program_Name & ": warning: " & Message);
       Flush (Standard_Error);
-      if Warnings_Are_Fatal then
-         OS_Exit (1);
-      end if;
    end Warning;
+
+   procedure Warning_Or_Error (Message : String) is
+      Message_Type : String :=
+        (if Warnings_Are_Fatal then "error" else "warning");
+   begin
+      if No_Warnings then
+         Put (Standard_Error, Program_Name & ": " & Message_Type & ": ");
+         Put_Line (Standard_Error, Message);
+         Flush (Standard_Error);
+         if Warnings_Are_Fatal then
+            OS_Exit (1);
+         end if;
+      end if;
+   end Warning_Or_Error;
 
    procedure Fatal_Error (Exit_Code : Natural; Message : String) is
    begin
@@ -169,11 +178,12 @@ procedure AModPath is
       Path_String   := Null_Unbounded_String;
       Path_Vector   := Empty_Vector;
       begin
-         Path_String   := +Value (Path_Variable_String);
-         Path_Vector   := Split (Path_String, Separator);
+         Path_String := +Value (Path_Variable_String);
+         Path_Vector := Split (Path_String, Separator);
       exception
          when Constraint_Error =>
-            Warning ("unable to set path from " & Path_Variable_String & ".");
+            Warning_Or_Error
+              ("unable to set path from " & Path_Variable_String & ".");
       end;
    end Set_Path_From_Variable;
 
@@ -223,11 +233,12 @@ procedure AModPath is
    begin
       if C = No_Element then
          Warning
-           ("unable to find """ & To_String (After) & """ to insert """ &
-            To_String (Part) & """ after it.");
+           (To_String (After) & " is not in path to add " & To_String (Part) & 
+              " after it; adding at end");
+         Append (Path_Vector, Part);
       else
          C := Next (C);
-         Path_Vector.Insert (C, Part);
+         Insert (Path_Vector, C, Part);
       end if;
    end Add_After;
 
@@ -236,10 +247,11 @@ procedure AModPath is
    begin
       if C = No_Element then
          Warning
-           ("unable to find """ & To_String (Before) & """ to insert """ &
-            To_String (Part) & """ before it.");
+           (To_String (Before) & " is not in path to add " & To_String (Part) & 
+              " before it; adding at start");
+         Prepend (Path_Vector, Part);
       else
-         Path_Vector.Insert (C, Part);
+         Insert (Path_Vector, C, Part);
       end if;
    end Add_Before;
 
@@ -248,8 +260,7 @@ procedure AModPath is
    begin
       if C = No_Element then
          Warning
-           ("unable to find element """ & To_String (Part) &
-            """ to delete it.");
+           (To_String (Part) & " is not in path to delete it");
          return;
       end if;
       loop
@@ -280,7 +291,8 @@ procedure AModPath is
    end Make_Absolute;
 
    procedure Anonymous_Arg (Part : String) is
-      Item : String := (if Relative_Flag then Part else Make_Absolute (Part));
+      Item : String :=
+        (if Directories_Are_Relative then Part else Make_Absolute (Part));
    begin
       if not Exists_Flag or else Ada.Directories.Exists (Item) then
          case Todo.Mode is
@@ -294,7 +306,7 @@ procedure AModPath is
                Add_End (+Item);
          end case;
       else
-         Warning ("path element """ & Item & """ does not exist.");
+         Warning ("pathname does not exist: " & Part);
       end if;
       Exists_Flag := False;
       Todo        := (Mode => Back);
@@ -302,7 +314,7 @@ procedure AModPath is
 
    procedure Add_Current is
       Current : String :=
-        (if Relative_Flag then Simple_Name (Current_Directory)
+        (if Directories_Are_Relative then Simple_Name (Current_Directory)
          else Current_Directory);
    begin
       Anonymous_Arg (Current);
@@ -323,7 +335,9 @@ begin
       declare
          Arg : String := Argument (I);
       begin
-         if Arg = "--after" or Arg = "-a" then
+         if Arg = "--absolute" or Arg = "-A" then
+            Directories_Are_Relative := False;
+         elsif Arg = "--after" or Arg = "-a" then
             I := @ + 1;
             Set_Add_After (+Argument (I));
          elsif Arg = "--before" or Arg = "-b" then
@@ -360,13 +374,16 @@ begin
             Path_Variable := +Argument (I);
          elsif Arg = "--nice" or Arg = "-N" then
             Output := Nice;
+         elsif Arg = "--no-warnings" or Arg = "-W" then 
+            -- Don't output any warnings, and so don't error on warnings;
+            No_Warnings := True;
          elsif Arg = "--path" or Arg = "-p" then
             I := @ + 1;
             Set_Path (+Argument (I));
          elsif Arg = "--quiet" or Arg = "-Q" then
             Output := Quiet;
          elsif Arg = "--relative" or Arg = "-R" then
-            Relative_Flag := True;
+            Directories_Are_Relative := True;
          elsif Arg = "--sep" or Arg = "-S" then
             I := @ + 1;
             Set_Separators (+Argument (I));
@@ -381,7 +398,7 @@ begin
          elsif Arg = "--var" or Arg = "-v" then
             I := @ + 1;
             Set_Path_From_Variable (+Argument (I));
-         elsif Arg = "--warn" or Arg = "-w" then
+         elsif Arg = "--warnings" or Arg = "-w" then
             Warnings_Are_Fatal := False;
          elsif Arg = "--version" or Arg = "-V" then
             Print_Version;
@@ -408,23 +425,24 @@ begin
             end loop;
          when Simple =>
             declare
-               Final_Path : String := Join (Path_Vector, Separator);
+               Final_Path : String := "'" & Join (Path_Vector, Separator) & "'";
             begin
                Put_Line (Final_Path);
             end;
          when Cmd =>
             declare
                Separator  : String :=
-                 Get_Alternate_Path_Separator (Out_Path_Separator, ";");
-               Final_Path : String := "path " & Join (Path_Vector, Separator);
+                 Get_Alternate_Path_Separator (Out_Path_Separator, ":");
+               Final_Path : String := 
+                 "path '" & Join (Path_Vector, Separator) & "'";
             begin
                Put_Line (Final_Path);
             end;
          when Csh =>
             declare
                Final_Path : String :=
-                 ("setenv " & To_String (Path_Variable) & " " &
-                  Join (Path_Vector, Separator));
+                 ("setenv " & To_String (Path_Variable) & " '" &
+                  Join (Path_Vector, Separator)) & "'";
             begin
                Put_Line (Final_Path);
             end;
