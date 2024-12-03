@@ -1,0 +1,1 @@
+* TODO Do modpath & smodpath put usage on stdout when --help & stderr otherwise?
