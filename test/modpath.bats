@@ -118,6 +118,11 @@ short_relative_and_absolute () (
     assert_output "path 'a:b:c:x'"
 }
 
+@test "Csh" {
+    run $MODPATH --csh --relative --path a:b:c x
+    assert_output "setenv PATH 'a:b:c:x'"
+}
+
 current () (
     MODPATH="$(realpath $MODPATH)"
     cd /tmp
@@ -126,4 +131,108 @@ current () (
 @test "Current" {
     run current
     assert_output "'a:b:c:/tmp'"
+}
+
+@test "Long Delete" {
+    run $MODPATH --simple --relative --path b:a:b:c:b:d:b:e:b --delete b
+    assert_output "'a:c:d:e'"
+}
+
+@test "Short Delete" {
+    run $MODPATH --simple --relative --path b:a:b:c:b:d:b:e:b -d  b
+    assert_output "'a:c:d:e'"
+}
+
+@test "Long Delete of Missing Item" {
+    run $MODPATH --simple --relative --path a:b:c --delete x
+    assert_output "$MODPATH: warning: x is not in path to delete it
+'a:b:c'"
+}
+
+@test "Short Delete of Missing Item" {
+    run $MODPATH --simple --relative --path a:b:c -d  x
+    assert_output "$MODPATH: warning: x is not in path to delete it
+'a:b:c'"
+}
+
+@test "Long Empty" {
+    run $MODPATH --simple --relative --path a:b:c --empty
+    assert_output "'a:b:c:'"
+}
+
+@test "Short Empty" {
+    run $MODPATH --simple --relative --path a:b:c -E
+    assert_output "'a:b:c:'"
+}
+
+@test "Long Empty before" {
+    run $MODPATH --simple --relative --path a:b:c --before b --empty
+    assert_output "'a::b:c'"
+}
+
+@test "Short Empty before" {
+    run $MODPATH --simple --relative --path a:b:c -b b -E
+    assert_output "'a::b:c'"
+}
+
+@test "Long Empty after" {
+    run $MODPATH --simple --relative --path a:b:c --after b --empty
+    assert_output "'a:b::c'"
+}
+
+@test "Short Empty after" {
+    run $MODPATH --simple --relative --path a:b:c -a b -E
+    assert_output "'a:b::c'"
+}
+
+@test "Long end" {
+    run $MODPATH --simple --relative --path a:b:c --end x
+    assert_output "'a:b:c:x'"
+}
+
+
+@test "Short end" {
+    run $MODPATH --simple --relative --path a:b:c -e x
+    assert_output "'a:b:c:x'"
+}
+
+exists_actually_exists () (
+    MODPATH="$(realpath $MODPATH)"
+    DIR=$(mktemp -d)
+    mkdir -p $DIR/x
+    cd $DIR
+    $MODPATH --simple --relative --path a:b:c --exists x
+    cd ..
+    rm -rf $DIR
+)
+
+@test "Exists actually Exists" {
+    run exists_actually_exists
+    assert_output "'a:b:c:x'"
+}
+
+
+exists_does_not_exist () (
+    DIR=$(mktemp -d)
+    cd $DIR
+    $MODPATH --simple --relative --path a:b:c --exists x
+    cd ..
+    rm -rf $DIR
+)
+
+@test "Exists does not exist" {
+    MODPATH="$(realpath $MODPATH)"
+    run exists_does_not_exist
+    assert_output "$MODPATH: warning: pathname does not exist: x
+'a:b:c'"
+}
+
+@test "Input Separator" {
+    run $MODPATH --simple --relative --insep ';' --path 'a;b;c'
+    assert_output "'a:b:c'"
+}
+
+
+@test "msys" {
+    run $MODPATH --simple --relative --path --msys a:b:c
 }
