@@ -24,7 +24,7 @@ let out_path_sep = ref !in_path_sep
 let msys_style = ref false
 
 (* Used in error messages; get from Sys.argv.(0) ??? *)
-let progname = ref "modpath"
+let progname = ref Sys.argv.(0)
 
 
 type mode =				(* The default mode is Mode_end. *)
@@ -189,7 +189,7 @@ let delete item =
     match rest with
       [] ->
 	if not !found then
-	  prerr_endline (!progname ^ ": warning: " ^ item ^ " is not in path");
+	  prerr_endline (!progname ^ ": warning: " ^ item ^ " is not in path to delete it");
 	acc
     | part :: rest ->
 	if item = part then begin
@@ -205,7 +205,7 @@ let delete item =
    there are any outstanding -after's or -before's.  *)
 let anonymous_arg item =
   let item =
-    if not !relative_flag then item
+    if !relative_flag then item
     else if Filename.is_relative item then Filename.concat (Sys.getcwd ()) item
     else item
   in
@@ -255,6 +255,10 @@ let main () =
     prerr_endline (!progname ^ ": warning: unable to get value of "
 		   ^ !path_var ^ " for default path."));
   let argdefs = [
+    ("--absolute", Arg.Clear relative_flag,
+     "\tNon-absolute names are made absolute using the current diretory.");
+    ("-A", Arg.Clear relative_flag,
+     "\t\tNon-absolute names are made absolute using the current diretory.");
     ("--after", Arg.String set_add_after_mode,
      "item\tAdd next argument to the path after item");
     ("-a", Arg.String set_add_after_mode,
@@ -276,9 +280,9 @@ let main () =
     ("--empty", Arg.Unit add_empty,
      "\tAdd an empty element to the path");
     ("-E", Arg.Unit add_empty,
-     "\tAdd an empty element to the path");
+     "\t\tAdd an empty element to the path");
     ("--end", Arg.Unit set_add_end_mode,
-     "\t\tAdd next argument to the end of the path");
+     "\tAdd next argument to the end of the path");
     ("-e", Arg.Unit set_add_end_mode,
      "\t\tAdd next argument to the end of the path");
     ("--exists", Arg.Set exists_flag,
@@ -304,8 +308,9 @@ let main () =
     ("--quiet", Arg.Unit (set_output Out_quiet),
      "\tDon't print out the path");
     ("--relative", Arg.Set relative_flag,
-     "\tInterpret non-absolute names as relative to the current\n"^
-     "\t\tdirectory");
+     "\tInterpret non-absolute paths as relative to the current\n\t\tdirectory");
+    ("-R", Arg.Set relative_flag,
+     "\t\tInterprit non-absolute paths as relative to tthe current\n\t\tdirectory");
     ("--sep", Arg.String set_sep,
      "sep\tSet the input and output path separators");
     ("--sh", Arg.Unit (set_output Out_sh),
@@ -322,8 +327,11 @@ let main () =
      "var\tSet the path from the environment variable var");
     ("-v", Arg.String set_path_from_var,
      "var\tSet the path from the environment variable var");
-    ("--warn", Arg.Set warn_flag,
+    ("--warnings", Arg.Set warn_flag,
      ("\tWarn about missing environment variables instead of exiting \n"^
+      "\t\twith an error"));
+    ("-w", Arg.Set warn_flag,
+     ("\t\tWarn about missing environment variables instead of exiting \n"^
       "\t\twith an error"));
     ("--version", Arg.Unit print_revision,
      "\tPrint version info and exit");
