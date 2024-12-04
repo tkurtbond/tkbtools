@@ -29,48 +29,6 @@ short_relative_and_absolute () (
     assert_output "'a:b:c:x:/tmp/y'"
 }
 
-@test "Long Before a" {
-    run $MODPATH --simple --relative --path a:b:c --before a x
-    assert_output "'x:a:b:c'"
-}
-
-@test "Long Before b" {
-    run $MODPATH --simple --relative --path a:b:c --before b x
-    assert_output "'a:x:b:c'"
-}
-
-@test "Long Before c" {
-    run $MODPATH --simple --relative --path a:b:c --before c x
-    assert_output "'a:b:x:c'"
-}
-
-@test "Long Before missing x" {
-    run $MODPATH --simple --relative --path a:b:c --before x y
-    assert_output "$MODPATH: warning: x is not in path to add y before it; adding at start
-'y:a:b:c'"
-}
-
-@test "Short Before a" {
-    run $MODPATH --simple --relative --path a:b:c -b a x
-    assert_output "'x:a:b:c'"
-}
-
-@test "Short Before b" {
-    run $MODPATH --simple --relative --path a:b:c -b b x
-    assert_output "'a:x:b:c'"
-}
-
-@test "Short Before c" {
-    run $MODPATH --simple --relative --path a:b:c -b c x
-    assert_output "'a:b:x:c'"
-}
-
-@test "Short Before missing x" {
-    run $MODPATH --simple --relative --path a:b:c -b x y
-    assert_output "$MODPATH: warning: x is not in path to add y before it; adding at start
-'y:a:b:c'"
-}
-
 @test "Long After a" {
     run $MODPATH --simple --relative --path a:b:c --after a x
     assert_output "'a:x:b:c'"
@@ -111,6 +69,48 @@ short_relative_and_absolute () (
     run $MODPATH --simple --relative --path a:b:c -a x y
     assert_output "$MODPATH: warning: x is not in path to add y after it; adding at end
 'a:b:c:y'"
+}
+
+@test "Long Before a" {
+    run $MODPATH --simple --relative --path a:b:c --before a x
+    assert_output "'x:a:b:c'"
+}
+
+@test "Long Before b" {
+    run $MODPATH --simple --relative --path a:b:c --before b x
+    assert_output "'a:x:b:c'"
+}
+
+@test "Long Before c" {
+    run $MODPATH --simple --relative --path a:b:c --before c x
+    assert_output "'a:b:x:c'"
+}
+
+@test "Long Before missing x" {
+    run $MODPATH --simple --relative --path a:b:c --before x y
+    assert_output "$MODPATH: warning: x is not in path to add y before it; adding at start
+'y:a:b:c'"
+}
+
+@test "Short Before a" {
+    run $MODPATH --simple --relative --path a:b:c -b a x
+    assert_output "'x:a:b:c'"
+}
+
+@test "Short Before b" {
+    run $MODPATH --simple --relative --path a:b:c -b b x
+    assert_output "'a:x:b:c'"
+}
+
+@test "Short Before c" {
+    run $MODPATH --simple --relative --path a:b:c -b c x
+    assert_output "'a:b:x:c'"
+}
+
+@test "Short Before missing x" {
+    run $MODPATH --simple --relative --path a:b:c -b x y
+    assert_output "$MODPATH: warning: x is not in path to add y before it; adding at start
+'y:a:b:c'"
 }
 
 @test "Cmd" {
@@ -209,6 +209,23 @@ exists_actually_exists () (
 @test "Exists actually Exists" {
     run exists_actually_exists
     assert_output "'a:b:c:x'"
+}
+
+exists_actually_exists_before_b () (
+    MODPATH="$(realpath $MODPATH)"
+    DIR=$(mktemp -d)
+    mkdir -p $DIR/x
+    cd $DIR
+    $MODPATH --simple --relative --path a:b:c --before b --exists x
+    cd ..
+    rm -rf $DIR
+)
+
+# This test fails on all three variants, because it doesn't actually put X
+# before b.
+@test "Exists actually Exists before b" {
+    run exists_actually_exists
+    assert_output "'a:x:b:c'"
 }
 
 
