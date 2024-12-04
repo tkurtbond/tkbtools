@@ -1,3 +1,4 @@
+# -*- sh -*-
 setup() {
     load 'test_helper/bats-support/load'
     load 'test_helper/bats-assert/load'
@@ -224,7 +225,8 @@ exists_actually_exists_before_b () (
 # This test fails on all three variants, because it doesn't actually put X
 # before b.
 @test "Exists actually Exists before b" {
-    run exists_actually_exists
+    #skip
+    run exists_actually_exists_before_b
     assert_output "'a:x:b:c'"
 }
 
