@@ -60,9 +60,9 @@
 	(set-path path)
 	(if warn-flag 
 	    (begin 
-	      (warn "unable to get path from environment variable: ~A~%" var)
+	      (warn "unable to get path from environment variable ~A~%" var)
 	      (set-path ""))
-	    (die 3 "unable to get path from environment variable: ~A~%" var)))))
+	    (die 3 "error: unable to get path from environment variable ~A~%" var)))))
 (define (set-path-and-var-from-var var)
   (set! path-var var)
   (set-path-from-var var))
@@ -217,7 +217,7 @@
 	  (set! output 'out-quiet))
 	(args:make-option (R relative) #:none "Interpret non-absolute paths as relative to\n                          the current directory"
 	  (set! relative-flag #t))
-	(args:make-option (sep) #:required "Set the input and output path separators"
+	(args:make-option (S sep) #:required "Set the input and output path separators"
 	  (set-sep arg))
 	(args:make-option (sh) #:none "Output sh command to set the path"
 	  (set! output 'out-sh))
@@ -238,7 +238,7 @@
 (define (usage)
   (with-output-to-port (current-error-port)
     (lambda ()
-      (print "Usage: " (program-name) " [options...] [files...]")
+      (print "Usage: " (program-name) " [[option...] [item...]]...")
       (newline)
       (print "\
 Prints a new version of the path, which defaults to the value of the PATH

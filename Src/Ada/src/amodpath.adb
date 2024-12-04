@@ -19,7 +19,7 @@ procedure AModPath is
       OS_Exit (0);
    end Print_Version;
 
-   Warnings_Are_Fatal       : Boolean          := False;
+   Warnings_Are_Fatal       : Boolean          := True;
    No_Warnings              : Boolean          := False;
    Directories_Are_Relative : Boolean          := False;
    Exists_Flag              : Boolean          := False;
@@ -44,7 +44,7 @@ procedure AModPath is
       Message_Type : String :=
         (if Warnings_Are_Fatal then "error" else "warning");
    begin
-      if No_Warnings then
+      if not No_Warnings then
          Put (Standard_Error, Program_Name & ": " & Message_Type & ": ");
          Put_Line (Standard_Error, Message);
          Flush (Standard_Error);
@@ -184,7 +184,7 @@ procedure AModPath is
       exception
          when Constraint_Error =>
             Warning_Or_Error
-              ("unable to set path from " & Path_Variable_String & ".");
+              ("unable to get path from environment variable " & Path_Variable_String);
       end;
    end Set_Path_From_Variable;
 
@@ -206,7 +206,8 @@ procedure AModPath is
       exception
          when Constraint_Error =>
             Warning_Or_Error
-              ("unable to set path from " & Path_Variable_String & ".");
+              ("unable to get path from environment variable " & 
+                 Path_Variable_String);
       end;
    end Set_Path_And_Variable_From_Variable;
 

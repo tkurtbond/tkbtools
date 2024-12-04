@@ -91,7 +91,7 @@ let set_path_from_var var =
   try set_path (Sys.getenv var)
   with Not_found ->
     prerr_endline (!progname ^ ": " ^ (if !warn_flag then "warning" else "error")
-		   ^ ": unable to get path from envrionment variable " ^ var);
+		   ^ ": unable to get path from environment variable " ^ var);
     if !warn_flag then 
       set_path ""
     else
@@ -108,7 +108,7 @@ let set_path_and_var_from_var var =
   try set_path (Sys.getenv var)
   with Not_found ->
     prerr_endline (!progname ^ ": " ^ (if !warn_flag then "warning" else "error")
-		   ^ ": unable to get path from envrionment variable " ^ var);
+		   ^ ": unable to get path from environment variable " ^ var);
     if !warn_flag then 
       set_path ""
     else
@@ -339,6 +339,8 @@ let main () =
      "\t\tInterprit non-absolute paths as relative to tthe current\n\t\tdirectory");
     ("--sep", Arg.String set_sep,
      "sep\tSet the input and output path separators");
+    ("-S", Arg.String set_sep,
+     "sep\tSet the input and output path separators");
     ("--sh", Arg.Unit (set_output Out_sh),
      "\t\tOutput sh command to set the path");
     ("--simple", Arg.Unit (set_output Out_simple),
@@ -348,6 +350,8 @@ let main () =
     ("-s", Arg.Unit set_add_start_mode,
      "\t\tAdd next argument to the start of the path");
     ("--unique", Arg.Unit unique,
+     "\tEliminate duplicate items");
+    ("-u", Arg.Unit unique,
      "\tEliminate duplicate items");
     ("--var", Arg.String set_path_and_var_from_var,
      "var\tSet the path from the environment variable var");
@@ -363,9 +367,10 @@ let main () =
      "\tPrint version info and exit");
   ] in
   Arg.parse argdefs anonymous_arg
-    ("\nusage: " ^ !progname ^ " [[options] [items] ...]\n"^
-     "\nAdds items to the path, which defaults to the value of the PATH"^
-     "\nenvironment variable, in positions specified by the user.\n"^
+    ("\nusage: " ^ !progname ^ " [[option...] [item...]]...\n\n"^
+     "Prints a new version of the path, which defaults to the value of the PATH\n"^
+     "environment variable, adding or deleting path elements in positions specified\n"^
+     "by the user.\n"^
      "\nUse it with something like\n"^
      "\tfunction repath {\n"^
      "\t    eval $(modpath \"$@\" --unique)\n"^

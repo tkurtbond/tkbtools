@@ -256,6 +256,42 @@ short_ivar () (
 export PATH"
 }
 
+@test "Long ivar nonexistant" {
+    (
+        unset VAR_DOES_NOT_EXIST
+        run $MODPATH --ivar VAR_DOES_NOT_EXIST
+        assert_output "$MODPATH: error: unable to get path from environment variable VAR_DOES_NOT_EXIST"
+    )
+}
+
+@test "Short ivar nonexistant" {
+    (
+        unset VAR_DOES_NOT_EXIST
+        run $MODPATH -I VAR_DOES_NOT_EXIST
+        assert_output "$MODPATH: error: unable to get path from environment variable VAR_DOES_NOT_EXIST"
+    )
+}
+
+@test "Long ivar nonexistant warnings" {
+    (
+        unset VAR_DOES_NOT_EXIST
+        run $MODPATH --warnings --ivar VAR_DOES_NOT_EXIST
+        assert_output "$MODPATH: warning: unable to get path from environment variable VAR_DOES_NOT_EXIST
+PATH=''
+export PATH"
+    )
+}
+
+@test "Short ivar nonexistant warnings" {
+    (
+        unset VAR_DOES_NOT_EXIST
+        run $MODPATH --warnings -I VAR_DOES_NOT_EXIST
+        assert_output "$MODPATH: warning: unable to get path from environment variable VAR_DOES_NOT_EXIST
+PATH=''
+export PATH"
+    )
+}
+
 @test "Long name" {
     run $MODPATH --warnings --relative --path a:b:c --name OUTPATH
     assert_output "OUTPATH='a:b:c'
@@ -301,3 +337,113 @@ export PATH"
     run $MODPATH --quiet
     cat /dev/null | assert_output -
 }
+
+@test "Long relative" {
+    run $MODPATH --simple --relative --path a:b:c x
+    assert_output "'a:b:c:x'"
+}
+
+@test "Short relative" {
+    run $MODPATH --simple -R --path a:b:c x
+    assert_output "'a:b:c:x'"
+}
+
+@test "Long sep" {
+    run $MODPATH --simple --relative --sep / --path a/b/c x
+    assert_output "'a/b/c/x'"
+}
+
+@test "Short sep" {
+    run $MODPATH --simple --relative -S / --path a/b/c x
+    assert_output "'a/b/c/x'"
+}
+
+@test "Sh" {
+    run $MODPATH --relative --path a:b:c x
+    assert_output "PATH='a:b:c:x'
+export PATH"
+}
+
+@test "Simple" {
+    run $MODPATH --simple --relative --path a:b:c x
+    assert_output "'a:b:c:x'"
+}
+
+@test "Long Start" {
+    run $MODPATH --simple --relative --path a:b:c --start x
+    assert_output "'x:a:b:c'"
+}
+
+@test "Short Start" {
+    run $MODPATH --simple --relative --path a:b:c -s x
+    assert_output "'x:a:b:c'"
+}
+
+@test "Long Unique" {
+    run $MODPATH --simple --relative --path a:1:b:1:c:1:1 --unique
+    assert_output "'a:1:b:c'"
+}
+
+@test "Short Unique" {
+    run $MODPATH --simple --relative --path a:1:b:1:c:1:1 -u
+    assert_output "'a:1:b:c'"
+}
+
+long_var () (
+    VAR=q:r:s $MODPATH --var VAR
+)
+
+@test "Long var" {
+    run long_var
+    assert_output "VAR='q:r:s'
+export VAR"
+}
+
+short_var () (
+    VAR=q:r:s $MODPATH -v VAR
+)
+
+@test "Short var" {
+    run short_var
+    assert_output "VAR='q:r:s'
+export VAR"
+}
+
+@test "Long var nonexistant" {
+    (
+        unset VAR_DOES_NOT_EXIST
+        run $MODPATH --var VAR_DOES_NOT_EXIST
+        assert_output "$MODPATH: error: unable to get path from environment variable VAR_DOES_NOT_EXIST"
+    )
+}
+
+@test "Short var nonexistant" {
+    (
+        unset VAR_DOES_NOT_EXIST
+        run $MODPATH -v VAR_DOES_NOT_EXIST
+        assert_output "$MODPATH: error: unable to get path from environment variable VAR_DOES_NOT_EXIST"
+    )
+}
+
+
+@test "Long var nonexistant warning" {
+    (
+        unset VAR_DOES_NOT_EXIST
+        run $MODPATH --warnings --var VAR_DOES_NOT_EXIST
+        assert_output "$MODPATH: warning: unable to get path from environment variable VAR_DOES_NOT_EXIST
+VAR_DOES_NOT_EXIST=''
+export VAR_DOES_NOT_EXIST"
+    )
+}
+
+@test "Short var nonexistant warning" {
+    (
+        unset VAR_DOES_NOT_EXIST
+        run $MODPATH --warnings -v VAR_DOES_NOT_EXIST
+        assert_output "$MODPATH: warning: unable to get path from environment variable VAR_DOES_NOT_EXIST
+VAR_DOES_NOT_EXIST=''
+export VAR_DOES_NOT_EXIST"
+    )
+}
+
+# -V/--version don't don't give the same answers right now, so don't test them.
