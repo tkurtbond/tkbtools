@@ -232,7 +232,72 @@ exists_does_not_exist () (
     assert_output "'a:b:c'"
 }
 
+#@test "msys" {
+#    run $MODPATH --simple --relative --path a:b:c --msys
+#}
 
-@test "msys" {
-    run $MODPATH --simple --relative --path --msys a:b:c
+long_ivar () (
+    XXX=q:r:s $MODPATH --warnings --relative --path a:b:c --ivar XXX x
+)
+
+@test "Long ivar" {
+    run long_ivar
+    assert_output "PATH='q:r:s:x'
+export PATH"
+}
+
+short_ivar () (
+    XXX=q:r:s $MODPATH --warnings --relative --path a:b:c -I XXX x
+)
+
+@test "Short ivar" {
+    run short_ivar
+    assert_output "PATH='q:r:s:x'
+export PATH"
+}
+
+@test "Long name" {
+    run $MODPATH --warnings --relative --path a:b:c --name OUTPATH
+    assert_output "OUTPATH='a:b:c'
+export OUTPATH"
+}
+
+@test "Short name" {
+    run $MODPATH --warnings --relative --path a:b:c -n OUTPATH
+    assert_output "OUTPATH='a:b:c'
+export OUTPATH"
+}
+
+@test "Nice" {
+    run $MODPATH --relative --path a:b:c --nice
+    assert_output "a
+b
+c"
+}
+
+@test "Long outsep" {
+    run $MODPATH --relative --path a:b:c --outsep /
+    assert_output "PATH='a/b/c'
+export PATH"
+}
+
+@test "Short outsep" {
+    run $MODPATH --relative --path a:b:c -o /
+    assert_output "PATH='a/b/c'
+export PATH"
+}
+
+@test "Long Path" {
+    run $MODPATH --simple --relative --path a:b:c
+    assert_output "'a:b:c'"
+}
+
+@test "Short Path" {
+    run $MODPATH --simple --relative -p a:b:c
+    assert_output "'a:b:c'"
+}
+
+@test "Quiet" {
+    run $MODPATH --quiet
+    cat /dev/null | assert_output -
 }

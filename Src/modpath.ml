@@ -55,9 +55,10 @@ let output = ref (if Sys.os_type = "Win32" then Out_cmd else Out_sh)
 let set_output o () = output := o
 
 
-(* path must be set by set_path or set_path_from_var, so that
-   path_list gets set at the same time.  Note that no effort is made
-   to keep path up to date with path_list.  *)
+(* path must be set by set_path, set_path_and_var_from_var, or
+   set_path_from_var, so that path_list gets set at the same time.
+   Note that no effort is made to keep path up to date with path_list.
+   *)
 let path_var = ref "PATH"
 let path = ref ""
 let path_list = ref []
@@ -79,13 +80,30 @@ let set_path s =
   path := s;
   path_list := (Str.split_delim (Str.regexp !in_path_sep) !path)
 
+(* Set path and path_list from path from value of environment
+   variable.  It is a fatal error for the user to specify a
+   non-existant environment variable, because if it wasn't the program
+   would continue on operating on the *default* path, which is the
+   value of PATH, and if one is trying to set LD_LIBRARY_PATH setting
+   it to something based on PATH would be completely wrong. *)
+
+let set_path_from_var var =
+  try set_path (Sys.getenv var)
+  with Not_found ->
+    prerr_endline (!progname ^ ": " ^ (if !warn_flag then "warning" else "error")
+		   ^ ": unable to get path from envrionment variable " ^ var);
+    if !warn_flag then 
+      set_path ""
+    else
+      exit 3
+
 (* Set path and then set path_list from path, given the name of an environment
    variable.  It is a fatal error for the user to specify a non-existant
    environment variable, because if it wasn't the program would continue on
    operating on the *default* path, which is the value of PATH, and if one is
    trying to set LD_LIBRARY_PATH setting it to something based on PATH would
    be completely wrong. *)
-let set_path_from_var var =
+let set_path_and_var_from_var var =
   path_var := var;
   try set_path (Sys.getenv var)
   with Not_found ->
@@ -289,6 +307,12 @@ let main () =
      "item\tAdd next item only if it exists");
     ("--insep", Arg.String ((:=) in_path_sep),
      "sep\tSet the input path separator");
+    ("-i", Arg.String ((:=) in_path_sep),
+     "sep\tSet the input path separator");
+    ("--ivar", Arg.String set_path_from_var,
+     "var\tSet the path from the environment variable given.");
+    ("-I", Arg.String set_path_from_var,
+     "var\tSet the path from the environment variable given.");
     ("--msys", Arg.Set msys_style,
      "\tOutput in msys style");
     ("--name", Arg.String ((:=) path_var),
@@ -298,6 +322,8 @@ let main () =
     ("--nice", Arg.Unit (set_output Out_nice),
      "\tPrint the path out \"nicely\", one item per line");
     ("--outsep", Arg.String ((:=) out_path_sep),
+     "sep\tSet the output path separator");
+    ("-o", Arg.String ((:=) out_path_sep),
      "sep\tSet the output path separator");
     ("--path", Arg.String set_path,
      "path\tSet the path to work on (defaults to the value of PATH without\n"^
@@ -323,9 +349,9 @@ let main () =
      "\t\tAdd next argument to the start of the path");
     ("--unique", Arg.Unit unique,
      "\tEliminate duplicate items");
-    ("--var", Arg.String set_path_from_var,
+    ("--var", Arg.String set_path_and_var_from_var,
      "var\tSet the path from the environment variable var");
-    ("-v", Arg.String set_path_from_var,
+    ("-v", Arg.String set_path_and_var_from_var,
      "var\tSet the path from the environment variable var");
     ("--warnings", Arg.Set warn_flag,
      ("\tWarn about missing environment variables instead of exiting \n"^

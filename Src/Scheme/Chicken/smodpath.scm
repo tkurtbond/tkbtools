@@ -201,11 +201,11 @@
 	  (set! exists-flag #t))
 	(args:make-option (i insep) #:required "Set the input path separator"
 	  (set! in-path-sep arg))
+	(args:make-option (I ivar) #:required "Set the path from environment variable ARG"
+	  (set-path-from-var arg))
         (args:make-option (msys) #:none "Output in msys style"
           (die 1 "--msys not implemented\n"))
-	(args:make-option (ivar) #:required "Set the path from environment variable ARG"
-	  (set-path-from-var arg))
-	(args:make-option (name) #:required "Name of path environment variable for output"
+	(args:make-option (n name) #:required "Name of path environment variable for output"
 	  (set! path-var arg))
 	(args:make-option (nice) #:none "Print the path out \"nicely\", one item per line"
 	  (set! output 'out-nice))

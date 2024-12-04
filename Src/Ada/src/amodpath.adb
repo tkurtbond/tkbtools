@@ -168,7 +168,30 @@ procedure AModPath is
       Path_Vector := Split (Path, Separator);
    end Set_Path;
 
-   procedure Set_Path_From_Variable (Variable : Unbounded_String) is
+   procedure Set_Path_From_Variable 
+     (Variable : Unbounded_String) 
+   is
+      Path_Variable_String : String := To_String (Variable);
+      Separator            : String :=
+        Get_Alternate_Path_Separator
+          (In_Path_Separator, String'([Path_Separator]));
+   begin
+      Path_String   := Null_Unbounded_String;
+      Path_Vector   := Empty_Vector;
+      begin
+         Path_String := +Value (Path_Variable_String);
+         Path_Vector := Split (Path_String, Separator);
+      exception
+         when Constraint_Error =>
+            Warning_Or_Error
+              ("unable to set path from " & Path_Variable_String & ".");
+      end;
+   end Set_Path_From_Variable;
+
+
+   procedure Set_Path_And_Variable_From_Variable 
+     (Variable : Unbounded_String) 
+   is
       Path_Variable_String : String := To_String (Variable);
       Separator            : String :=
         Get_Alternate_Path_Separator
@@ -185,7 +208,7 @@ procedure AModPath is
             Warning_Or_Error
               ("unable to set path from " & Path_Variable_String & ".");
       end;
-   end Set_Path_From_Variable;
+   end Set_Path_And_Variable_From_Variable;
 
    procedure Set_Add_After (Part : Unbounded_String) is
    begin
@@ -359,18 +382,21 @@ begin
             Set_Add_End;
          elsif Arg = "--exists" or Arg = "-X" then
             Exists_Flag := True;
-         elsif Arg = "--insep" or Arg = "-I" then
-            I                 := @ + 1;
+         elsif Arg = "--insep" or Arg = "-i" then
+            I := @ + 1;
             In_Path_Separator := +Argument (I);
+         elsif Arg = "--ivar" or Arg = "-I" then
+            I := @ + 1;
+            Set_Path_From_Variable (+Argument (I));
          elsif Arg = "--fatal" or Arg = "-f" then
             Warnings_Are_Fatal := True;
-         elsif Arg = "--outsep" or Arg = "-O" then
-            I                  := @ + 1;
+         elsif Arg = "--outsep" or Arg = "-o" then
+            I := @ + 1;
             Out_Path_Separator := +Argument (I);
          elsif Arg = "--msys" or Arg = "-M" then
             Fatal_Error (10, "--msys not yet implemented");
          elsif Arg = "--name" or Arg = "-n" then
-            I             := I + 1;
+            I := I + 1;
             Path_Variable := +Argument (I);
          elsif Arg = "--nice" or Arg = "-N" then
             Output := Nice;
@@ -397,7 +423,7 @@ begin
             Unique;
          elsif Arg = "--var" or Arg = "-v" then
             I := @ + 1;
-            Set_Path_From_Variable (+Argument (I));
+            Set_Path_And_Variable_From_Variable (+Argument (I));
          elsif Arg = "--warnings" or Arg = "-w" then
             Warnings_Are_Fatal := False;
          elsif Arg = "--version" or Arg = "-V" then
