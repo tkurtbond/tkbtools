@@ -212,6 +212,21 @@ exists_actually_exists () (
     assert_output "'a:b:c:x'"
 }
 
+exists_actually_exists_after_b () (
+    MODPATH="$(realpath $MODPATH)"
+    DIR=$(mktemp -d)
+    mkdir -p $DIR/x
+    cd $DIR
+    $MODPATH --simple --relative --path a:b:c --after b --exists x
+    cd ..
+    rm -rf $DIR
+)
+
+@test "Exists actually Exists after b" {
+    run exists_actually_exists_after_b
+    assert_output "'a:b:x:c'"
+}
+
 exists_actually_exists_before_b () (
     MODPATH="$(realpath $MODPATH)"
     DIR=$(mktemp -d)
@@ -222,12 +237,39 @@ exists_actually_exists_before_b () (
     rm -rf $DIR
 )
 
-# This test fails on all three variants, because it doesn't actually put X
-# before b.
 @test "Exists actually Exists before b" {
-    #skip
     run exists_actually_exists_before_b
     assert_output "'a:x:b:c'"
+}
+
+exists_actually_missing_after_b () (
+    DIR=$(mktemp -d)
+    cd $DIR
+    $MODPATH --simple --relative --path a:b:c --after b --exists x
+    cd ..
+    rm -rf $DIR
+)
+
+@test "Exists actually Missing after b" {
+    MODPATH="$(realpath $MODPATH)"
+    run exists_actually_missing_after_b
+    assert_output "$MODPATH: warning: pathname does not exist: x
+'a:b:c'"
+}
+
+exists_actually_missing_before_b () (
+    DIR=$(mktemp -d)
+    cd $DIR
+    $MODPATH --simple --relative --path a:b:c --before b --exists x
+    cd ..
+    rm -rf $DIR
+)
+
+@test "Exists actually missing before b" {
+    MODPATH="$(realpath $MODPATH)"
+    run exists_actually_missing_before_b
+    assert_output "$MODPATH: warning: pathname does not exist: x
+'a:b:c'"
 }
 
 
