@@ -15,6 +15,7 @@
 const char *prefix_text[] = 
   {
    "From: http://physics.nist.gov/cuu/Units/binary.html",
+   "and https://www.nist.gov/pml/owm/metric-si-prefixes",
    "",
    "These are prefixes because they are prefixes to units of",
    "measure, such as byte or bit",
