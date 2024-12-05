@@ -129,9 +129,32 @@ current () (
     cd /tmp
     $MODPATH --simple --path a:b:c --current   
 )
+
 @test "Current" {
     run current
     assert_output "'a:b:c:/tmp'"
+}
+
+current_before () (
+    MODPATH="$(realpath $MODPATH)"
+    cd /tmp
+    $MODPATH --simple --path a:b:c --before b --current   
+)
+
+@test "Current before" {
+    run current_before
+    assert_output "'a:/tmp:b:c'"
+}
+
+current_after () (
+    MODPATH="$(realpath $MODPATH)"
+    cd /tmp
+    $MODPATH --simple --path a:b:c --after b --current   
+)
+
+@test "Current after" {
+    run current_after
+    assert_output "'a:b:/tmp:c'"
 }
 
 @test "Long Delete" {
@@ -286,6 +309,24 @@ exists_does_not_exist () (
     run exists_does_not_exist
     assert_output "$MODPATH: warning: pathname does not exist: x
 'a:b:c'"
+}
+
+exists_actually_exists_absolute () (
+    mkdir -p $DIR/x $DIR/y
+    cd $DIR
+    $MODPATH --simple --relative --path a:b:c --exists x --absolute --exists y
+    cd ..
+    rm -rf $DIR
+)
+
+@test "Exists actually Exists absolute" {
+    (
+        MODPATH="$(realpath $MODPATH)"
+        DIR=$(mktemp -d)
+
+        run exists_actually_exists_absolute
+        assert_output "'a:b:c:x:$DIR/y'"
+    )
 }
 
 @test "Input Separator" {
