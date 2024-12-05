@@ -16,6 +16,9 @@ const char *prefix_text[] =
   {
    "From: http://physics.nist.gov/cuu/Units/binary.html",
    "",
+   "These are prefixes because they are prefixes to units of",
+   "measure, such as byte or bit",
+   "",
    "--------------------------------------------------------------",
    "Prefixes for binary multiples",
    "--------------------------------------------------------------",
@@ -219,11 +222,12 @@ main (int argc, char **argv)
   if (errflg)
     {
       fprintf (stderr,
-               "usage: %s [-s] [string]\n\n"
+               "usage: %s [-p] [-s] [string]\n\n"
                "Convert an string with a multiplicitive suffix, like 1K, "
                "to a number.\n\n"
                "-s means to use SI units, values that are multiples of 1000,\n"
-               "   instead of binary units, values that are multiples of 1024.\n",
+               "   instead of binary units, values that are multiples of 1024.\n"
+               "-p means print the prefixes.\n",
                progname);
       exit (3);
     }
