@@ -52,7 +52,7 @@ const char *prefix_text[] =
   };
 
 void
-print_prefixes ()
+print_binary_prefixes ()
 {
   const char **p;
   for (p = prefix_text; p && *p; p++)
@@ -90,6 +90,10 @@ bool mult_by_g = false;
 bool mult_by_t = false;
 bool mult_by_p = false;
 bool mult_by_e = false;
+bool mult_by_z = false;
+bool mult_by_y = false;
+bool mult_by_r = false;
+bool mult_by_q = false;
 
 
 void readable_bytes_binary (char *number, char *buf, size_t bufsize)
@@ -149,19 +153,23 @@ main (int argc, char **argv)
   
   prog_name = argv[0];
 
-  while ((ch = getopt (argc, argv, "hpsKMGTPE")) != EOF)
+  while ((ch = getopt (argc, argv, "hpsKMGTPEZYRQkmgtpezyrq")) != EOF)
     {
       switch (ch)
         {
         case 'h': errflg++; break;
-        case 'p': print_prefixes (); break;
+        case 'b': print_binary_prefixes (); break;
         case 's': binary = false; break;
-        case 'K': mult_by_k = true; break;
-        case 'M': mult_by_m = true; break;
-        case 'G': mult_by_g = true; break;
-        case 'T': mult_by_t = true; break;
-        case 'P': mult_by_p = true; break;
-        case 'E': mult_by_e = true; break;
+        case 'K': case 'k': mult_by_k = true; break;
+        case 'M': case 'm': mult_by_m = true; break;
+        case 'G': case 'g': mult_by_g = true; break;
+        case 'T': case 't': mult_by_t = true; break;
+        case 'P': case 'p': mult_by_p = true; break;
+        case 'E': case 'e': mult_by_e = true; break;
+        case 'Z': case 'z': mult_by_z = true; break;
+        case 'Y': case 'y': mult_by_y = true; break;
+        case 'R': case 'r': mult_by_r = true; break;
+        case 'Q': case 'q': mult_by_q = true; break;
         default: errflg++; break;
         }
     }
