@@ -18,9 +18,12 @@ project Tools is
    package Install is 
       for Prefix use External ("HOME") & "/local";
    end Install;
-   for Main use (
-     "amodpath",
-     "ruler"
+   for Main use 
+     (
+      "amodpath",
+      "afromunits",
+      "atounits",
+      "ruler"
      );
 end Tools;
 -- Local Variables:
