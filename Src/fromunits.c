@@ -71,6 +71,12 @@ intmult_binary (char *s, char **p)
     {
       switch (**p)
 	{
+        case 'Q':
+        case 'q':
+          n *= 1024.0;
+        case 'R':
+        case 'r':
+          n *= 1024.0;
         case 'Y':
         case 'y':
           n *= 1024.0;
@@ -113,6 +119,12 @@ intmult_si (char *s, char **p)
     {
       switch (**p)
 	{
+        case 'Q':
+        case 'q':
+          n *= 1000.0;
+        case 'R':
+        case 'r':
+          n *= 10000;
         case 'Y':
         case 'y':
           n *= 1000.0;
