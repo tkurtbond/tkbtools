@@ -80,7 +80,7 @@ die (int status, char *fmt, ...)
 
 char *binary_units[] =
   {
-   "B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"
+    "B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB", "RiB", "QiB",
   };
 
 /* command line options set these. */
@@ -112,7 +112,7 @@ void readable_bytes_binary (char *number, char *buf, size_t bufsize)
 
 char *si_units[] =
   {
-   "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"
+    "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB", "RB", "QB"
   };
 
 void readable_bytes_si (char *number, char *buf, size_t bufsize)
