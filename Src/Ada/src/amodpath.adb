@@ -9,7 +9,8 @@ with Ada.Text_IO;               use Ada.Text_IO;
 with GNAT.OS_Lib;               use GNAT.OS_Lib;
 
 procedure AModPath is
-   Program_Name : String := Command_Name;
+   Program_Name : String := 
+     (if Command_Name = "" then "amodpath" else Command_Name);
 
    Debugging : constant Boolean := False;
 
