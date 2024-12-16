@@ -111,7 +111,7 @@ void readable_bytes_binary (char *number, char *buf, size_t bufsize)
   else if (mult_by_e) bytes *= 1024.0 * 1024.0 * 1024.0 * 1024.0 * 1024.0 * 1024.0;  
   double n = floor (log (bytes) / log (1024.0));
   double m = bytes / pow (1024, n);
-  snprintf (buf, bufsize, "%g %s", m, binary_units[(int) floor (n)]);
+  snprintf (buf, bufsize, "%g%s", m, binary_units[(int) floor (n)]);
 }
 
 char *si_units[] =
@@ -135,7 +135,7 @@ void readable_bytes_si (char *number, char *buf, size_t bufsize)
 
   double n = floor (log (bytes) / log (1000.0));
   double m = bytes / pow (1000.0, n);
-  snprintf (buf, bufsize, "%g %s", m, si_units[(int) floor (n)]);
+  snprintf (buf, bufsize, "%g%s", m, si_units[(int) floor (n)]);
 }
 
 
