@@ -2,4 +2,4 @@ tools:
 	gprbuild -P tools
 
 install:
-	gprinstall --mode=usage -f -P tools
+	gprinstall --mode=usage --install-name=tools -f -P tools
