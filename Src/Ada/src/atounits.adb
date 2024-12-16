@@ -192,8 +192,7 @@ procedure AToUnits is
 
          Put (Trim (To_String (R_Out), Both));
          if Multiplier_Used.Found then
-            Put (" " & (+Abbreviation (Multiplier_Used.Multiplier_Used)) &
-                   (if Units = "" then "" else +Units));
+            Put (+Abbreviation (Multiplier_Used.Multiplier_Used) & (+Units));
          end if;
          New_Line;
       end;
@@ -215,15 +214,22 @@ procedure AToUnits is
       end loop;
    end Process_Standard_Input;
 
+   procedure Print_Usage is
+   begin
+      Put_Line ("usage: " & Program_Name & " [option ...] [value ...]");
+      New_Line;
+   end Print_Usage;
+
 begin
    loop
       declare
-         Ch: Character := Getopt ("B b S s u: K M G T P E Z Y R Q k m g t p e z y r q");
+         Ch: Character := Getopt ("B b h S s u: K M G T P E Z Y R Q k m g t p e z y r q");
       begin
          case Ch is
             when ASCII.NUL => exit;
             when 'B' => Print_Binary_Prefixes;
             when 'b' => Use_SI := False;
+            when 'h' => Print_Usage;
             when 'S' => Print_Si_Prefixes;
             when 's' => Use_SI := True;
             when 'u' => Units := +Parameter;
