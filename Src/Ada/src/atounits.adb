@@ -10,7 +10,7 @@ with GNAT.OS_Lib; use GNAT.OS_Lib;
 
 procedure AToUnits is
    Program_Name : String :=
-     (if Command_Name = "" then "amodpath" else Command_Name);
+     (if Command_Name = "" then "atounits" else Command_Name);
 
    procedure Error (Message : String) is
    begin
