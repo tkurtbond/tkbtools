@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-[[ -e scan.pdf ]] && mv -v scan.pdf scan0001.pdf
+[[ -e scan.pdf ]] && mv -v scan.pdf scan0000.pdf
 
 find . -maxdepth 1 -type f -name \*.pdf | sort |
     while read fn; do
