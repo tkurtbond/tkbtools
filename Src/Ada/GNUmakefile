@@ -1,5 +1,5 @@
 tools:
-	gprbuild -P tools
+	gprbuild $(GPROPTS) -P tools
 
 install:
-	gprinstall --mode=usage --install-name=tools -f -P tools
+	gprinstall --mode=usage --install-name=tools -f $(GPROPTS) -P tools

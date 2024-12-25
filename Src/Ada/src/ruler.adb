@@ -23,7 +23,7 @@ procedure Ruler is
    begin
       if Extra then 
          for I in 1..Ruler_Length loop 
-            Put (if I mod 10 = 0 then '+' else '-');
+            Put (if I mod 10 = 0 then '|' elsif I mod 5 = 0 then '+' else '-');
          end loop;
          New_Line;
       end if;
