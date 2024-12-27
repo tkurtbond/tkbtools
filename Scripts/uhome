@@ -1,5 +1,16 @@
 #! /usr/bin/env bash
 
+function iterate {
+    for profile in "$@"
+    do
+        if [[ -z "$DISPLAY" && -z "$WAYLAND_DISPLAY" ]]; then
+            unison -ui text $profile
+        else
+            unison $profile &
+        fi
+    done
+}
+
 HOSTNAME=$(hostname)
 echo HOSTNAME: $HOSTNAME
 
@@ -9,17 +20,24 @@ else
     export MEDIA=/run/media/tkb
 fi
 
-unison $HOSTNAME-tkb-to-ulrich &
-unison $HOSTNAME-tkb-to-ulrich-d1tkb &
-unison $HOSTNAME-tkb-to-ilian &
-unison $HOSTNAME-tkb-to-konrad &
-unison $HOSTNAME-tkb-to-elric &
-unison $HOSTNAME-tkb-to-elric-fensalir &
-# unison $HOSTNAME-tkb-to-smiorgan &
-# unison $HOSTNAME-tkb-to-cornelius &
+ALWAYS=(
+    $HOSTNAME-tkb-to-ulrich
+    $HOSTNAME-tkb-to-ulrich-d1tkb
+    $HOSTNAME-tkb-to-ilian
+    $HOSTNAME-tkb-to-konrad
+    $HOSTNAME-tkb-to-elric
+    $HOSTNAME-tkb-to-elric-fensalir
+    # $HOSTNAME-tkb-to-smiorgan
+    # $HOSTNAME-tkb-to-cornelius
+)
 
-[[ -d $MEDIA/Kormt ]] && {
-    unison $HOSTNAME-kormt-to-ulrich-d1tkb &
-    unison $HOSTNAME-kormt-to-ulrich-jotunheim &
-    unison $HOSTNAME-kormt-to-elric-fensalir &
-}      
+IFKORMT=(
+    $HOSTNAME-kormt-to-ulrich-d1tkb
+    $HOSTNAME-kormt-to-ulrich-jotunheim
+    $HOSTNAME-kormt-to-elric-fensalir
+)
+
+
+iterate "${ALWAYS[@]}"
+
+[[ -d $MEDIA/Kormt ]] && iterate "${IFKORMT[@]}"
