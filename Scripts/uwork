@@ -26,6 +26,6 @@ IFKORMT=($HOSTNAME-kormt-to-oone-muspelheim
          $HOSTNAME-tkb-kormt)
 IFSINDRI=($HOSTNAME-tkb-sindri)
 
-iterate ${ALWAYS[@]}
-[[ -d $MEDIA/Kormt ]] && iterate ${IFKORMT[@]}
-[[ -d $MEDIA/Sindri ]] && iterate ${IFSINDRI[@]}
+iterate "${ALWAYS[@]}"
+[[ -d $MEDIA/Kormt ]] && iterate "${IFKORMT[@]}"
+[[ -d $MEDIA/Sindri ]] && iterate "${IFSINDRI[@]}"
