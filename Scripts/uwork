@@ -1,5 +1,16 @@
 #! /usr/bin/env bash
 
+function iterate {
+    for profile in "$@"
+    do
+        if [[ -z "$DISPLAY" && -z "$WAYLAND_DISPLAY" ]]; then
+            unison $profile
+        else
+            unison $profile &
+        fi
+    done
+}
+
 HOSTNAME=$(hostname)
 echo HOSTNAME: $HOSTNAME
 
@@ -9,15 +20,10 @@ else
     export MEDIA=/run/media/tkb
 fi
 
-unison $HOSTNAME-tkb-to-oone &
-unison $HOSTNAME-tkb-to-oone-muspelheim &
+ALWAYS=($HOSTNAME-tkb-to-oone $HOSTNAME-tkb-to-oone-muspelheim)
+IFKORMT=($HOSTNAME-kormt-to-oone-muspelheim $HOSTNAME-tkb-kormt)
+IFSINDRI=($HOSTNAME-tkb-sindri)
 
-
-if [[ -d $MEDIA/Kormt ]]; then
-    unison $HOSTNAME-kormt-to-oone-muspelheim &
-    unison $HOSTNAME-tkb-kormt &
-fi
-
-if [[ -d $MEDIA/Sindri ]]; then
-    unison $HOSTNAME-tkb-sindri &
-fi
+iterate ${ALWAYS[@]}
+[[ -d $MEDIA/Kormt ]] && iterate ${IFKORMT[@]}
+[[ -d $MEDIA/Sindri ]] && iterate ${IFSINDRI[@]}
