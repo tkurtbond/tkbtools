@@ -4,7 +4,7 @@ function iterate {
     for profile in "$@"
     do
         if [[ -z "$DISPLAY" && -z "$WAYLAND_DISPLAY" ]]; then
-            unison $profile
+            unison -ui text $profile
         else
             unison $profile &
         fi
@@ -20,8 +20,10 @@ else
     export MEDIA=/run/media/tkb
 fi
 
-ALWAYS=($HOSTNAME-tkb-to-oone $HOSTNAME-tkb-to-oone-muspelheim)
-IFKORMT=($HOSTNAME-kormt-to-oone-muspelheim $HOSTNAME-tkb-kormt)
+ALWAYS=($HOSTNAME-tkb-to-oone
+        $HOSTNAME-tkb-to-oone-muspelheim)
+IFKORMT=($HOSTNAME-kormt-to-oone-muspelheim
+         $HOSTNAME-tkb-kormt)
 IFSINDRI=($HOSTNAME-tkb-sindri)
 
 iterate ${ALWAYS[@]}
