@@ -20,11 +20,17 @@ else
     export MEDIA=/run/media/tkb
 fi
 
-ALWAYS=($HOSTNAME-tkb-to-oone
-        $HOSTNAME-tkb-to-oone-muspelheim)
-IFKORMT=($HOSTNAME-kormt-to-oone-muspelheim
-         $HOSTNAME-tkb-kormt)
-IFSINDRI=($HOSTNAME-tkb-sindri)
+ALWAYS=(
+    $HOSTNAME-tkb-to-oone
+    $HOSTNAME-tkb-to-oone-muspelheim
+)
+IFKORMT=(
+    $HOSTNAME-kormt-to-oone-muspelheim
+    $HOSTNAME-tkb-kormt
+)
+IFSINDRI=(
+    $HOSTNAME-tkb-sindri
+)
 
 iterate "${ALWAYS[@]}"
 [[ -d $MEDIA/Kormt ]] && iterate "${IFKORMT[@]}"
