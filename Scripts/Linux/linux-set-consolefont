@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+setfont /usr/share/consolefonts/Uni3-DejaVu30x16.psf.gz
