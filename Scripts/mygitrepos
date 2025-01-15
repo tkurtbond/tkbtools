@@ -48,7 +48,7 @@ REPOS=(
     20 y ~/Repos/sdcl                                        git@github.com:tkurtbond/sdcl.git
     20 y ~/Repos/filetap                                     git@github.com:tkurtbond/filetap.git
     10 y ~/current/computer/lang/tnolang                     git@github.com:tkurtbond/tnolang.git
-    00 n /usr/local/sw/src/Oberon/tkb/voc                    git@github.com:tkurtbond/voc.git
+    00 n /usr/local/sw/src/lang/Oberon/tkb/vishap/voc        git@github.com:tkurtbond/voc.git
 )
 
 #for i in ${REPOS[@]}; do echo $i; done
