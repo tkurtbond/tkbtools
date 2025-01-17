@@ -1,4 +1,9 @@
 #! /usr/bin/env bash
+DO_HELP=0                       # Does the help need to be displayed?
+CONTINUOUS=0                    # Keep dinging!
+LIMIT=5                         # Only ding five times by default.
+errors=0
+
 while getopts "chn:" opt
 do
     case "$opt" in
