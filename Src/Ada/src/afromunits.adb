@@ -54,7 +54,7 @@ procedure AFromUnits is
    Use_SI : Boolean := False;
 
    Multipliers : Labeled_Multiplier_Array :=
-     ['K' => (+"Kilo",   +"K", +"10.0**03", 10.0**03, +"Kibi", +"Ki", +"2.0**010", 2.0**010),
+     ('K' => (+"Kilo",   +"K", +"10.0**03", 10.0**03, +"Kibi", +"Ki", +"2.0**010", 2.0**010),
       'M' => (+"Mega",   +"M", +"10.0**06", 10.0**06, +"Mebi", +"Mi", +"2.0**020", 2.0**020),
       'G' => (+"Giga",   +"G", +"10.0**09", 10.0**09, +"Gibi", +"Gi", +"2.0**030", 2.0**030),
       'T' => (+"Tera",   +"T", +"10.0**12", 10.0**12, +"Tebi", +"Ti", +"2.0**040", 2.0**040),
@@ -64,7 +64,7 @@ procedure AFromUnits is
       'Y' => (+"Yotta",  +"Y", +"10.0**24", 10.0**24, +"Yobi", +"Yi", +"2.0**080", 2.0**080),
       'R' => (+"Ronna",  +"R", +"10.0**27", 10.0**27, +"Robi", +"Ri", +"2.0**090", 2.0**090),
       'Q' => (+"Quetta", +"Q", +"10.0**30", 10.0**30, +"Qubi", +"Qi", +"2.0**100", 2.0**100)
-     ];
+     );
 
    function By_Multiplier (M : Multiplier) return Big_Real is
      (if Use_SI then Multipliers (M).SI else Multipliers (M).BI);
@@ -215,7 +215,7 @@ begin
          Arg : constant String := Get_Argument;
       begin
          exit when Arg'Length = 0;
-         Number_Of_Arguments := @ + 1;
+         Number_Of_Arguments := Number_Of_Arguments + 1;
          Process_Argument (Arg);
       end;
    end loop;

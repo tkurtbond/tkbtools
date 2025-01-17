@@ -39,7 +39,7 @@ begin
          Argument : String := Get_Argument (End_Of_Arguments => End_Of_Arguments);
       begin
          exit when End_Of_Arguments;
-         Number_Of_Arguments := @ + 1;
+         Number_Of_Arguments := Number_Of_Arguments + 1;
          if Number_Of_Arguments > 1 then 
             Put_Line (Standard_Error, "ruler: only one argument is allowed.");
             OS_Exit (2);

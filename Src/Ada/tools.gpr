@@ -7,7 +7,7 @@ project Tools is
    package Compiler is 
       for Default_Switches ("Ada") use (
         "-gnatef",                      --  use full pathnames in error messages
-        "-gnat2022",                    --  Ada 2022 by default
+        "-gnat2012",                    --  Ada 2012 for portability (OpenBSD)
         "-gnatf");                      --  full error messages
    end Compiler;
    package Binder is 
@@ -21,8 +21,8 @@ project Tools is
    for Main use 
      (
       "amodpath",
-      "afromunits",
-      "atounits",
+      -- "afromunits",             -- only in Ada 2022
+      -- "atounits",               -- only in Ada 2022
       "ruler"
      );
 end Tools;
