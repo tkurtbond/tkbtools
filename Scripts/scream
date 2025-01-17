@@ -5,13 +5,14 @@ CONTINUOUS=0                    # Keep dinging!
 LIMIT=5                         # Only ding five times by default.
 errors=0
 
-while getopts "chn:" opt
+while getopts "chn:x" opt
 do
     case "$opt" in
         (\?) ((errors++)) ;;
         (c) CONTINUOUS=1 ;;
         (h) DO_HELP=1 ;;
         (n) LIMIT=$OPTARG ;;
+        (x) set -x ;;
     esac
 done
 
@@ -32,7 +33,7 @@ EOF
 let n=0
 while ((CONTINUOUS || n < LIMIT))
 do
+  ((n > 0)) && sleep 1
   printf "\a"
-  sleep 1
   ((n++))
 done
