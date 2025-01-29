@@ -226,6 +226,10 @@ LINUX_SCRIPTS=\
 	Linux/linux-screen-resolutions \
 	# Nothing here
 
+NOT_INSTALLED_SCRIPTS=\
+	build-ncurses-doc \
+	build-ncurses-resources
+
 EXES=
 TEST_EXES=
 NOTSRC=
