@@ -49,7 +49,7 @@ REPOS=(
     20 y ~/Repos/filetap                                     git@github.com:tkurtbond/filetap.git
     10 y ~/current/computer/lang/tnolang                     git@github.com:tkurtbond/tnolang.git
     00 n /usr/local/sw/src/lang/Oberon/tkb/vishap/voc        git@github.com:tkurtbond/vishap-compiler.git
-    00 n /usr/local/sw/src/lang/C/TLDP                       git@github.com:tkurtbond/LDP.git
+    00 n /usr/local/sw/src/lang/C/TLDP/LDP                   git@github.com:tkurtbond/LDP.git
     00 n ~/Repos/ncurses_howto_in_ada                        git@github.com:tkurtbond/ncurses_howto_in_ada.git
 )
 
