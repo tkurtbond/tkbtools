@@ -50,7 +50,8 @@ REPOS=(
     10 y ~/current/computer/lang/tnolang                     git@github.com:tkurtbond/tnolang.git
     00 n /usr/local/sw/src/lang/Oberon/tkb/vishap/voc        git@github.com:tkurtbond/vishap-compiler.git
     00 n /usr/local/sw/src/lang/C/TLDP/LDP                   git@github.com:tkurtbond/LDP.git
-    00 n ~/Repos/ncurses_howto_in_ada                        git@github.com:tkurtbond/ncurses_howto_in_ada.git
+    00 y ~/Repos/ncurses_howto_in_ada                        git@github.com:tkurtbond/ncurses_howto_in_ada.git
+    00 y ~/Repos/exceptions                                  git@github.com:tkurtbond/exceptions.git
 )
 
 #for i in ${REPOS[@]}; do echo $i; done
