@@ -49,6 +49,7 @@ $(BINDIR)/% : Linux/%
 
 SCRIPTS= \
 	accumulate \
+	blank-swayidle \
 	bldmyblog \
 	blogbot \
 	books-per-day \
