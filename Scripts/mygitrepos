@@ -10,6 +10,7 @@ NUMCOLUMNS=4
 REPOS=(
     90 y ~/lib/emacs/emacs-config                            git@github.com:tkurtbond/emacs-config.git
     90 y ~/lib/emacs/arrows                                  git@github.com:tkurtbond/arrow-macros-for-emacs.git
+    90 y ~/lib/emacs/old-ada-mode                            git@github.com:tkurtbond/old-ada-mode.git
     90 y ~/comp/tkbtools                                     git@github.com:tkurtbond/tkbtools.git
     80 y ~/Repos/tkb-notes                                   git@gitlab.com:t-kurt-bond/tkb-notes.git
     75 y ~/Notes                                             git@github.com:tkurtbond/general-notes.git
