@@ -3,6 +3,8 @@
 COLUMNS=$(tput cols)
 LINES=$(tput lines)
 
+# was /INQ instead of /DEVICE=VT100.  Changed to better deal with EDIT/TPU.
+
 echo "
-set term/inq/insert/page=$LINES/width=$COLUMNS
+set term/DEVICE=VT100/insert/page=$LINES/width=$COLUMNS
 "
