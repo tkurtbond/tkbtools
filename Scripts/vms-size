@@ -3,8 +3,11 @@
 COLUMNS=$(tput cols)
 LINES=$(tput lines)
 
+DEVICE=/DEVICE=VT100
+[[ $1 == "-i" ]] && DEVICE=/inquire
+
 # was /INQ instead of /DEVICE=VT100.  Changed to better deal with EDIT/TPU.
 
 echo "
-set term/DEVICE=VT100/insert/page=$LINES/width=$COLUMNS
+set term${DEVICE}/insert/page=$LINES/width=$COLUMNS
 "
