@@ -2,4 +2,5 @@
 
 #cp -v ~/KeePass/tkurtbond.kdbx  ~/Dropbox/tkurtbond-mobile.kdbx
 #cp -v ~/KeePass/tkurtbond.kdbx ~/Library/CloudStorage/Dropbox/
-cp -v ~/KeePass/tkurtbond.kdbx  ~/Dropbox
+cp -v ~/KeePass/tkurtbond.kdbx  ~/Dropbox/Crypted
+cp -v ~/KeePass/MPL-Passwords.kdbx ~/Dropbox/Crypted
