@@ -60,6 +60,7 @@ SCRIPTS= \
 	context-depends \
 	copy-to-minimal \
 	count-books-read \
+	count-eggs \
 	cvs-update \
 	darcs-inventory \
 	dedos.py \
