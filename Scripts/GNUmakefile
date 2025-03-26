@@ -225,7 +225,10 @@ NETBSD_SCRIPTS=\
 
 LINUX_SCRIPTS=\
 	Linux/linux-capabilities \
+	Linux/linux-loadkeys \
+	Linux/linux-light \
 	Linux/linux-screen-resolutions \
+	Linux/linux-set-consolefont \
 	# Nothing here
 
 NOT_INSTALLED_SCRIPTS=\
