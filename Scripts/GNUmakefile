@@ -75,6 +75,7 @@ SCRIPTS= \
 	fg-backup-campaigns \
 	filedate \
 	filetime \
+	fileurl \
 	find-rst-footnotes \
 	gensite.sh \
 	getremotemail.sh \
