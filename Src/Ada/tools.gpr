@@ -7,7 +7,7 @@ project Tools is
    package Compiler is 
       for Default_Switches ("Ada") use (
         "-gnatef",                      --  use full pathnames in error messages
-        "-gnat2022",                    --  Ada 2022 by default
+        -- Not on OpenBSD "-gnat2022",                    --  Ada 2022 by default
         "-gnatf");                      --  full error messages
    end Compiler;
    package Binder is 
