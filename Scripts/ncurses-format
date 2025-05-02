@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+jade -t sgml -i html \
+     -d /usr/share/sgml/docbook/dsssl-stylesheets-1.79/html/docbook.dsl \
+     -V nochunks \
+     NCURSES-Programming-HOWTO.sgml \
+     > ~/Reference/Computer/Libraries/NCURSES/NCURSES-ONE-BIG-FILE.html

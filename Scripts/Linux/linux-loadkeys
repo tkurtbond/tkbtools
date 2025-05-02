@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+loadkeys /etc/console-setup/ctrlswapcaps.kmap
+

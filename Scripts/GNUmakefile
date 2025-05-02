@@ -49,6 +49,7 @@ $(BINDIR)/% : Linux/%
 
 SCRIPTS= \
 	accumulate \
+	blank-swayidle \
 	bldmyblog \
 	blogbot \
 	books-per-day \
@@ -59,6 +60,7 @@ SCRIPTS= \
 	context-depends \
 	copy-to-minimal \
 	count-books-read \
+	count-eggs \
 	cvs-update \
 	darcs-inventory \
 	dedos.py \
@@ -73,6 +75,7 @@ SCRIPTS= \
 	fg-backup-campaigns \
 	filedate \
 	filetime \
+	fileurl \
 	find-rst-footnotes \
 	gensite.sh \
 	getremotemail.sh \
@@ -223,8 +226,15 @@ NETBSD_SCRIPTS=\
 
 LINUX_SCRIPTS=\
 	Linux/linux-capabilities \
+	Linux/linux-loadkeys \
+	Linux/linux-light \
 	Linux/linux-screen-resolutions \
+	Linux/linux-set-consolefont \
 	# Nothing here
+
+NOT_INSTALLED_SCRIPTS=\
+	build-ncurses-doc \
+	build-ncurses-resources
 
 EXES=
 TEST_EXES=

@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+echo "Chicken Version 4 has $(parse-eggs-list --version 4), version 5 has $(parse-eggs-list), and version 6 has $(parse-eggs-list --version 6)"

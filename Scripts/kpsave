@@ -2,3 +2,4 @@
 
 # I don't think I need to save a version of   ~/Dropbox/tkurtbond-mobile.kdbx
 snewver -d ~/KeePass/Old "$@" ~/KeePass/tkurtbond.kdbx
+snewver -d ~/KeePass/Old "$@" ~/KeePass/MPL-Passwords.kdbx

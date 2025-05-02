@@ -1,0 +1,2 @@
+#! /usr/bin/env bash
+tar --exclude CVS -cvf ncurses_programs.tar.gz ncurses_programs/
