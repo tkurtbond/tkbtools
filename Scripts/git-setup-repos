@@ -64,8 +64,8 @@ do
         PARENTDIR=$(dirname $DIR)
         REPODIR=$(basename $DIR)
         echo PARENTDIR: $PARENTDIR REPODIR: $REPODIR
-        echo DO_INTERACTIVE: $DO_INTERACTIVE
-        ((DO_INTERACTIVE)) && echo interactive || echo non-interactive
+        # echo DO_INTERACTIVE: $DO_INTERACTIVE
+        # ((DO_INTERACTIVE)) && echo interactive || echo non-interactive
         ((DO_INTERACTIVE)) && {
             read -p "Create repo? (y/n/q) " ynq </dev/tty
             echo ynq: $ynq
