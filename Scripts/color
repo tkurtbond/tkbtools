@@ -1,0 +1,19 @@
+#! /usr/bin/env bash
+. ~/comp/tkbtools/Scripts/define-colors
+
+color_wanted="$1"
+
+[[ -z $color_wanted ]] && color_wanted=blue
+
+color_wanted="$(echo $color_wanted | tr [:lower:] [:upper:])"
+
+color_variable="COLOR_$color_wanted"
+
+[[ -z "${!color_variable}" ]] && {
+    printf 1>&2 "error: color %s is unknown\n" $color_wanted
+    exit 2
+}
+
+printf "${!color_variable}"
+printf "%0*d" $(tput cols) 0 | tr 0 @
+printf "$COLOR_NC\n"
