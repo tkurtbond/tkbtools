@@ -56,6 +56,7 @@ SCRIPTS= \
 	check-eggs \
 	code2pandoc \
 	collapse \
+	color \
 	combine-dicts \
 	context-depends \
 	copy-to-minimal \
