@@ -55,6 +55,7 @@ SCRIPTS= \
 	books-per-day \
 	check-eggs \
 	code2pandoc \
+	color \
 	collapse \
 	combine-dicts \
 	context-depends \
