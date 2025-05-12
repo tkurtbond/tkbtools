@@ -1,19 +1,63 @@
 #! /usr/bin/env bash
-. ~/comp/tkbtools/Scripts/define-colors
+EMPTY=
+errors=0
 
-color_wanted="$1"
+while getopts "b:c:f:n" opt
+do
+    case "$opt" in
+        (\?) ((errors++)) ;;
+        (b) BACKGROUND=$OPTARG ;;
+        (f) FOREGROUND=$OPTARG ;;
+        (c) CHARACTER=$OPTARG ;;
+        (n) NO_NEWLINE=1 ;;
+        (x) DO_TRACE=1 ;;
+    esac
+done
 
-[[ -z $color_wanted ]] && color_wanted=blue
+((DO_HELP)) && HELPOUT=/dev/stdout || HELPOUT=/dev/stderr
+((DO_HELP || errors)) && {
+    cat >$HELPOUT <<EOF
+usage: $0 [-n] [-bCOLOR] [-fCOLOR] [text]
 
-color_wanted="$(echo $color_wanted | tr [:lower:] [:upper:])"
-
-color_variable="COLOR_$color_wanted"
-
-[[ -z "${!color_variable}" ]] && {
-    printf 1>&2 "error: color %s is unknown\n" $color_wanted
-    exit 2
+Options
+-bCOLOR Use background color COLOR.
+-fCOLOR Use foreground color COLOR.
+-n      Don't output terminating newline.
+EOF
+    exit
 }
 
-printf "${!color_variable}"
-printf "%0*d" $(tput cols) 0 | tr 0 @
-printf "$COLOR_NC\n"
+shift $((OPTIND-1))
+
+[[ -z "$CHARACTER" ]] && CHARACTER="@"
+
+[[ -n "$1" ]] && TEXT="$1" || TEXT="$(printf "%0*d" $(tput cols) 0 | tr 0 "$CHARACTER")"
+
+. ~/comp/tkbtools/Scripts/define-colors
+
+((DO_TRACE)) && set -x
+
+if [[ -n "$FOREGROUND" ]]; then
+    FOREGROUND="$(echo $FOREGROUND | tr [:lower:] [:upper:])"
+    FOREGROUND_VARIABLE="COLOR_FORE_$FOREGROUND"
+    [[ -z "${!FOREGROUND_VARIABLE}" ]] && {
+        printf 1>&2 "error: foreground color %s is unknown\n" $FOREGROUND
+        exit 2
+    }
+else
+    FOREGROUND_VARIABLE=EMPTY
+fi
+
+if [[ -n "$BACKGROUND" ]]; then
+    BACKGROUND="$(echo $BACKGROUND | tr [:lower:] [:upper:])"
+    BACKGROUND_VARIABLE="COLOR_BACK_$BACKGROUND"
+    [[ -z "${!BACKGROUND_VARIABLE}" ]] && {
+        printf 1>&2 "error: background color %s is unknown\n" $BACKGROUND
+        exit 2
+    }
+else
+    BACKGROUND_VARIABLE=EMPTY
+fi
+
+
+printf "${!FOREGROUND_VARIABLE}${!BACKGROUND_VARIABLE}$TEXT$COLOR_NC\n"
