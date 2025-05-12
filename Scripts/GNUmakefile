@@ -57,6 +57,7 @@ SCRIPTS= \
 	code2pandoc \
 	color \
 	collapse \
+	color \
 	combine-dicts \
 	context-depends \
 	copy-to-minimal \
