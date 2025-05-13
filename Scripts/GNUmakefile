@@ -129,6 +129,7 @@ SCRIPTS= \
 	nikola-roles \
 	nikola-tags \
 	nisttime \
+	numsum \
 	nsf \
 	nsmail \
 	nsremote \
