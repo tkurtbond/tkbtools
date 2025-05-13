@@ -10,3 +10,5 @@
 * wipedir
 
 * where needs to use PATHEXT under NT.
+
+* numsum needs a option to crunch and translate spaces to newlines

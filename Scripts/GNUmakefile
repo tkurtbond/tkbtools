@@ -56,6 +56,7 @@ SCRIPTS= \
 	check-eggs \
 	code2pandoc \
 	collapse \
+	color \
 	combine-dicts \
 	context-depends \
 	copy-to-minimal \
@@ -127,6 +128,7 @@ SCRIPTS= \
 	nikola-roles \
 	nikola-tags \
 	nisttime \
+	numsum \
 	nsf \
 	nsmail \
 	nsremote \
