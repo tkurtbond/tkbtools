@@ -2,11 +2,13 @@
 EMPTY=
 errors=0
 
-while getopts "b:c:f:n" opt
+while getopts "B:b:c:F:f:n" opt
 do
     case "$opt" in
         (\?) ((errors++)) ;;
+        (B) BACKGROUND24=$OPTARG ;;
         (b) BACKGROUND=$OPTARG ;;
+        (F) FOREGROUND24=$OPTARG ;;
         (f) FOREGROUND=$OPTARG ;;
         (c) CHARACTER=$OPTARG ;;
         (n) NO_NEWLINE=1 ;;
@@ -20,8 +22,10 @@ done
 usage: $0 [-n] [-bCOLOR] [-fCOLOR] [text]
 
 Options
--bCOLOR Use background color COLOR.
--fCOLOR Use foreground color COLOR.
+-BR,G,B Use background 24-bit color specified as decimal numbers red,green,blue.
+-bCOLOR Use background color named COLOR.
+-FR,G,B Use foreground 24-bit color specified as decimal numbers red,green,blue.
+-fCOLOR Use foreground color named COLOR.
 -n      Don't output terminating newline.
 EOF
     exit
@@ -48,6 +52,12 @@ else
     FOREGROUND_VARIABLE=EMPTY
 fi
 
+if [[ -n "$FOREGROUND24" ]]; then
+    RGB="$(echo "$FOREGROUND24" | tr , ";")"
+    FGVALUE="\e[38;2;${RGB}m"
+    FOREGROUND_VARIABLE="FGVALUE"
+fi
+
 if [[ -n "$BACKGROUND" ]]; then
     BACKGROUND="$(echo $BACKGROUND | tr [:lower:] [:upper:])"
     BACKGROUND_VARIABLE="COLOR_BACK_$BACKGROUND"
@@ -59,5 +69,10 @@ else
     BACKGROUND_VARIABLE=EMPTY
 fi
 
+if [[ -n "$BACKGROUND24" ]]; then
+    RGB="$(echo "$BACKGROUND24" | tr , ";")"
+    BGVALUE="\e[48;2;${RGB}m"
+    BACKGROUND_VARIABLE="BGVALUE"
+fi
 
 printf "${!FOREGROUND_VARIABLE}${!BACKGROUND_VARIABLE}$TEXT$COLOR_NC\n"
