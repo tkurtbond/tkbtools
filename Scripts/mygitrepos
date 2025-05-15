@@ -39,7 +39,8 @@ REPOS=(
     30 y ~/current/RPG/Kids/TFT/West-Marches/Euleron         git@github.com:tkurtbond/Refugees-in-Euleron.git
     30 y ~/current/RPG/Campaigns/Alusia/Partyhist-xml        git@github.com:tkurtbond/partyhist.git
     30 y ~/Repos/RPG/Red-Planet-Blue-Helmets                 git@github.com:tkurtbond/Red-Planet-Blue-Helmets.git
-    30 y ~/Repos/RPG/Centauri-Knights                        git@github.com:tkurtbond/Centauri-Knights.git
+    30 y ~/Repos/RPG/Centauri-Knights-2E                     git@github.com:tkurtbond/Centauri-Knights-2E.git
+    30 y ~/Repos/RPG/Centauri-Knights-4E                     git@github.com:tkurtbond/Centauri-Knights-4E.git
     20 y ~/job/MPL/MHST/sis-export                           git@github.com:tkurtbond/sis-export.git
     20 y ~/job/MPL/MHST/dmstosqldb                           git@github.com:tkurtbond/dmstosqldb.git
     20 y ~/job/MPL/MHST/dmsfields                            git@github.com:tkurtbond/dmsfields.git
