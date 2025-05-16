@@ -1,9 +1,37 @@
 #! /usr/bin/bash
+
+
+errors=0
+
+while getopts "d" opt
+do
+    case "$opt" in
+        (\?) ((errors++)) ;;
+        (d) DOWNLOAD=--downloadonly
+        (h) DO_HELP=1 ;;
+    esac
+done
+
+((DO_HELP)) && HELPOUT=/dev/stdout || HELPOUT=/dev/stderr
+((DO_HELP || errors)) && {
+    cat >$HELPOUT <<EOF
+usage: $0 [-chiu]
+
+Options
+-d      Download only.
+-h	Displays this message.
+EOF
+    exit
+}
+
+shift $((OPTIND-1))
+
+
 while true
 do
     ((i++))
-    echo "Run #$i of dnf update at $(date -Iseconds)"
-    dnf -y upgrade && break     # Exit loop on success
+    echo "Run #$i of dnf update $(DOWNLOAD) at $(date -Iseconds)"
+    dnf -y upgrade $(DOWNLOAD) && break     # Exit loop on success
 
     # This allows the user to exit if necessary.
     read -t 30 -p "Continue? (y/n) " reply
