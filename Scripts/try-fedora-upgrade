@@ -7,7 +7,7 @@ while getopts "d" opt
 do
     case "$opt" in
         (\?) ((errors++)) ;;
-        (d) DOWNLOAD=--downloadonly
+        (d) DOWNLOAD=--downloadonly ;;
         (h) DO_HELP=1 ;;
     esac
 done
