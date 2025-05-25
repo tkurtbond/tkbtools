@@ -74,12 +74,21 @@ main (int argc, char **argv)
 
   prog_name = argv[0];
 
-  for (i = 1; i < argc; i++)
+  
+  if (argc <= 1)
     {
-      char *filename = argv[i];
-      int max_ll = process_filename (filename);
+      int max_ll = process_file (stdin);
+      printf ("%d\n", max_ll);
+    }
+  else
+    {
+      for (i = 1; i < argc; i++)
+        {
+          char *filename = argv[i];
+          int max_ll = process_filename (filename);
       
-      printf ("%s: %d\n", filename, max_ll);
+          printf ("%s: %d\n", filename, max_ll);
+        }
     }
   return 0;
 }
