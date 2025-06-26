@@ -49,6 +49,7 @@ $(BINDIR)/% : Linux/%
 
 SCRIPTS= \
 	accumulate \
+	apply-to \
 	blank-swayidle \
 	bldmyblog \
 	blogbot \

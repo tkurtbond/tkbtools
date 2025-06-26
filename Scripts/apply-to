@@ -1,0 +1,13 @@
+#! /usr/bin/env bash
+errors=0
+
+((${#@} < 2)) && {
+    printf "%s: must specify a command and at least one file for it to operate on.\n" $@ 1>&2
+    exit 1
+}
+
+cmd="$1"
+shift 1
+for filename in "${@}"; do
+    $cmd $filename &
+done
