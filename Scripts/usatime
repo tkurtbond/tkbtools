@@ -33,6 +33,7 @@ showtime()
   TZIN=$1
   TZOUT=$2
 
+  printf "%20s -> %20s: " $TZIN $TZOUT
   TZ=$TZOUT date --date='TZ="'$TZIN'"'" $time" +"$time is $FORMAT"
 }
 
