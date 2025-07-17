@@ -1,4 +1,4 @@
 #! /usr/bin/env bash
 
-cd Path=/home/tkb/.smiteworks/fantasygrounds
+cd /home/tkb/.smiteworks/fantasygrounds
 /home/tkb/.smiteworks/fantasygrounds/FantasyGrounds.x86_64 &
