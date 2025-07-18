@@ -33,6 +33,7 @@ REPOS=(
     55 y ~/Repos/RPG/Lost-Worlds                  	     git@github.com:tkurtbond/Lost-Worlds.git
     55 y ~/Repos/RPG/Centauri-Knights-4E                     git@github.com:tkurtbond/Centauri-Knights-4E.git
     55 y ~/Repos/RPG/Centauri-Knights-2E                     git@github.com:tkurtbond/Centauri-Knights-2E.git
+    53 y ~/Repos/RPG/The-Mecha-Hack	                     git@github.com:tkurtbond/The-Mecha-Hack.git
     50 y ~/Repos/tpa                                         git@github.com:tkurtbond/tpa.git
     50 y ~/Repos/flex_args                                   git@github.com:tkurtbond/flex_args.git
     43 y ~/Repos/learn-htmx/                                 git@github.com:tkurtbond/learn-htmx.git
