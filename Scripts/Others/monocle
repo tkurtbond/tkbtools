@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# From: https://www.reddit.com/r/swaywm/comments/1maj8w3/my_solution_to_the_monocle_issue/
+# u/xircon -- https://www.reddit.com/user/xircon/
+
+current=$(swaymsg -t get_workspaces | jq '.[] | select(.focused==true).name' | cut -d"\"" -f2)
+monocle=99
+
+if [[ "$current" != "$monocle" ]]; then
+    swaymsg move container to workspace $monocle
+    swaymsg workspace $monocle
+    echo $current > /tmp/current
+else
+    prev=$(</tmp/current)
+    swaymsg move container to workspace $prev
+    swaymsg workspace $prev
+    rm /tmp/current # Remove temp file.
+fi

@@ -1,10 +1,5 @@
 ##############################################################################
-#### Makefile -- makefile for my tools.  
-##############################################################################
-### $Id: Makefile 1.8 Wed, 03 Apr 2002 20:16:32 -0500 tkb $
-### 
-### The scripts in ~/local/bin are in this directory
-### and installed in ~/local/bin by this Makefile.
+#### Makefile -- makefile for tools I got form others.  
 ##############################################################################
 
 include .what-sys.dat
@@ -33,7 +28,7 @@ $(BINDIR)/% : %
 # There is a C implementation of ordinalday in ../Src which gets installed.
 
 SCRIPTS= \
-	h-m-m \
+	monocle
 	# Nothing Here
 
 NOTSRC=
