@@ -1,0 +1,8 @@
+#! /usr/bin/env bash
+
+(($# < 1)) && {
+    printf "%s: you must specify at least one argument.\n" $0 1>&2
+    exit 2
+}
+
+echo -n -e "\e]0;$*\a"

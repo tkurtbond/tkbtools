@@ -205,6 +205,7 @@ SCRIPTS= \
 	winbox-in-wine \
 	worldographer \
 	worldtime \
+	wtitle \
 	wscream \
 	# Nothing Here
 
