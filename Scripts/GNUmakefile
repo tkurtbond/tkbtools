@@ -184,6 +184,7 @@ SCRIPTS= \
 	sum-cp \
 	sum-sp \
 	sumlines \
+	swaysave \
 	tarit \
 	test-email.sh \
 	do-text-mapper \
