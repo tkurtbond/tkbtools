@@ -96,6 +96,7 @@ SCRIPTS= \
 	hero-designer \
 	htmlindex.sh \
 	hyphen-groff \
+	i3save \
 	incf \
 	incf.py \
 	instmyblog \

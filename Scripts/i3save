@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+snewver -l $(hostname).save ~/.config/i3/config
