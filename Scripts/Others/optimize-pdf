@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# From: https://forum.rpg.net/threads/for-those-of-you-who-do-both-print-and-digital-how-to-you-balance-between-the-two.929736/post-25576341
+# By: idajourney -- https://forum.rpg.net/members/idajourney.229637/
+
+if [ "$#" -lt 2 ]; then
+        echo "Not enough arguments; usage is $0 output.pdf input.pdf"
+        exit 1
+fi
+
+if [ ! -f $2 ]; then
+        echo "Input file does not exist"
+        exit 2
+fi
+
+gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.7 -dPDFSETTINGS=/screen -dNOPAUSE -dQUIET -dBATCH -sProcessColorModel=DeviceGray -sColorConversionStrategy=Gray -dOverrideICC -sOutputFile=$1 $2
+
