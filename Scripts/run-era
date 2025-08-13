@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+ERADIR=/usr/local/sw/versions/ERA-Linux
+
+cd $ERADIR && (foot ./Server/ERA-Server.sh RMC &)
+
+# x-terminal-emulator -e ./Server/ERA-Server.sh RMC
