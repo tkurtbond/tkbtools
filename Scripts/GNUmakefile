@@ -162,6 +162,7 @@ SCRIPTS= \
 	run-duckling-run \
 	run-fantasygrounds \
 	run-nyxt \
+	run-rmc-era \
 	run-spotify \
 	scream \
 	setup-gerbil \
