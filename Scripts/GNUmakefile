@@ -116,6 +116,7 @@ SCRIPTS= \
 	lpbook \
 	mac-unquarantine \
 	machine-characteristics \
+	map-d100 \
 	mfcleanup \
 	mkignores \
 	mpl-rename-mail \

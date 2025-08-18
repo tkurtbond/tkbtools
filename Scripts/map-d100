@@ -1,0 +1,31 @@
+#!/usr/bin/sbcl --script
+;;; -*- common-lisp -*-
+;;; map-d100.lisp -- Map d100 rolls to numbers from 1 to 100 with no repeats.
+
+(defparameter mapping (make-array '(101) :initial-element nil)) ; we'll be using 1-100, not 0-99
+(defparameter used (make-hash-table :test 'eql))
+
+(defparameter my-random-state (make-random-state t))
+(format t "~&*random-state*: ~s" my-random-state)
+
+(defun find-replacement (i)
+  (let ((replacement (1+ (random 100 my-random-state))))
+    (loop while (gethash replacement used)
+          do (setf replacement (1+ (random 100 my-random-state))))
+    (setf (aref mapping i) replacement)
+    (setf (gethash replacement used) t)))
+
+(loop for i from 1 to 100 do (find-replacement i))
+(loop for i from 1 to 100 do (format t "~3d -> ~3d~&" i (aref mapping i)))
+
+(defun map-d100 ()
+  (loop (format t "~&Number: ")
+        (force-output *standard-output*)
+        (let ((n (parse-integer (read-line) :junk-allowed t)))
+          (when (not n) (return))
+          (if (<= 1 n 100)
+              (format t "The mapping of ~D is ~D." n (aref mapping n))
+              (format t "The number ~d is not between 1 and 100." n)))))
+
+
+(map-d100)
