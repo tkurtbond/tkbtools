@@ -165,6 +165,7 @@ SCRIPTS= \
 	run-nyxt \
 	run-rmc-era \
 	run-spotify \
+	run-ytdn \
 	scream \
 	setup-gerbil \
 	signature-size \
