@@ -1,12 +1,18 @@
-#!/usr/bin/sbcl --script
+#! /usr/bin/env -S sbcl --script
 ;;; -*- common-lisp -*-
 ;;; map-d100.lisp -- Map d100 rolls to numbers from 1 to 100 with no repeats.
+(load "~/.sbclrc")
+
+(with-output-to-string (*standard-output*)
+  (ql:quickload "clingon"))
+
+(defparameter *number-of-columns* 5)
 
 (defparameter mapping (make-array '(101) :initial-element nil)) ; we'll be using 1-100, not 0-99
 (defparameter used (make-hash-table :test 'eql))
 
 (defparameter my-random-state (make-random-state t))
-(format t "~&*random-state*: ~s" my-random-state)
+;;(format t "~&*random-state*: ~s" my-random-state)
 
 (defun find-replacement (i)
   (let ((replacement (1+ (random 100 my-random-state))))
@@ -16,16 +22,50 @@
     (setf (gethash replacement used) t)))
 
 (loop for i from 1 to 100 do (find-replacement i))
-(loop for i from 1 to 100 do (format t "~3d -> ~3d~&" i (aref mapping i)))
+
+(defun print-replacements ()
+  (loop for i from 1 to 100 do (progn (format t "| ~3d -> ~3d " i (aref mapping i))
+                                    (when (= (mod i *number-of-columns*) 0) (format t "|~&")))))
 
 (defun map-d100 ()
   (loop (format t "~&Number: ")
         (force-output *standard-output*)
-        (let ((n (parse-integer (read-line) :junk-allowed t)))
-          (when (not n) (return))
+        (let* ((line (read-line *standard-input* nil))
+               (_ (when (not line) (return)))
+               (n (parse-integer line :junk-allowed t)))
           (if (<= 1 n 100)
               (format t "The mapping of ~D is ~D." n (aref mapping n))
               (format t "The number ~d is not between 1 and 100." n)))))
 
+(defun main (cmd)
+  (let* ((*number-of-columns* (clingon:getopt cmd :columns)))
+    (print-replacements)
+    (map-d100)
+    (format t "~&")))
 
-(map-d100)
+
+(defparameter *cli-options*
+  (list (clingon:make-option
+         :flag
+         :description "short help."
+         :short-name #\h
+         :key :help)
+        (clingon:make-option
+         :integer
+         :description "Number of columns for output."
+         :short-name #\c
+         :long-name "columns"
+         :initial-value 10
+         :key :columns)))
+
+(defun command ()
+  "Map d100 roles to randomly shuffled numbers."
+  (clingon:make-command
+   :name "map-d100"
+   :description "Map d100 roles"
+   :version "1.1.0"
+   :authors '("T. Kurt Bond")
+   :options *cli-options*
+   :handler #'main))
+
+(clingon:run (command))
