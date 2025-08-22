@@ -46,11 +46,6 @@
 
 (defparameter *cli-options*
   (list (clingon:make-option
-         :flag
-         :description "short help."
-         :short-name #\h
-         :key :help)
-        (clingon:make-option
          :integer
          :description "Number of columns for output."
          :short-name #\c
