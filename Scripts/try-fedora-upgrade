@@ -44,3 +44,6 @@ do
 	echo "Continuing..."
     fi
 done
+echo
+pad -c= -n$(tput cols)
+echo "Ended on run #$i"
