@@ -1,6 +1,5 @@
 #! /usr/bin/bash
 
-
 errors=0
 
 while getopts "d" opt
@@ -30,8 +29,8 @@ shift $((OPTIND-1))
 while true
 do
     ((i++))
-    echo "Run #$i of dnf update $(DOWNLOAD) at $(date -Iseconds)"
-    dnf -y upgrade $(DOWNLOAD) && break     # Exit loop on success
+    echo "Run #$i of dnf update ${DOWNLOAD} at $(date -Iseconds)"
+    dnf -y upgrade ${DOWNLOAD} && break     # Exit loop on success
 
     # This allows the user to exit if necessary.
     read -t 30 -p "Continue? (y/n) " reply
