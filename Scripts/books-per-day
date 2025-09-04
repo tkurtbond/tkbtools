@@ -1,6 +1,32 @@
 #! /usr/bin/env bash
 CURRENT_YEAR="$(date '+%Y')"
 YEAR=$CURRENT_YEAR
+DESTINATION=~/Repos/tkb-notes/Books/books-per-day.text
+
+let errors=0
+while getopts "F" opt
+do
+    case $opt in
+        (\?) let errors++ ;;
+        (F) DESTINATION=/dev/null ;;
+    esac
+done
+
+let shift_by=OPTIND-1
+shift $shift_by
+
+((errors > 0)) && {
+    cat <<EOF
+usage: $PROG_NAME [-F] YYYY
+where
+-F    means don't write to ~/Repos/tkb-notes/Books/books-per-day.text also.
+
+Calculate the average number of books pre day I've read in the
+specified year, or the current year if no year is specified.
+EOF
+    exit 2
+}
+
 
 if [[ -n "$1" ]]; then YEAR="$1"; fi
 
@@ -25,4 +51,4 @@ fi
 (echo -n "$HEADER"
  echo '(format #t "~3,3F~%" (/ '$books_read.0' '$days_of_year'))' |
      csi -q -R format | head -1) |
-    tee -a ~/Repos/tkb-notes/Books/books-per-day.text
+    tee -a $DESTINATION
