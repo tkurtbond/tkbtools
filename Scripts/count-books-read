@@ -28,10 +28,11 @@ F2=cat
 F3=cat
 
 let errors=0
-while getopts "ly:" opt
+while getopts "aly:" opt
 do
     case $opt in
         (\?) let errors++ ;;
+        (a) ALTFORMAT=1 ;;
         (l) F1="tee $HOME/tmp/Log.cbr1"
             F2="tee $HOME/tmp/Log.cbr2"
             F3="tee $HOME/tmp/Log.cbr3"
@@ -45,13 +46,18 @@ shift $shift_by
 
 ((errors > 0)) && {
     cat <<EOF
-usage: $PROG_NAME [-l] [-y YYYY] [file]
+usage: $PROG_NAME [-l] [-a] [-y YYYY] [file]
 where
+-a        Use alternate output format for year end summaries.
 -l        Log intermediate files as ~/tmp/Log.cbr{1,2,3}.
 -y YYYY   Year number to calculate for.
+
+Prints the number of books read in the year.
 EOF
     exit 2
 }
+
+if ((ALTFORMAT)); then ALTFORMAT="$YEAR: "; else ALTFORMAT=""; fi
 
 if [[ -n "$1" ]]; then READ_FILE="$1"; fi
 LAST_YEAR=$((YEAR - 1))
@@ -60,7 +66,7 @@ sed -E -n "/^\* $YEAR/,/^(\*\* Did not finish|\* $LAST_YEAR)/p" $READ_FILE |
     $F1 | sed -e "/^* $YEAR/,/^** Read/d" \
               -e "/^(\*\* Did not finish|\* $LAST_YEAR)/d" |
     $F2 | sed -E -n "/^\*\*\*[ \t]+([0-9]+[ \t]+){0,1}[0-9]/p" |
-    $F3 | gawk '
+    $F3 | gawk -v ALTFORMAT="$ALTFORMAT" '
 {
   line_no++
   found = match($0, /\*\*\*[ \t]+(([0-9]+)[ \t]+){0,1}([0-9]+)/, matches)
@@ -75,7 +81,7 @@ sed -E -n "/^\* $YEAR/,/^(\*\* Did not finish|\* $LAST_YEAR)/p" $READ_FILE |
   }
 }
 END {
-    print total
+    printf "%s%d\n", ALTFORMAT, total
 }
 '
 #    cat; exit
