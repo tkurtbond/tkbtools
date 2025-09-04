@@ -10,7 +10,7 @@ if (($YEAR == $CURRENT_YEAR)); then
     HEADER="$(date +%F) - "
     days_of_year=$(ordinalday)
 else
-    HEADER="$YEAR - "
+    HEADER="$YEAR: "
     # Was it a leap year?
     if (($YEAR % 400 == 0)); then
         days_of_year=366
