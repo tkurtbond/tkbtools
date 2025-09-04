@@ -5,13 +5,15 @@
 # xdg-open doesn't have any useful options.
 
 USE_OKULAR=
+USE_EVINCE=
 let errors=0
-while getopts "o" opt
+while getopts "eow:" opt
 do
     case "$opt" in
-    \?) let errors++ ;;
-    o) USE_OKULAR=true ;;
-    w) wait_time="$OPTARG" ;;
+        (\?) let errors++ ;;
+        (e) USE_EVINCE=true ;;
+        (o) USE_OKULAR=true ;;
+        (w) WAIT_TIME="$OPTARG" ;;
     esac
 done
 if [ "$errors" -gt 0 ]
@@ -20,23 +22,28 @@ then
 usage: $0 [-o] file ...
 where
 -o	Open with Okular
-
+-e      Open with Evince
+-w TIME Use sleep to Wait TIME before opening files after the first.
 EOF
     exit 2
 fi
 let shift_by=OPTIND-1
 shift $shift_by
 
-
+((ITEMS=0))
 case "$(uname -s)" in
     (Linux)
         for i in "$@"
         do
-            if [[ -z "$USE_OKULAR" ]]; then
-                spwn xdg-open "$i"
-            else
+            if ((ITEMS)); then sleep $WAIT_TIME; fi
+            if [[ -n "$USE_OKULAR" ]]; then
                 spwn okular "$i"
+            elif [[ -n "$USE_EVINCE" ]]; then
+                spwn evince "$i"
+            else
+                spwn xdg-open "$i"
             fi
+            ((ITEMS++))
         done
         ;;
     (Darwin)
