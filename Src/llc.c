@@ -1,3 +1,4 @@
+/* llc.c -- Get the lengths of the shortest and longest lines in files. Quick and dirty C version. */
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
