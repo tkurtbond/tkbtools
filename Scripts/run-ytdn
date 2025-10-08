@@ -1,2 +1,4 @@
 #! /usr/bin/env bash
+# ytDownloader - Download videos and audios from hundreds of site
+# https://github.com/aandrew-me/ytDownloader
 flatpak run io.github.aandrew_me.ytdn
