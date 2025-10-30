@@ -35,7 +35,7 @@ case "$(uname -s)" in
     (Linux)
         for i in "$@"
         do
-            if ((ITEMS)); then sleep $WAIT_TIME; fi
+            if ((ITEMS)) && [[ -n $WAIT_TIME ]]; then sleep $WAIT_TIME; fi
             if [[ -n "$USE_OKULAR" ]]; then
                 spwn okular "$i"
             elif [[ -n "$USE_EVINCE" ]]; then
