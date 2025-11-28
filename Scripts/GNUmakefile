@@ -183,6 +183,7 @@ SCRIPTS= \
 	start-gpodder \
 	start-sway \
 	start-swayidle \
+	sway-windows \
 	strip-leading-hash \
 	sum-bp \
 	sum-cp \

@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+swaymsg -t get_tree | jq -r '.nodes[1].nodes[].nodes[] | .. | (.id|tostring) + " " + .app_id?' | grep -e "[0-9]* ." 
