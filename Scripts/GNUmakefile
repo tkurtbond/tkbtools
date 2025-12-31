@@ -149,6 +149,7 @@ SCRIPTS= \
 	pslp \
 	pstopcl \
 	pybloxrst \
+	pyvenv \
 	ratstart \
 	rmail \
 	rst \
