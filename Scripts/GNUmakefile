@@ -214,6 +214,7 @@ SCRIPTS= \
 	worldtime \
 	wtitle \
 	wscream \
+	yearday \
 	# Nothing Here
 
 HOME_SCRIPTS=\
