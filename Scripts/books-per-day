@@ -4,11 +4,12 @@ YEAR=$CURRENT_YEAR
 DESTINATION=~/Repos/tkb-notes/Books/books-per-day.text
 
 let errors=0
-while getopts "F" opt
+while getopts "Fy:" opt
 do
     case $opt in
         (\?) let errors++ ;;
         (F) DESTINATION=/dev/null ;;
+        (y) YEAR=$OPTARG
     esac
 done
 
@@ -19,7 +20,8 @@ shift $shift_by
     cat <<EOF
 usage: $PROG_NAME [-F] YYYY
 where
--F    means don't write to ~/Repos/tkb-notes/Books/books-per-day.text also.
+-F      means don't write to ~/Repos/tkb-notes/Books/books-per-day.text also.
+-y YYYY Year to calculate.
 
 Calculate the average number of books pre day I've read in the
 specified year, or the current year if no year is specified.
