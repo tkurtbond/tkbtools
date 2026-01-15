@@ -5,14 +5,14 @@
 # again before I could C-c the shell.  This way there is a prompt and an
 # option to quit, before it times out and continues.
 
-RELEASEVER=42
+RELEASEVER=43
 while true
 do
     ((i++))
     echo "Run #$i of dnf system-upgrade download at $(date -Iseconds)"
 
     # Exit loop if successful
-    dnf -y system-upgrade download --refresh --releasever=$RELEASEVER \
+    dnf -y system-upgrade download --refresh --allowerasing --releasever=$RELEASEVER \
         "$@" && break
 
     # This allows the user to exit if necessary.
@@ -26,3 +26,6 @@ do
 	echo "Continuing..."
     fi
 done    
+
+echo "If this worked, then try:"
+echo "    dnf5 offline reboot"
