@@ -1,12 +1,19 @@
 #! /usr/bin/env bash
+
 errors=0
+DO_FGREP=0
+declare -a FGREPS
+FGREP_COUNT=0
 
 while getopts "cf:hIix" opt
 do
     case "$opt" in
         (\?) ((errors++)) ;;
         (c) DO_CLEAR=1 ;;
-        (f) DO_FGREP=$OPTARG ;;
+        (f) DO_FGREP=1
+            FGREPS[$FGREP_COUNT]=$OPTARG
+            ((FGREP_COUNT++))
+            ;;
         (h) DO_HELP=1 ;;
         (I) DO_IGNORED=1 ;;
         (i) DO_INTERACTIVE=1 ;;
@@ -24,7 +31,7 @@ usage: $0 [option...]
 
 Options
 -c      Clears the screen.
--f ARG  Uses grep -F to find a specific repo.
+-f ARG  Uses grep -F to find a specific repo.  May appear more than once.
 -h	Displays this message.
 -I	Even ask the user if they want to clone the ignored repositories.
 -i      Interactive: Ask the user if they want to create the repo.
@@ -48,10 +55,18 @@ if [[ -t 0 ]]; then
     NC='\033[0m'                # No Color.
 fi
 
-[[ -n $DO_FGREP ]] && export FGREP_CMD="grep -F $DO_FGREP" || FGREP_CMD=cat
+[[ -n $DO_FGREP ]] && {
+    FGREP_F_ARGS=
+    for ((i = 0; i < $FGREP_COUNT; i++)) {
+        ((i > 0)) && FGREP_F_ARGS+=" "
+        FGREP_F_ARGS+="-e ${FGREPS[$i]}"
+        }
+    export FGREP_CMD="grep $FGREP_F_ARGS"
+}|| export FGREP_CMD=cat
 
 mygitrepos --all-columns | $FGREP_CMD | while read PRIORITY INCLUDE DIR REPO
 do
+    echo $REPO
     if ! [[ -d $DIR ]]; then 
         printf "===> ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" "Does not exist!"
         [[ $INCLUDE != y ]] && DO_INCLUDE=0 || DO_INCLUDE=1
