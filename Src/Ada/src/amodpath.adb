@@ -8,6 +8,9 @@ with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
 with Ada.Text_IO;               use Ada.Text_IO;
 with GNAT.OS_Lib;               use GNAT.OS_Lib;
 
+with A68args; use A68args;
+with AModPath_Args; use AModPath_Args;
+
 procedure AModPath is
    Program_Name : String :=
      (if Command_Name = "" then "amodpath" else Command_Name);
