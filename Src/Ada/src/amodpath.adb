@@ -9,7 +9,7 @@ with Ada.Text_IO;               use Ada.Text_IO;
 with GNAT.OS_Lib;               use GNAT.OS_Lib;
 
 procedure AModPath is
-   Program_Name : String := 
+   Program_Name : String :=
      (if Command_Name = "" then "amodpath" else Command_Name);
 
    Debugging : constant Boolean := False;
@@ -66,7 +66,7 @@ procedure AModPath is
    function "+" (S : in String) return Unbounded_String renames
      To_Unbounded_String;
 
-   function "+" (C : in Character) return String is ([C]);
+   function "+" (C : in Character) return String is (1 => C);
 
    package Unbounded_String_Vectors is new Ada.Containers.Vectors
      (Index_Type => Natural, Element_Type => Unbounded_String);
@@ -96,9 +96,9 @@ procedure AModPath is
       String_Length : Integer := 0;
    begin
       for E of V loop
-         String_Length := @ + Length (E);
+         String_Length := String_Length + Length (E);
       end loop;
-      String_Length := @ + (Vector_Length - 1) * Separator'Length;
+      String_Length := String_Length + (Vector_Length - 1) * Separator'Length;
       declare
          Result : String (1 .. String_Length);
          I      : Natural  := 0;
@@ -108,12 +108,12 @@ procedure AModPath is
             declare
                E_Length : Integer := Length (E);
             begin
-               I                                      := @ + 1;
+               I                                      := I + 1;
                Result (Start .. Start + E_Length - 1) := To_String (E);
-               Start                                  := @ + E_Length;
+               Start                                  := Start + E_Length;
                if I < Vector_Length then
                   Result (Start .. Start + Separator'Length - 1) := Separator;
-                  Start := @ + Separator'Length;
+                  Start := Start + Separator'Length;
                end if;
             end;
          end loop;
@@ -163,19 +163,19 @@ procedure AModPath is
    procedure Set_Path (Path : Unbounded_String) is
       Separator : String :=
         Get_Alternate_Path_Separator
-          (In_Path_Separator, String'([Path_Separator]));
+          (In_Path_Separator, String'(1 => Path_Separator));
    begin
       Path_String := Path;
       Path_Vector := Split (Path, Separator);
    end Set_Path;
 
-   procedure Set_Path_From_Variable 
-     (Variable : Unbounded_String) 
+   procedure Set_Path_From_Variable
+     (Variable : Unbounded_String)
    is
       Path_Variable_String : String := To_String (Variable);
       Separator            : String :=
         Get_Alternate_Path_Separator
-          (In_Path_Separator, String'([Path_Separator]));
+          (In_Path_Separator, String'(1 => Path_Separator));
    begin
       Path_String   := Null_Unbounded_String;
       Path_Vector   := Empty_Vector;
@@ -190,13 +190,13 @@ procedure AModPath is
    end Set_Path_From_Variable;
 
 
-   procedure Set_Path_And_Variable_From_Variable 
-     (Variable : Unbounded_String) 
+   procedure Set_Path_And_Variable_From_Variable
+     (Variable : Unbounded_String)
    is
       Path_Variable_String : String := To_String (Variable);
       Separator            : String :=
         Get_Alternate_Path_Separator
-          (In_Path_Separator, String'([Path_Separator]));
+          (In_Path_Separator, String'(1 => Path_Separator));
    begin
       Path_Variable := Variable;
       Path_String   := Null_Unbounded_String;
@@ -207,7 +207,7 @@ procedure AModPath is
       exception
          when Constraint_Error =>
             Warning_Or_Error
-              ("unable to get path from environment variable " & 
+              ("unable to get path from environment variable " &
                  Path_Variable_String);
       end;
    end Set_Path_And_Variable_From_Variable;
@@ -258,7 +258,7 @@ procedure AModPath is
    begin
       if C = No_Element then
          Warning
-           (To_String (After) & " is not in path to add " & To_String (Part) & 
+           (To_String (After) & " is not in path to add " & To_String (Part) &
               " after it; adding at end");
          Append (Path_Vector, Part);
       else
@@ -272,7 +272,7 @@ procedure AModPath is
    begin
       if C = No_Element then
          Warning
-           (To_String (Before) & " is not in path to add " & To_String (Part) & 
+           (To_String (Before) & " is not in path to add " & To_String (Part) &
               " before it; adding at start");
          Prepend (Path_Vector, Part);
       else
@@ -356,17 +356,17 @@ procedure AModPath is
 begin
    loop
       exit when I >= Number_Of_Arguments;
-      I := @ + 1;
+      I := I + 1;
       declare
          Arg : String := Argument (I);
       begin
          if Arg = "--absolute" or Arg = "-A" then
             Directories_Are_Relative := False;
          elsif Arg = "--after" or Arg = "-a" then
-            I := @ + 1;
+            I := I + 1;
             Set_Add_After (+Argument (I));
          elsif Arg = "--before" or Arg = "-b" then
-            I := @ + 1;
+            I := I + 1;
             Set_Add_Before (+Argument (I));
          elsif Arg = "--cmd" or Arg = "-D" then
             -- DOS/Windows style, for cmd.exe.
@@ -376,7 +376,7 @@ begin
          elsif Arg = "--current" or Arg = "-c" then
             Add_Current;
          elsif Arg = "--delete" or Arg = "-d" then
-            I := @ + 1;
+            I := I + 1;
             Delete (+Argument (I));
          elsif Arg = "--empty" or Arg = "-E" then
             Add_Empty;
@@ -385,15 +385,15 @@ begin
          elsif Arg = "--exists" or Arg = "-X" then
             Exists_Flag := True;
          elsif Arg = "--insep" or Arg = "-i" then
-            I := @ + 1;
+            I := I + 1;
             In_Path_Separator := +Argument (I);
          elsif Arg = "--ivar" or Arg = "-I" then
-            I := @ + 1;
+            I := I + 1;
             Set_Path_From_Variable (+Argument (I));
          elsif Arg = "--fatal" or Arg = "-f" then
             Warnings_Are_Fatal := True;
          elsif Arg = "--outsep" or Arg = "-o" then
-            I := @ + 1;
+            I := I + 1;
             Out_Path_Separator := +Argument (I);
          elsif Arg = "--msys" or Arg = "-M" then
             Fatal_Error (10, "--msys not yet implemented");
@@ -402,18 +402,18 @@ begin
             Path_Variable := +Argument (I);
          elsif Arg = "--nice" or Arg = "-N" then
             Output := Nice;
-         elsif Arg = "--no-warnings" or Arg = "-W" then 
+         elsif Arg = "--no-warnings" or Arg = "-W" then
             -- Don't output any warnings, and so don't error on warnings;
             No_Warnings := True;
          elsif Arg = "--path" or Arg = "-p" then
-            I := @ + 1;
+            I := I + 1;
             Set_Path (+Argument (I));
          elsif Arg = "--quiet" or Arg = "-Q" then
             Output := Quiet;
          elsif Arg = "--relative" or Arg = "-R" then
             Directories_Are_Relative := True;
          elsif Arg = "--sep" or Arg = "-S" then
-            I := @ + 1;
+            I := I + 1;
             Set_Separators (+Argument (I));
          elsif Arg = "--sh" or Arg = "-U" then
             Output := Sh;
@@ -424,7 +424,7 @@ begin
          elsif Arg = "--unique" or Arg = "-u" then
             Unique;
          elsif Arg = "--var" or Arg = "-v" then
-            I := @ + 1;
+            I := I + 1;
             Set_Path_And_Variable_From_Variable (+Argument (I));
          elsif Arg = "--warnings" or Arg = "-w" then
             Warnings_Are_Fatal := False;
@@ -444,7 +444,7 @@ begin
    declare
       Separator : String :=
         Get_Alternate_Path_Separator
-          (Out_Path_Separator, String'([Path_Separator]));
+          (Out_Path_Separator, String'((1 => Path_Separator)));
    begin
       case Output is
          when Nice =>
@@ -461,7 +461,7 @@ begin
             declare
                Separator  : String :=
                  Get_Alternate_Path_Separator (Out_Path_Separator, ":");
-               Final_Path : String := 
+               Final_Path : String :=
                  "path '" & Join (Path_Vector, Separator) & "'";
             begin
                Put_Line (Final_Path);

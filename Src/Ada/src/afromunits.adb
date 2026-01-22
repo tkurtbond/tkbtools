@@ -54,7 +54,7 @@ procedure AFromUnits is
    Use_SI : Boolean := False;
 
    Multipliers : Labeled_Multiplier_Array :=
-     ['K' => (+"Kilo",   +"K", +"10.0**03", 10.0**03, +"Kibi", +"Ki", +"2.0**010", 2.0**010),
+     ('K' => (+"Kilo",   +"K", +"10.0**03", 10.0**03, +"Kibi", +"Ki", +"2.0**010", 2.0**010),
       'M' => (+"Mega",   +"M", +"10.0**06", 10.0**06, +"Mebi", +"Mi", +"2.0**020", 2.0**020),
       'G' => (+"Giga",   +"G", +"10.0**09", 10.0**09, +"Gibi", +"Gi", +"2.0**030", 2.0**030),
       'T' => (+"Tera",   +"T", +"10.0**12", 10.0**12, +"Tebi", +"Ti", +"2.0**040", 2.0**040),
@@ -63,8 +63,7 @@ procedure AFromUnits is
       'Z' => (+"Zeta",   +"Z", +"10.0**21", 10.0**21, +"Zebi", +"Zi", +"2.0**070", 2.0**070),
       'Y' => (+"Yotta",  +"Y", +"10.0**24", 10.0**24, +"Yobi", +"Yi", +"2.0**080", 2.0**080),
       'R' => (+"Ronna",  +"R", +"10.0**27", 10.0**27, +"Robi", +"Ri", +"2.0**090", 2.0**090),
-      'Q' => (+"Quetta", +"Q", +"10.0**30", 10.0**30, +"Qubi", +"Qi", +"2.0**100", 2.0**100)
-     ];
+      'Q' => (+"Quetta", +"Q", +"10.0**30", 10.0**30, +"Qubi", +"Qi", +"2.0**100", 2.0**100));
 
    function By_Multiplier (M : Multiplier) return Big_Real is
      (if Use_SI then Multipliers (M).SI else Multipliers (M).BI);
@@ -72,8 +71,8 @@ procedure AFromUnits is
    function Abbreviation (M: Multiplier) return Unbounded_String is
      (if Use_SI then Multipliers (M).SI_Abbreviation
       else Multipliers (M).BI_Abbreviation);
-   
-   procedure Maybe_Multiply (R : in out Big_Real; S: String) is 
+
+   procedure Maybe_Multiply (R : in out Big_Real; S: String) is
       T : Unbounded_String := +S;
    begin
       for I in Multiplier'Range loop
@@ -105,22 +104,22 @@ procedure AFromUnits is
          end;
       end loop;
    end Print_SI_Prefixes;
-   
-   procedure Print_Prefixes is 
+
+   procedure Print_Prefixes is
    begin
       Put_Line ("SI/Metric Prefixes: https://en.wikipedia.org/wiki/Metric_prefix");
       for C in Multipliers'Range loop
-         declare 
+         declare
             E: Labeled_Multiplier renames Multipliers (C);
          begin
             Put_Line (Head (+E.SI_Label, 6) & " (" & (+E.SI_Abbreviation) & ")  " & (+E.Si_Text) & " " & Trim (To_String (E.SI, Aft => 1), Both));
          end;
       end loop;
       New_Line;
-      
-      Put_Line ("Binary Prefixes: https://en.wikipedia.org/wiki/Binary_prefix"); 
+
+      Put_Line ("Binary Prefixes: https://en.wikipedia.org/wiki/Binary_prefix");
       for C in Multipliers'Range loop
-         declare 
+         declare
             E: Labeled_Multiplier renames Multipliers (C);
          begin
             Put_Line (Head (+E.BI_Label, 6) & " (" & (+E.BI_Abbreviation) & ") " & (+E.BI_Text) & " " & Trim (To_String (E.BI, Aft => 1), Both));
@@ -164,9 +163,9 @@ procedure AFromUnits is
       R : Big_Real;
    begin
       -- Ugh.  This is so ugly.
-      while I <= L and then (Is_Digit (S(I)) 
-                               or else S(I) = '_' or else S(I) = '.' 
-                               or else S(I) = '+' or else S(I) = '-') 
+      while I <= L and then (Is_Digit (S(I))
+                               or else S(I) = '_' or else S(I) = '.'
+                               or else S(I) = '+' or else S(I) = '-')
       loop
          I := I + 1;
       end loop;
@@ -215,7 +214,7 @@ begin
          Arg : constant String := Get_Argument;
       begin
          exit when Arg'Length = 0;
-         Number_Of_Arguments := @ + 1;
+         Number_Of_Arguments := Number_Of_Arguments + 1;
          Process_Argument (Arg);
       end;
    end loop;
