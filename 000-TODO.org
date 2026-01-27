@@ -1,5 +1,3 @@
-                                                                -*- outline -*-
-
 * modpath.ml
 1.  The `-exists' option should be a flag like `-start'.
 2.  Need a -replace and repreg (replace regexp)
@@ -12,3 +10,6 @@
 * where needs to use PATHEXT under NT.
 
 * numsum needs a option to crunch and translate spaces to newlines
+
+* a{,b}fromunits
+Needs to allow unit designators on suffixes
