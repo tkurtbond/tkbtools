@@ -9,7 +9,7 @@ project Tools is
    Ada_2022_Switches := ();
    case OS is
       when "Linux" | "NetBSD" =>
-         Ada_2022_Sources := ("atounits", "atounits");
+         Ada_2022_Sources := ("afromunits", "atounits");
          Ada_2022_Switches := ("-gnat2022");
       when others =>
          null;
