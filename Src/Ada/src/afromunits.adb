@@ -197,7 +197,7 @@ begin
          case Ch is
             when ASCII.NUL | '-' => exit;
             when 'b' => Use_SI := False;
-            when 'h' => Print_Usage;
+            when 'h' => Print_Usage; GNAT.OS_Lib.OS_Exit (1);
             when 'p' => Print_Prefixes;
             when 's' => Use_SI := True;
             when 'u' => Units := +Parameter;
