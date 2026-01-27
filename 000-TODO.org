@@ -11,5 +11,5 @@
 
 * numsum needs a option to crunch and translate spaces to newlines
 
-* a{,b}fromunits
+* a{,b}fromunits bug
 Needs to allow unit designators on suffixes

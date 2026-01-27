@@ -54,7 +54,8 @@ procedure AFromUnits is
    type Labeled_Multiplier_Array is array (Multiplier range <>)
      of Labeled_Multiplier;
 
-   Use_SI : Boolean := False;
+   Use_SI_Default : constant Boolean := False;
+   Use_SI : aliased Boolean := Use_SI_Default;
 
    Multipliers : Labeled_Multiplier_Array :=
      ('K' => (+"Kilo",   +"K", +"10.0**03", 10.0**03, +"Kibi", +"Ki", +"2.0**010", 2.0**010),
@@ -209,10 +210,11 @@ procedure AFromUnits is
      Make_Argument_Parser ("afromunits [options] [argument ...]", Process_Argument'Unrestricted_Access,
                            Options'Unrestricted_Access);
    function Print_Usage return Boolean is
+      Default : String := (if Use_SI_Default then "SI" else "binary");
    begin
-      Put_Line ("usage: " & Program_Name & " [option ...] [value ...]");
       Usage (AP);
       New_Line;
+      Put_Line ("This program defaults to using the " & Default'Image & " prefixes for units.");
       raise Exit_Program;
       return False;             -- If they ask for help, it's time to stop parsing arguments.
    end Print_Usage;
