@@ -36,6 +36,8 @@ project Tools is
 
    for Main use
      (
+      "affromunits",
+      "aftounits",
       "amodpath",
       "ruler"
      ) & Ada_2022_Sources;
