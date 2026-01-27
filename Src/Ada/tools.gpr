@@ -1,4 +1,4 @@
-with "../../../../Repos/scratch/Ada/a68args/a68args.gpr";
+with "../../../../Repos/scratch/Ada/arg_parser/arg_parser.gpr";
 
 project Tools is
    type OS_Type is ("Linux", "NetBSD", "OpenBSD", "macOS", "Windows");
