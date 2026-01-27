@@ -3,11 +3,12 @@ with Ada.Strings; use Ada.Strings;
 with Ada.Strings.Fixed; use Ada.Strings.Fixed;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
-with Ada.Long_Long_Float_Text_IO; use Ada.Long_Long_Float_Text_IO;
+with Ada.Numerics.Big_Numbers.Big_Integers; use Ada.Numerics.Big_Numbers.Big_Integers;
+with Ada.Numerics.Big_Numbers.Big_Reals; use Ada.Numerics.Big_Numbers.Big_Reals;
 with GNAT.Command_Line; use GNAT.Command_Line;
 with GNAT.OS_Lib; use GNAT.OS_Lib;
 
-procedure AFToUnits is
+procedure ABToUnits is
    Program_Name : String :=
      (if Command_Name = "" then "atounits" else Command_Name);
 
@@ -38,10 +39,10 @@ procedure AFToUnits is
    type Labeled_Multiplier is record
       SI_Label : Unbounded_String;
       SI_Abbreviation : Unbounded_String;
-      SI : Long_Long_Float;
+      SI : Big_Real;
       BI_Label : Unbounded_String;
       BI_Abbreviation : Unbounded_String;
-      BI : Long_Long_Float;
+      BI : Big_Real;
    end record;
 
    type Labeled_Multiplier_Array is array (Multiplier range <>)
@@ -62,7 +63,7 @@ procedure AFToUnits is
       'Q' => (+"Quetta", +"Q", 10.0**30, +"Qubi", +"Qi", 2.0**100)
      ];
 
-   function By_Multiplier (M : Multiplier) return Long_Long_Float is
+   function By_Multiplier (M : Multiplier) return Big_Real is
      (if Use_SI then Multipliers (M).SI else Multipliers (M).BI);
 
    function Abbreviation (M: Multiplier) return Unbounded_String is
@@ -75,9 +76,7 @@ procedure AFToUnits is
          declare
             E : Labeled_Multiplier renames Multipliers (C);
          begin
-            Put (Head (+E.BI_Label & ": ", 8));
-            Put (E.BI, Aft => 1, Exp => 0);
-            New_Line;
+            Put_Line (Head (+E.BI_Label & ": ", 8) & Trim (To_String (E.BI, Aft => 1), Both));
          end;
       end loop;
    end Print_Binary_Prefixes;
@@ -88,24 +87,32 @@ procedure AFToUnits is
          declare
             E : Labeled_Multiplier renames Multipliers (C);
          begin
-            Put (Head (+E.SI_Label & ": ", 8));
-            Put (E.SI, Aft => 1, Exp => 0);
-            New_Line;
+            Put_Line (Head (+E.SI_Label & ": ", 8) & Trim (To_String (E.SI, Aft => 1), Both));
          end;
       end loop;
    end Print_SI_Prefixes;
 
-   function Relaxed_From_String (S: String) return Long_Long_Float is
+   function Relaxed_From_String (S: String) return Big_Real is
    begin
       declare
-         R: Long_Long_Float := Long_Long_Float'Value (S);
+         R: Big_Real := From_String (S);
       begin
          return R;
       end;
    exception
       when CONSTRAINT_ERROR =>
-         Error ("The value """ & S & """ is not a valid floating point number.");
-         raise;
+         begin
+            declare
+               I : Big_Integer := From_String (S);
+               R : Big_Real := To_Big_Real (I);
+            begin
+               return R;
+            end;
+         exception
+            when CONSTRAINT_ERROR =>
+               Error ("The value """ & S & """ is not a valid floating point number.");
+               raise;
+         end;
    end Relaxed_From_String;
 
    Mult_By_K: Boolean := False;
@@ -126,8 +133,8 @@ procedure AFToUnits is
    procedure Process_Argument (S: String) is
    begin
       declare
-         R_In: Long_Long_Float := Relaxed_From_String (S);
-         R_Out : Long_Long_Float := R_In;
+         R_In: Big_Real := Relaxed_From_String (S);
+         R_Out : Big_Real := R_In;
          type Found_Multiplier (Found : Boolean := False) is
             record
                case Found is
@@ -183,7 +190,7 @@ procedure AFToUnits is
             Multiplier_Used := (Found => False);
          end if;
 
-         Put (R_Out, Aft => 1, Exp => 0);
+         Put (Trim (To_String (R_Out), Both));
          if Multiplier_Used.Found then
             Put (+Abbreviation (Multiplier_Used.Multiplier_Used) & (+Units));
          end if;
@@ -255,4 +262,4 @@ begin
    if Number_Of_Arguments < 1 then
       Process_Standard_Input;
    end if;
-end AFToUnits;
+end ABToUnits;
