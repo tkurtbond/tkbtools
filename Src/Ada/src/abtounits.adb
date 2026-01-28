@@ -291,43 +291,6 @@ procedure ABToUnits is
    end Print_Usage;
 
 begin
-   --  loop
-   --     declare
-   --        Ch: Character := Getopt ("B b h S s u: K M G T P E Z Y R Q");
-   --     begin
-   --        case Ch is
-   --           when ASCII.NUL => exit;
-   --           when 'B' => Print_Binary_Prefixes;
-   --           when 'b' => Use_SI := False;
-   --           when 'h' => Print_Usage; GNAT.OS_Lib.OS_Exit (1);
-   --           when 'S' => Print_Si_Prefixes;
-   --           when 's' => Use_SI := True;
-   --           when 'u' => Units := +Parameter;
-   --           when 'K' => Mult_By_K := True;
-   --           when 'M' => Mult_By_M := True;
-   --           when 'G' => Mult_By_G := True;
-   --           when 'T' => Mult_By_T := True;
-   --           when 'P' => Mult_By_P := True;
-   --           when 'E' => Mult_By_E := True;
-   --           when 'Z' => Mult_By_Z := True;
-   --           when 'Y' => Mult_By_Y := True;
-   --           when 'R' => Mult_By_R := True;
-   --           when 'Q' => Mult_By_Q := True;
-   --           when others =>
-   --              Fatal_Error (1, "unhandled option -" & Ch);
-   --        end case;
-   --     end;
-   --  end loop;
-
-   --  loop
-   --     declare
-   --        Arg : constant String := Trim (Get_Argument, Both);
-   --     begin
-   --        exit when Arg'Length = 0;
-   --        Arguments_Seen := Arguments_Seen + 1;
-   --        Process_Argument (Arg);
-   --     end;
-   --  end loop;
    Parse_Arguments (AP);
 
    if Arguments_Seen < 1 then
