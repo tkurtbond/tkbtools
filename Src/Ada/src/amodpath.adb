@@ -481,7 +481,7 @@ procedure AModPath is
        Make_Option
          ("Print the version number of this program.", 'V', "version", Print_Version'Unrestricted_Access),
        Make_Set_Boolean_False_Option
-         ("Warn about missing environment variables instead of exiting with an error.",'w', "Warnings",
+         ("Warn about missing environment variables instead of exiting with an error.",'w', "warnings",
           Warnings_Are_Fatal'Unrestricted_Access));
 
    AP : Argument_Parser :=
