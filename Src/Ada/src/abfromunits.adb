@@ -9,9 +9,13 @@ with Ada.Numerics.Big_Numbers.Big_Reals; use Ada.Numerics.Big_Numbers.Big_Reals;
 with GNAT.Command_Line; use GNAT.Command_Line;
 with GNAT.OS_Lib; use GNAT.OS_Lib;
 
+with Arg_Parser; use Arg_Parser;
+
 procedure ABFromUnits is
    Program_Name : String :=
-     (if Command_Name = "" then "afromunits" else Command_Name);
+     (if Command_Name = "" then "abfromunits" else Command_Name);
+
+   Exit_Program : exception;
 
    procedure Error (Message : String) is
    begin
@@ -51,7 +55,8 @@ procedure ABFromUnits is
    type Labeled_Multiplier_Array is array (Multiplier range <>)
      of Labeled_Multiplier;
 
-   Use_SI : Boolean := False;
+   Use_SI_Default : constant Boolean := False;
+   Use_SI : aliased Boolean := Use_SI_Default;
 
    Multipliers : Labeled_Multiplier_Array :=
      ('K' => (+"Kilo",   +"K", +"10.0**03", 10.0**03, +"Kibi", +"Ki", +"2.0**010", 2.0**010),
@@ -105,7 +110,7 @@ procedure ABFromUnits is
       end loop;
    end Print_SI_Prefixes;
 
-   procedure Print_Prefixes is
+   function Print_Prefixes return Boolean is
    begin
       Put_Line ("SI/Metric Prefixes: https://en.wikipedia.org/wiki/Metric_prefix");
       for C in Multipliers'Range loop
@@ -126,6 +131,7 @@ procedure ABFromUnits is
          end;
       end loop;
 
+      return True;
    end Print_Prefixes;
 
    function Relaxed_From_String (S: String) return Big_Real is
@@ -151,21 +157,24 @@ procedure ABFromUnits is
          end;
    end Relaxed_From_String;
 
-   Units : Unbounded_String := +"B"; -- Units default to bytes.
+   Units : aliased Unbounded_String := +"B"; -- Units default to bytes.
 
-   Number_Of_Arguments : Natural := 0;
+   Arguments_Seen : Natural := -0;
 
-   procedure Process_Argument (Arg: String) is
+   function Process_Argument (Start_With : Positive; Arg: String) return Boolean is
       S : String := Trim (Arg, Both);
       F : constant Integer := S'First;
       L : constant Integer := S'Last;
       I : Integer := S'First;
       R : Big_Real;
    begin
-      -- Ugh.  This is so ugly.
+      Arguments_Seen := Arguments_Seen + 1;
+      -- Ugh.  This is so ugly.  And not really correct.
       while I <= L and then (Is_Digit (S(I))
-                               or else S(I) = '_' or else S(I) = '.'
-                               or else S(I) = '+' or else S(I) = '-')
+                             or else S(I) = '_' or else S(I) = '.'
+                             or else S(I) = '+' or else S(I) = '-'
+                             or else S(I) = 'e' or else S(I) = 'E'
+                             or else S(I) = '#')
       loop
          I := I + 1;
       end loop;
@@ -175,51 +184,49 @@ procedure ABFromUnits is
          Maybe_Multiply (R, S(I..I));
       end if;
       Put_Line (To_String (R, Aft => 1));
+      return True;
    end Process_Argument;
 
    procedure Process_Standard_Input is
+      Continue : Boolean := True;
    begin
       loop
-         exit when End_Of_File;
-         Process_Argument (Get_Line);
+         exit when End_Of_File or not Continue;
+         Continue := Process_Argument (1, Get_Line);
       end loop;
    end Process_Standard_Input;
 
-   procedure Print_Usage is
+   function Print_Usage return Boolean;
+
+   Options : aliased Option_Array :=
+     (Make_Set_Boolean_False_Option
+        ("Use the binary prefixes for units.", 'b', "binary", Use_SI'Unrestricted_Access),
+      Make_Option
+        ("Display the help message.", 'h', "help", Print_Usage'Unrestricted_access),
+      Make_Option
+        ("Print the prefixes.", 'p', "prefixes", Print_Prefixes'Unrestricted_access),
+      Make_Set_Boolean_True_Option
+        ("Use the SI prefixes for units.", 's', "si", Use_Si'Unrestricted_Access),
+      Make_Set_Unbounded_String_Option
+        ("Set the units to use.", 'u', "units", Units'Unrestricted_access));
+
+   AP : Argument_Parser :=
+     Make_Argument_Parser ("afromunits [options] [argument ...]", Process_Argument'Unrestricted_Access,
+                           Options'Unrestricted_Access);
+   function Print_Usage return Boolean is
+      Default : String := (if Use_SI_Default then "SI" else "binary");
    begin
-      Put_Line ("usage: " & Program_Name & " [option ...] [value ...]");
+      Usage (AP);
       New_Line;
+      Put_Line ("This program defaults to using the " & Default'Image & " prefixes for units.");
+      raise Exit_Program;
+      return False;             -- If they ask for help, it's time to stop parsing arguments.
    end Print_Usage;
 
 begin
-   loop
-      declare
-         Ch: Character := Getopt ("- b h p s u:");
-      begin
-         case Ch is
-            when ASCII.NUL | '-' => exit;
-            when 'b' => Use_SI := False;
-            when 'h' => Print_Usage; GNAT.OS_Lib.OS_Exit (1);
-            when 'p' => Print_Prefixes;
-            when 's' => Use_SI := True;
-            when 'u' => Units := +Parameter;
-            when others =>
-               Fatal_Error (1, "unhandled option -" & Ch);
-         end case;
-      end;
-   end loop;
+   Parse_Arguments (AP);
 
-   loop
-      declare
-         Arg : constant String := Get_Argument;
-      begin
-         exit when Arg'Length = 0;
-         Number_Of_Arguments := Number_Of_Arguments + 1;
-         Process_Argument (Arg);
-      end;
-   end loop;
-
-   if Number_Of_Arguments < 1 then
+   if Arguments_Seen < 1 then
       Process_Standard_Input;
    end if;
 end ABFromUnits;

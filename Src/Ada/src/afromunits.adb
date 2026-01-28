@@ -166,10 +166,12 @@ procedure AFromUnits is
       I : Integer := S'First;
    begin
       Arguments_Seen := Arguments_Seen + 1;
-      -- Ugh.  This is so ugly.
+      -- Ugh.  This is so ugly.  And not really correct.
       while I <= L and then (Is_Digit (S(I))
                              or else S(I) = '_' or else S(I) = '.'
-                             or else S(I) = '+' or else S(I) = '-')
+                             or else S(I) = '+' or else S(I) = '-'
+                             or else S(I) = 'e' or else S(I) = 'E'
+                             or else S(I) = '#')
       loop
          I := I + 1;
       end loop;
