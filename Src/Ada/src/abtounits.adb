@@ -76,28 +76,6 @@ procedure ABToUnits is
      (if Use_SI then Multipliers (M).SI_Abbreviation
       else Multipliers (M).BI_Abbreviation);
 
-   procedure Print_Binary_Prefixes is
-   begin
-      for C in Multipliers'Range loop
-         declare
-            E : Labeled_Multiplier renames Multipliers (C);
-         begin
-            Put_Line (Head (+E.BI_Label & ": ", 8) & Trim (To_String (E.BI, Aft => 1), Both));
-         end;
-      end loop;
-   end Print_Binary_Prefixes;
-
-   procedure Print_SI_Prefixes is
-   begin
-      for C in Multipliers'Range loop
-         declare
-            E : Labeled_Multiplier renames Multipliers (C);
-         begin
-            Put_Line (Head (+E.SI_Label & ": ", 8) & Trim (To_String (E.SI, Aft => 1), Both));
-         end;
-      end loop;
-   end Print_SI_Prefixes;
-
    function Print_Prefixes return Boolean is
    begin
       Put_Line ("SI/Metric Prefixes: https://en.wikipedia.org/wiki/Metric_prefix");

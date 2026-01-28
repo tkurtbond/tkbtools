@@ -87,32 +87,6 @@ procedure AFromUnits is
       end loop;
    end Maybe_Multiply;
 
-   procedure Print_Binary_Prefixes is
-   begin
-      for C in Multipliers'Range loop
-         declare
-            E : Labeled_Multiplier renames Multipliers (C);
-         begin
-            Put (Head (+E.BI_Label & ": ", 8));
-            Put (E.BI, Aft => 1, Exp => 0);
-            New_Line;
-         end;
-      end loop;
-   end Print_Binary_Prefixes;
-
-   procedure Print_SI_Prefixes is
-   begin
-      for C in Multipliers'Range loop
-         declare
-            E : Labeled_Multiplier renames Multipliers (C);
-         begin
-            Put (Head (+E.SI_Label & ": ", 8));
-            Put (E.SI, Aft => 1, Exp => 0);
-            New_Line;
-         end;
-      end loop;
-   end Print_SI_Prefixes;
-
    function Print_Prefixes return Boolean is
    begin
       Put_Line ("SI/Metric Prefixes: https://en.wikipedia.org/wiki/Metric_prefix");
