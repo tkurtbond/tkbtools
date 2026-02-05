@@ -485,7 +485,7 @@ procedure AModPath is
           Warnings_Are_Fatal'Unrestricted_Access));
 
    AP : Argument_Parser :=
-     Make_Argument_Parser (Program_Name & " [options] arguments...",
+     Make_Argument_Parser (Program_Name & " [option | argument]...",
                            Arg_Handler'Unrestricted_Access, Options'Unrestricted_Access);
 
    function Help return Boolean is
