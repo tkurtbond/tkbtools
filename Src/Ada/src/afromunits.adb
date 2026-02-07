@@ -190,7 +190,7 @@ procedure AFromUnits is
    begin
       Usage (AP);
       New_Line;
-      Put_Line ("This program defaults to using the " & Default'Image & " prefixes for units.");
+      Put_Line ("This program defaults to using the " & Default & " prefixes for units.");
       raise Exit_Program;
       return False;             -- If they ask for help, it's time to stop parsing arguments.
    end Print_Usage;

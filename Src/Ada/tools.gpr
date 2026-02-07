@@ -10,7 +10,6 @@ project Tools is
    case OS is
       when "Linux" | "NetBSD" =>
          Ada_2022_Sources := ("abfromunits", "abtounits");
-         Ada_2022_Switches := ("-gnat2022");
       when others =>
          null;
    end case;
@@ -25,7 +24,10 @@ project Tools is
       for Default_Switches ("Ada") use
         ("-gnatef",            --  use full pathnames in error messages
          "-gnatf"              --  full error messages
-        ) & Ada_2022_Switches;
+        );
+
+      for Switches ("abfromunits.adb") use ("-gnat2022");
+      for Switches ("abtounits.adb") use ("-gnat2022");
    end Compiler;
    package Binder is
       -- for Default_Switches ("Ada") use ("-E");
