@@ -1,4 +1,6 @@
-with "../../../../Repos/scratch/Ada/arg_parser/arg_parser.gpr";
+-- Remember that GPR_PROJECT_PATH must be set properly, and "alr build" run in ~/Repos/arg_parser/
+-- before this can be built.
+with "arg_parser.gpr";
 
 project Tools is
    type OS_Type is ("Linux", "NetBSD", "OpenBSD", "macOS", "Windows");
