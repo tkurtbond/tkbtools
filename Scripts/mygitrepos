@@ -20,6 +20,7 @@ REPOS=(
     60 y ~/Repos/h-m-m                                       git@github.com:tkurtbond/h-m-m.git
     60 y ~/Repos/arg_parser                                  git@github.com:tkurtbond/arg_parser.git
     60 y ~/Repos/ada-experiments                             git@github.com:tkurtbond/ada-experiments.git
+    60 y ~/Repos/a68-experiments                             git@github.com:tkurtbond/a68-experiments.git
     55 y ~/current/RPG/Tools/TFT                             git@github.com:tkurtbond/TFT-tools.git
     55 y ~/current/RPG/Tools/OVA                             git@github.com:tkurtbond/ova-tools.git
     55 y ~/current/RPG/Tools/Generators                      git@github.com:tkurtbond/Generators.git
