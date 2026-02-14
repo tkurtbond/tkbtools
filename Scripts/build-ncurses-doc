@@ -1,9 +1,12 @@
 #! /usr/bin/env bash
+# This only works if run from the correct place!
 
-openjade -t sgml -i html \
-         -d /usr/share/sgml/docbook/dsssl-stylesheets-1.79/html/docbook.dsl \
-         -V nochunks \
-    /usr/local/sw/src/lang/C/LDP/LDP/howto/docbook/NCURSES-Programming-HOWTO/NCURSES-Programming-HOWTO.sgml > ~/tmp/NCURSES-ONE-BIG-FILE.html
+(cd /usr/local/sw/src/lang/C/TLDP/LDP/LDP/howto/docbook/NCURSES-Programming-HOWTO/ && 
+     openjade -t sgml -i html \
+              -d /usr/share/sgml/docbook/dsssl-stylesheets-1.79/html/docbook.dsl \
+              -V nochunks \
+              /usr/local/sw/src/lang/C/TLDP/LDP/LDP/howto/docbook/NCURSES-Programming-HOWTO/NCURSES-Programming-HOWTO.sgml > ~/Reference/Computer/Languages/C/NCURSES-HOWTO/NCURSES-ONE-BIG-FILE.html
+)
 
 # This doesn't work.
 # openjade -t tex -i html \
