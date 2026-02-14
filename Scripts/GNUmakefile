@@ -55,6 +55,7 @@ SCRIPTS= \
 	blogbot \
 	books-per-day \
 	check-eggs \
+	check-stuff \
 	code2pandoc \
 	collapse \
 	color \
@@ -70,6 +71,7 @@ SCRIPTS= \
 	devolvepdf \
 	dmenu_emoji \
 	domail \
+	do-text-mapper \
 	ebook \
 	embed-fonts \
 	endsound \
@@ -193,9 +195,9 @@ SCRIPTS= \
 	swaysave \
 	tarit \
 	test-email.sh \
-	do-text-mapper \
 	tkb-sync \
 	tkbput.sh \
+	touch-stuff \
 	troff-depends \
 	uhome \
 	unbuilt-programs \

@@ -1,0 +1,7 @@
+#! /usr/bin/env bash
+ssh $1 '{
+    eza -l --color-scale=age,size --time-style=long-iso Documents/TKBStuff2.img
+    sha512sum Documents/TKBStuff2.img
+}'
+
+
