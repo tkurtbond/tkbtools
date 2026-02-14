@@ -1,5 +1,8 @@
 #! /usr/bin/env bash
 # This only works if run from the correct place!
+# 
+# The NCURSES HOWTO SGML files look for the C source of the example
+# programs to include in the output in a specific relative place.
 
 (cd /usr/local/sw/src/lang/C/TLDP/LDP/LDP/howto/docbook/NCURSES-Programming-HOWTO/ && 
      openjade -t sgml -i html \
