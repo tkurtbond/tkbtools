@@ -18,6 +18,7 @@ geminih
 html-parser
 http-client
 ioctl                           # This is for schemepunk, which is for show.
+libyaml
 loop
 matchable
 math                            # For sum
