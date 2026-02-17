@@ -22,6 +22,7 @@ REPOS=(
     60 y ~/Repos/Ada/ada-experiments                         git@github.com:tkurtbond/ada-experiments.git
     60 y ~/Repos/Ada/ncurses_howto_in_ada                    git@github.com:tkurtbond/ncurses_howto_in_ada.git
     60 y ~/Repos/a68-experiments                             git@github.com:tkurtbond/a68-experiments.git
+    55 y ~/Repos/RPG/Misc-RPG                                git@github.com:tkurtbond/Misc-RPG.git
     55 y ~/current/RPG/Tools/TFT                             git@github.com:tkurtbond/TFT-tools.git
     55 y ~/current/RPG/Tools/OVA                             git@github.com:tkurtbond/ova-tools.git
     55 y ~/current/RPG/Tools/Generators                      git@github.com:tkurtbond/Generators.git
