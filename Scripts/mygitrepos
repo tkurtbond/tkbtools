@@ -33,6 +33,7 @@ REPOS=(
     55 y ~/current/RPG/Kids/TFT/West-Marches/Euleron         git@github.com:tkurtbond/Refugees-in-Euleron.git
     55 y ~/current/RPG/Kids/Story-Engine/Maelstrom           git@github.com:tkurtbond/Maelstrom.git
     55 y ~/current/RPG/Kids/Mini-Six/Middle-Sea              git@github.com:tkurtbond/Middle-Sea.git
+    55 y ~/Repos/RPG/Breachworld/Breachworld-Campaigning     git@github.com:tkurtbond/Breachworld-Campaigning.git
     55 y ~/Repos/RPG/Red-Planet-Blue-Helmets                 git@github.com:tkurtbond/Red-Planet-Blue-Helmets.git
     55 y ~/Repos/RPG/Lost-Worlds                  	     git@github.com:tkurtbond/Lost-Worlds.git
     55 y ~/Repos/RPG/Centauri-Knights-4E                     git@github.com:tkurtbond/Centauri-Knights-4E.git
