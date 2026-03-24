@@ -94,6 +94,7 @@ SCRIPTS= \
 	git-state \
 	git-undo-last-commit \
 	git-uptodate \
+	grim \
 	hatch-eggs \
 	hero-designer \
 	htmlindex.sh \

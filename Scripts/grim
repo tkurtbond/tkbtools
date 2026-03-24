@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+grimshot savecopy area /tmp/grim-save.png
