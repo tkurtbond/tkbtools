@@ -1,0 +1,13 @@
+#! /usr/bin/env bash
+
+APPNAME=$(echo $1 | tr A-Z a-z)
+
+swaymsg -t get_tree | jq -r '
+  .. 
+  | select(.type? == "workspace") 
+  | select(
+      [.. | select(.type? == "con" or .type? == "floating_con") | .name? // ""] 
+      | any(ascii_downcase | contains("'$APPNAME'"))
+    ) 
+  | .name
+'

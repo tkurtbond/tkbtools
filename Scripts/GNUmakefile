@@ -138,6 +138,7 @@ SCRIPTS= \
 	nsf \
 	nsmail \
 	nsremote \
+	onwspace \
 	op \
 	osinfo \
 	pbook \
