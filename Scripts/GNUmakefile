@@ -219,6 +219,7 @@ SCRIPTS= \
 	wtitle \
 	wscream \
 	yearday \
+	yl \
 	# Nothing Here
 
 HOME_SCRIPTS=\
