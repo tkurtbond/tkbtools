@@ -1,0 +1,37 @@
+#! /usr/bin/env bash
+
+# https://www.reddit.com/r/swaywm/comments/1tvtft0/comment/opkej1w/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+#
+# BackgroundAnxiety684 -- https://www.reddit.com/user/BackgroundAnxiety684/
+# •
+# 19h ago
+
+# Well, I might have just the right solution for you
+# What the script below does is the following
+
+#     Get the workspace number on the current monitor
+
+#     On pressing your hotkey for the next workspace, it goes to the
+#     next workspace. And if there is no next workspace then it
+#     creates a new one and shifts there
+
+# Now all you need to do is save this script as a .sh file in your
+# config/sway folder, make it executable and link it to your hotkey
+# for next workspace (idk why there are gaps between the lines and I
+# can't make them go away here. You can just copy paste and it should
+# work).
+
+#!/bin/bash
+
+current_output=$(swaymsg -t get_outputs | jq -r '.[] | select(.focused).name')
+all_workspaces=$(swaymsg -t get_workspaces | jq -r '.[].num' | sort -n)
+current_output_workspaces=$(swaymsg -t get_workspaces | jq -r ".[] | select(.output == \"$current_output\").num" | sort -n)
+current_workspace=$(swaymsg -t get_workspaces | jq -r '.[] | select(.focused).num')
+next_workspace=$(echo "$current_output_workspaces" | awk -v curr="$current_workspace" '$1 > curr {print; exit}')
+
+if [ -z "$next_workspace" ]; then
+    next_available=$(comm -13 <(echo "$all_workspaces") <(seq 1 100) | head -n 1)
+    swaymsg "workspace number $next_available"
+else
+    swaymsg "workspace number $next_workspace"
+fi
