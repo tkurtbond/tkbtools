@@ -172,6 +172,7 @@ SCRIPTS= \
 	run-spotify \
 	run-ytdn \
 	scream \
+	search-sway-workspaces \
 	setup-gerbil \
 	signature-size \
 	sgpod \
