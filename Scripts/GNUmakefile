@@ -121,6 +121,8 @@ SCRIPTS= \
 	machine-characteristics \
 	map-d100 \
 	mfcleanup \
+	mikrotik-backup \
+	mikrotik-generate-backup-commmands \
 	mkignores \
 	mpl-rename-mail \
 	mplnas-sharedocs \

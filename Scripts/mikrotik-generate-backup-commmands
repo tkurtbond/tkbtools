@@ -1,0 +1,17 @@
+#! /usr/bin/env bash
+
+DATETIME=$(date -Iseconds | tr -d :)
+LABEL="$1"
+[[ -z $LABEL ]] && LABEL=backup
+NAME=${DATETIME}_${LABEL}
+
+OLD_IFS="$IFS"
+IFS=
+read -s -p Password? PASSWORD
+IFS="$OLD_IFS"
+echo
+
+
+echo /system backup save name=$NAME.backup password=$PASSWORD
+echo /export file=$NAME.export-full
+echo /export compact file=$NAME.export-deltas

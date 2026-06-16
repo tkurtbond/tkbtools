@@ -1,0 +1,18 @@
+#! /usr/bin/env bash
+DATETIME=$(date -Iseconds | tr -d :)
+LABEL="$1"
+[[ -z $LABEL ]] && LABEL=backup
+NAME=${DATETIME}_${LABEL}
+
+OLD_IFS="$IFS"
+IFS=
+read -s -p Password? PASSWORD
+IFS="$OLD_IFS"
+echo
+
+ssh mainrouter /system backup save name=$NAME.backup password=$PASSWORD
+scp mainrouter:/$NAME.backup ~/job/MPL/Mikrotik/backups/
+ssh mainrouter /export file=$NAME.export-full
+scp mainrouter:/$NAME.export-full.rsc ~/job/MPL/Mikrotik/backups/
+ssh mainrouter /export compact file=$NAME.export-deltas
+scp mainrouter:/$NAME.export-deltas.rsc ~/job/MPL/Mikrotik/backups/
