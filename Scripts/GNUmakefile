@@ -67,6 +67,7 @@ SCRIPTS= \
 	cvs-update \
 	darcs-inventory \
 	dedos.py \
+	delay-swayidle \
 	deslash \
 	devolvepdf \
 	dmenu_emoji \
