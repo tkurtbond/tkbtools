@@ -1,5 +1,6 @@
 **/bin/**
 **/build/**
+**/obj/**
 *.adb.stderr
 *.adb.stdout
 *.ali
@@ -78,3 +79,4 @@ Src/words
 \#*\#
 b__*.adb
 b__*.ads
+**/Scripts/Others/wofi-emoji

@@ -1,0 +1,2 @@
+* These tests use bats, the [[https://github.com/bats-core/bats-core][Bash Automated Testing System]].
+The directories =bats= and =test_helpers/*= are three git submodules.

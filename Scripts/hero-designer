@@ -26,4 +26,5 @@ EOF
     exit
 }
 
+export _JAVA_AWT_WM_NONREPARENTING=1
 java -jar /usr/local/sw/versions/hero-designer/HD6.jar $FONTSIZE

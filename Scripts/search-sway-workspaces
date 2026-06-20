@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+APP="$1"
+swaymsg -t get_tree | jq -r '.. | select(.type? == "workspace") | select(.. | .app_id? == "'${APP}'") .name' 

@@ -1,4 +1,6 @@
-with "../../../../Repos/scratch/Ada/a68args/a68args.gpr";
+-- Remember that GPR_PROJECT_PATH must be set properly, and "alr build" run in ~/Repos/arg_parser/
+-- before this can be built.
+with "arg_parser.gpr";
 
 project Tools is
    type OS_Type is ("Linux", "NetBSD", "OpenBSD", "macOS", "Windows");
@@ -9,11 +11,12 @@ project Tools is
    Ada_2022_Switches := ();
    case OS is
       when "Linux" | "NetBSD" =>
-         Ada_2022_Sources := ("atounits", "atounits");
-         Ada_2022_Switches := ("-gnat2022");
+         Ada_2022_Sources := ("abfromunits", "abtounits");
       when others =>
          null;
    end case;
+
+   for Languages use ("Ada", "C");
 
    for Source_Dirs use ("src");
    for Object_Dir use "obj";
@@ -23,7 +26,10 @@ project Tools is
       for Default_Switches ("Ada") use
         ("-gnatef",            --  use full pathnames in error messages
          "-gnatf"              --  full error messages
-        ) & Ada_2022_Switches;
+        );
+
+      for Switches ("abfromunits.adb") use ("-gnat2022");
+      for Switches ("abtounits.adb") use ("-gnat2022");
    end Compiler;
    package Binder is
       -- for Default_Switches ("Ada") use ("-E");
@@ -36,6 +42,8 @@ project Tools is
 
    for Main use
      (
+      "afromunits",
+      "atounits",
       "amodpath",
       "ruler"
      ) & Ada_2022_Sources;

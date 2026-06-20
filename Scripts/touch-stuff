@@ -1,0 +1,9 @@
+#! /usr/bin/env bash
+printf "Before:\n"
+eza -l --color-scale=age,size --time-style=long-iso ~/Documents/TKBStuff2.img
+touch ~/Documents/TKBStuff2.img
+printf "After:\n"
+eza -l --color-scale=age,size --time-style=long-iso ~/Documents/TKBStuff2.img
+
+
+

@@ -16,12 +16,17 @@ REPOS=(
     75 y ~/Notes                                             git@github.com:tkurtbond/general-notes.git
     70 y ~/Repos/tkurtbond.github.io                         git@github.com:tkurtbond/tkurtbond.github.io.git
     70 y ~/Repos/microblog                                   git@github.com:tkurtbond/microblog.git
-    60 y ~/Repos/scratch                                     git@github.com:tkurtbond/scratch.git
-    60 y ~/Repos/h-m-m                                       git@github.com:tkurtbond/h-m-m.git
-    60 y ~/Repos/ada-experiments                             git@github.com:tkurtbond/ada-experiments.git
+    65 y ~/Repos/scratch                                     git@github.com:tkurtbond/scratch.git
+    65 y ~/Repos/h-m-m                                       git@github.com:tkurtbond/h-m-m.git
+    60 y ~/Repos/Ada/arg_parser                              git@github.com:tkurtbond/arg_parser.git
+    60 y ~/Repos/Ada/ada-experiments                         git@github.com:tkurtbond/ada-experiments.git
+    60 y ~/Repos/Ada/ncurses_howto_in_ada                    git@github.com:tkurtbond/ncurses_howto_in_ada.git
+    60 y ~/Repos/a68-experiments                             git@github.com:tkurtbond/a68-experiments.git
+    55 y ~/Repos/RPG/Misc-RPG                                git@github.com:tkurtbond/Misc-RPG.git
     55 y ~/current/RPG/Tools/TFT                             git@github.com:tkurtbond/TFT-tools.git
     55 y ~/current/RPG/Tools/OVA                             git@github.com:tkurtbond/ova-tools.git
     55 y ~/current/RPG/Tools/Generators                      git@github.com:tkurtbond/Generators.git
+    55 y ~/Repos/RPG/Tools/aftermath-generator               git@github.com:tkurtbond/aftermath-generator.git
     55 y ~/current/RPG/Tools/Barrowmaze                      git@github.com:tkurtbond/barrowmaze-tools.git
     55 y ~/current/RPG/Tools/BESM                            git@github.com:tkurtbond/besm-tools.git
     55 y ~/current/RPG/Mini-Six/m6charcost                   git@github.com:tkurtbond/m6charcost.git
@@ -29,6 +34,7 @@ REPOS=(
     55 y ~/current/RPG/Kids/TFT/West-Marches/Euleron         git@github.com:tkurtbond/Refugees-in-Euleron.git
     55 y ~/current/RPG/Kids/Story-Engine/Maelstrom           git@github.com:tkurtbond/Maelstrom.git
     55 y ~/current/RPG/Kids/Mini-Six/Middle-Sea              git@github.com:tkurtbond/Middle-Sea.git
+    55 y ~/Repos/RPG/Breachworld/Breachworld-Campaigning     git@github.com:tkurtbond/Breachworld-Campaigning.git
     55 y ~/Repos/RPG/Red-Planet-Blue-Helmets                 git@github.com:tkurtbond/Red-Planet-Blue-Helmets.git
     55 y ~/Repos/RPG/Lost-Worlds                  	     git@github.com:tkurtbond/Lost-Worlds.git
     55 y ~/Repos/RPG/Centauri-Knights-4E                     git@github.com:tkurtbond/Centauri-Knights-4E.git
@@ -53,7 +59,6 @@ REPOS=(
     20 y ~/Repos/sdcl                                        git@github.com:tkurtbond/sdcl.git
     20 y ~/Repos/filetap                                     git@github.com:tkurtbond/filetap.git
     10 y ~/current/computer/lang/tnolang                     git@github.com:tkurtbond/tnolang.git
-    00 y ~/Repos/ncurses_howto_in_ada                        git@github.com:tkurtbond/ncurses_howto_in_ada.git
     00 y ~/Repos/exceptions                                  git@github.com:tkurtbond/exceptions.git
     00 n /usr/local/sw/src/lang/Oberon/tkb/vishap/voc        git@github.com:tkurtbond/vishap-compiler.git
     00 n /usr/local/sw/src/lang/C/TLDP/LDP                   git@github.com:tkurtbond/LDP.git

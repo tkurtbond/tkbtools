@@ -5,6 +5,10 @@ with GNAT.Command_Line; use GNAT.Command_Line;
 with GNAT.Formatted_String; use GNAT.Formatted_String;
 procedure Ruler is
 
+   procedure Termsize (Rows : out Natural; Columns : out Natural) is separate;
+
+   Rows, Columns : Natural;
+
    Config : Command_Line_Configuration;
    Extra : Boolean := False;
    Ruler_Length : Positive := 80;
@@ -30,6 +34,11 @@ procedure Ruler is
    end Extra_Line;
 
 begin
+   Termsize (Rows, Columns);
+   if Columns /= 0 then
+      Ruler_Length := Columns;
+      end if;
+
    Define_Switch (Config, "-e", Help => "Output extra header and trailer lines.");
    Set_Usage (Config, "[-e] [ruler_length]");
    Getopt (Config, Callback'Unrestricted_access);
@@ -48,7 +57,7 @@ begin
       exception
          when Constraint_Error =>
             Put_Line (Standard_Error,
-              -(+"ruler: ""%s"" is an invalid value for ruler length." & Argument));
+                      -(+"ruler: ""%s"" is an invalid value for ruler length." & Argument));
             OS_Exit (3);
       end;
    end loop;

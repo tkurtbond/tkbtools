@@ -4,15 +4,16 @@ with Ada.Strings; use Ada.Strings;
 with Ada.Strings.Fixed; use Ada.Strings.Fixed;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
-with Ada.Long_Long_Float_Text_IO; use Ada.Long_Long_Float_Text_IO;
+with Ada.Numerics.Big_Numbers.Big_Integers; use Ada.Numerics.Big_Numbers.Big_Integers;
+with Ada.Numerics.Big_Numbers.Big_Reals; use Ada.Numerics.Big_Numbers.Big_Reals;
 with GNAT.Command_Line; use GNAT.Command_Line;
 with GNAT.OS_Lib; use GNAT.OS_Lib;
 
 with Arg_Parser; use Arg_Parser;
 
-procedure AFromUnits is
+procedure ABFromUnits is
    Program_Name : String :=
-     (if Command_Name = "" then "affromunits" else Command_Name);
+     (if Command_Name = "" then "abfromunits" else Command_Name);
 
    Exit_Program : exception;
 
@@ -44,11 +45,11 @@ procedure AFromUnits is
       SI_Label : Unbounded_String;
       SI_Abbreviation : Unbounded_String;
       SI_Text : Unbounded_String;
-      SI : Long_Long_Float ;
+      SI : Big_Real;
       BI_Label : Unbounded_String;
       BI_Abbreviation : Unbounded_String;
       BI_Text : Unbounded_String;
-      BI : Long_Long_Float;
+      BI : Big_Real;
    end record;
 
    type Labeled_Multiplier_Array is array (Multiplier range <>)
@@ -69,14 +70,14 @@ procedure AFromUnits is
       'R' => (+"Ronna",  +"R", +"10.0**27", 10.0**27, +"Robi", +"Ri", +"2.0**090", 2.0**090),
       'Q' => (+"Quetta", +"Q", +"10.0**30", 10.0**30, +"Qubi", +"Qi", +"2.0**100", 2.0**100));
 
-   function By_Multiplier (M : Multiplier) return Long_Long_Float is
+   function By_Multiplier (M : Multiplier) return Big_Real is
      (if Use_SI then Multipliers (M).SI else Multipliers (M).BI);
 
    function Abbreviation (M: Multiplier) return Unbounded_String is
      (if Use_SI then Multipliers (M).SI_Abbreviation
       else Multipliers (M).BI_Abbreviation);
 
-   procedure Maybe_Multiply (R : in out Long_Long_Float; S: String) is
+   procedure Maybe_Multiply (R : in out Big_Real; S: String) is
       T : Unbounded_String := +S;
    begin
       for I in Multiplier'Range loop
@@ -94,9 +95,7 @@ procedure AFromUnits is
          declare
             E: Labeled_Multiplier renames Multipliers (C);
          begin
-            Put (Head (+E.SI_Label, 6) & " (" & (+E.SI_Abbreviation) & ")  " & (+E.Si_Text) & " ");
-            Put (E.SI, Aft => 1, Exp => 0);
-            New_Line;
+            Put_Line (Head (+E.SI_Label, 6) & " (" & (+E.SI_Abbreviation) & ")  " & (+E.Si_Text) & " " & Trim (To_String (E.SI, Aft => 1), Both));
          end;
       end loop;
       New_Line;
@@ -106,26 +105,34 @@ procedure AFromUnits is
          declare
             E: Labeled_Multiplier renames Multipliers (C);
          begin
-            Put (Head (+E.BI_Label, 6) & " (" & (+E.BI_Abbreviation) & ") " & (+E.BI_Text) & " ");
-            Put (E.BI, Aft => 1, Exp => 0);
-            New_Line;
+            Put_Line (Head (+E.BI_Label, 6) & " (" & (+E.BI_Abbreviation) & ") " & (+E.BI_Text) & " " & Trim (To_String (E.BI, Aft => 1), Both));
          end;
       end loop;
 
       return True;
    end Print_Prefixes;
 
-   function Relaxed_From_String (S: String) return Long_Long_Float is
+   function Relaxed_From_String (S: String) return Big_Real is
    begin
       declare
-         R: Long_Long_Float := Long_Long_Float'Value (S);
+         R: Big_Real := From_String (S);
       begin
          return R;
       end;
    exception
       when CONSTRAINT_ERROR =>
-         Error ("The value """ & S & """ is not a valid floating point number.");
-         raise;
+         begin
+            declare
+               I : Big_Integer := From_String (S);
+               R : Big_Real := To_Big_Real (I);
+            begin
+               return R;
+            end;
+         exception
+            when CONSTRAINT_ERROR =>
+               Error ("The value """ & S & """ is not a valid floating point number.");
+               raise;
+         end;
    end Relaxed_From_String;
 
    Units : aliased Unbounded_String := +"B"; -- Units default to bytes.
@@ -134,10 +141,10 @@ procedure AFromUnits is
 
    function Process_Argument (Start_With : Positive; Arg: String) return Boolean is
       S : String := Trim (Arg, Both);
-      R : Long_Long_Float;
       F : constant Integer := S'First;
       L : constant Integer := S'Last;
       I : Integer := S'First;
+      R : Big_Real;
    begin
       Arguments_Seen := Arguments_Seen + 1;
       -- Ugh.  This is so ugly.  And not really correct.
@@ -154,8 +161,7 @@ procedure AFromUnits is
       if I <= L then
          Maybe_Multiply (R, S(I..I));
       end if;
-      Put (R, Aft => 1, Exp => 0);
-      New_Line;
+      Put_Line (To_String (R, Aft => 1));
       return True;
    end Process_Argument;
 
@@ -190,7 +196,7 @@ procedure AFromUnits is
    begin
       Usage (AP);
       New_Line;
-      Put_Line ("This program defaults to using the " & Default & " prefixes for units.");
+      Put_Line ("This program defaults to using the " & Default'Image & " prefixes for units.");
       raise Exit_Program;
       return False;             -- If they ask for help, it's time to stop parsing arguments.
    end Print_Usage;
@@ -201,4 +207,4 @@ begin
    if Arguments_Seen < 1 then
       Process_Standard_Input;
    end if;
-end AFromUnits;
+end ABFromUnits;
