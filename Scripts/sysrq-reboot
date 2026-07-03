@@ -1,0 +1,10 @@
+#! /usr/bin/env bash
+
+set -x
+echo 1 | sudo tee /proc/sys/kernel/sysrq
+sleep 5
+echo s | sudo tee /proc/sysrq-trigger  # Sync filesystems
+sleep 5
+echo u | sudo tee /proc/sysrq-trigger  # Remount filesystems read-only
+sleep 5
+echo b | sudo tee /proc/sysrq-trigger  # Reboot immediately
