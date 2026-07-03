@@ -11,6 +11,7 @@ REPOS=(
     95 y ~/lib/emacs/emacs-config                            git@github.com:tkurtbond/emacs-config.git
     94 y ~/lib/emacs/arrows                                  git@github.com:tkurtbond/arrow-macros-for-emacs.git
     93 y ~/lib/emacs/old-ada-mode                            git@github.com:tkurtbond/old-ada-mode.git
+    92 y ~/Repos/flex_args                                   git@github.com:tkurtbond/flex_args.git
     90 y ~/comp/tkbtools                                     git@github.com:tkurtbond/tkbtools.git
     80 y ~/Repos/tkb-notes                                   git@gitlab.com:t-kurt-bond/tkb-notes.git
     75 y ~/Notes                                             git@github.com:tkurtbond/general-notes.git
@@ -41,8 +42,8 @@ REPOS=(
     55 y ~/Repos/RPG/Centauri-Knights-4E                     git@github.com:tkurtbond/Centauri-Knights-4E.git
     55 y ~/Repos/RPG/Centauri-Knights-2E                     git@github.com:tkurtbond/Centauri-Knights-2E.git
     53 y ~/Repos/RPG/The-Mecha-Hack                          git@github.com:tkurtbond/The-Mecha-Hack.git
+    50 y ~/Repos/CPB/initiative-tracker                      git@github.com:cpaulbond/initiative-tracker.git
     50 y ~/Repos/tpa                                         git@github.com:tkurtbond/tpa.git
-    50 y ~/Repos/flex_args                                   git@github.com:tkurtbond/flex_args.git
     43 y ~/Repos/learn-htmx/                                 git@github.com:tkurtbond/learn-htmx.git
     42 y ~/Repos/tkbvmslib                                   git@github.com:tkurtbond/tkbvmslib.git
     40 y ~/Repos/VTIL-pictures                               git@github.com:tkurtbond/VTIL-pictures.git
