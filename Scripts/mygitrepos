@@ -11,7 +11,7 @@ REPOS=(
     95 y ~/lib/emacs/emacs-config                            git@github.com:tkurtbond/emacs-config.git
     94 y ~/lib/emacs/arrows                                  git@github.com:tkurtbond/arrow-macros-for-emacs.git
     93 y ~/lib/emacs/old-ada-mode                            git@github.com:tkurtbond/old-ada-mode.git
-    92 y ~/Repos/flex_args                                   git@github.com:tkurtbond/flex_args.git
+    92 y ~/Repos/Ada/arg_parser                              git@github.com:tkurtbond/arg_parser.git
     90 y ~/comp/tkbtools                                     git@github.com:tkurtbond/tkbtools.git
     80 y ~/Repos/tkb-notes                                   git@gitlab.com:t-kurt-bond/tkb-notes.git
     75 y ~/Notes                                             git@github.com:tkurtbond/general-notes.git
@@ -19,7 +19,6 @@ REPOS=(
     70 y ~/Repos/microblog                                   git@github.com:tkurtbond/microblog.git
     65 y ~/Repos/scratch                                     git@github.com:tkurtbond/scratch.git
     65 y ~/Repos/h-m-m                                       git@github.com:tkurtbond/h-m-m.git
-    60 y ~/Repos/Ada/arg_parser                              git@github.com:tkurtbond/arg_parser.git
     60 y ~/Repos/Ada/ada-experiments                         git@github.com:tkurtbond/ada-experiments.git
     60 y ~/Repos/Ada/ncurses_howto_in_ada                    git@github.com:tkurtbond/ncurses_howto_in_ada.git
     60 y ~/Repos/a68-experiments                             git@github.com:tkurtbond/a68-experiments.git
