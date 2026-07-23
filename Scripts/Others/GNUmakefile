@@ -29,6 +29,7 @@ $(BINDIR)/% : %
 
 SCRIPTS= \
 	monocle
+	sway-next-workspace
 	# Nothing Here
 
 NOTSRC=

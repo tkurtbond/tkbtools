@@ -55,6 +55,7 @@ SCRIPTS= \
 	blogbot \
 	books-per-day \
 	check-eggs \
+	check-stuff \
 	code2pandoc \
 	collapse \
 	color \
@@ -66,10 +67,12 @@ SCRIPTS= \
 	cvs-update \
 	darcs-inventory \
 	dedos.py \
+	delay-swayidle \
 	deslash \
 	devolvepdf \
 	dmenu_emoji \
 	domail \
+	do-text-mapper \
 	ebook \
 	embed-fonts \
 	endsound \
@@ -92,6 +95,8 @@ SCRIPTS= \
 	git-state \
 	git-undo-last-commit \
 	git-uptodate \
+	gsave \
+	gsave-screen \
 	hatch-eggs \
 	hero-designer \
 	htmlindex.sh \
@@ -118,6 +123,8 @@ SCRIPTS= \
 	machine-characteristics \
 	map-d100 \
 	mfcleanup \
+	mikrotik-backup \
+	mikrotik-generate-backup-commmands \
 	mkignores \
 	mpl-rename-mail \
 	mplnas-sharedocs \
@@ -135,6 +142,7 @@ SCRIPTS= \
 	nsf \
 	nsmail \
 	nsremote \
+	onwspace \
 	op \
 	osinfo \
 	pbook \
@@ -168,6 +176,7 @@ SCRIPTS= \
 	run-spotify \
 	run-ytdn \
 	scream \
+	search-sway-workspaces \
 	setup-gerbil \
 	signature-size \
 	sgpod \
@@ -193,9 +202,9 @@ SCRIPTS= \
 	swaysave \
 	tarit \
 	test-email.sh \
-	do-text-mapper \
 	tkb-sync \
 	tkbput.sh \
+	touch-stuff \
 	troff-depends \
 	uhome \
 	unbuilt-programs \
@@ -215,6 +224,7 @@ SCRIPTS= \
 	wtitle \
 	wscream \
 	yearday \
+	yl \
 	# Nothing Here
 
 HOME_SCRIPTS=\
