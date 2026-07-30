@@ -1,4 +1,4 @@
--- Remember that GPR_PROJECT_PATH must be set properly, and "alr build" run in ~/Repos/arg_parser/
+-- Remember that GPR_PROJECT_PATH must be set properly, and "alr build" run in ~/Repos/Ada/arg_parser/
 -- before this can be built.
 with "arg_parser.gpr";
 
