@@ -1,0 +1,2 @@
+#! /usr/bin/env bash
+gprinstall --prefix=/usr/local/sw/versions/ada "$@"

@@ -203,6 +203,7 @@ SCRIPTS= \
 	tarit \
 	test-email.sh \
 	tkb-sync \
+	tkbgprinstall \
 	tkbput.sh \
 	touch-stuff \
 	troff-depends \
