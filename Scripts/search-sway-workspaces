@@ -2,5 +2,5 @@
 
 APP="$1"
 swaymsg -t get_tree | jq -r --arg app "$APP" '
-  .. | select(.type? == "workspace") | select(.. | .app_id? | strings | contains($app)) | .name
+  .. | select(.type? == "workspace") | select(.. | .app_id? | strings | contains($app | ascii_downcase)) | .name
 '
