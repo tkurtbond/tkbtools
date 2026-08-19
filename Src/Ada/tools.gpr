@@ -42,6 +42,7 @@ project Tools is
 
    for Main use
      (
+      "achopext",
       "afromunits",
       "atounits",
       "amodpath",
