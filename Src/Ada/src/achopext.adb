@@ -1,5 +1,8 @@
 -- I originally thought to use Ada.Directories with this, but it was just simpler to do it manually.
 -- This agrees with my basename and chopext.
+--
+-- Now, why did I write chopext in the first place, if it does the same thing as basename?
+
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Command_Line;
 with Ada.Strings;
