@@ -34,7 +34,7 @@ procedure Anewver is
 
    Options : aliased Option_Array :=
      (Make_Set_String_Option
-       (Description => "Set output directory.", Short_Name => 'D',
+       (Description => "Set output directory.", Short_Name => 'd',
         Long_Name   => "output-directory",
         Variable    => Output_Directory'Unrestricted_Access),
        Make_Option
@@ -84,7 +84,11 @@ procedure Anewver is
             if D.Exists  (New_Name) then
                I := I + 1;
             else
-               TIO.Put_Line ("Copy " & Path_Name & " to " & New_Name);
+               TIO.Put_Line ("'" & Path_Name & "'" &
+                             (if Dry_Run then " would be copied to " else " copied to ") & "'" & New_Name & "'");
+               if not Dry_Run then
+                  D.Copy_File (Path_Name, New_Name);
+               end if;
                exit;
             end if;
          end;
