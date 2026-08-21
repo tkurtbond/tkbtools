@@ -7,6 +7,9 @@ project Tools is
    --  A typed variable, set from external variable OS.
    OS : OS_Type := external ("OS", "Linux");
 
+   type Build_Mode_Type is ("development", "release");
+   Build_Mode : Build_Mode_Type := external ("BUILD_MODE", "development");
+
    Ada_2022_Sources := ();
    Ada_2022_Switches := ("-gnat2022");
    case OS is
@@ -16,16 +19,28 @@ project Tools is
          null;
    end case;
 
-   Ada_Switches := ("-gnatef",            --  use full pathnames in error messages
-                    "-gnatf",              --  full error messages
-                    "-F"
-                   );
+   Full_Path_Error_Switches := ("-gnatef", -- use full pathnames in error messages
+                                "-gnatf",  -- full error messages
+                                "-F");
+   Ada_Switches := ();
+   case Build_Mode is
+      when "development" =>
+         Ada_Switches := Full_Path_Error_Switches;
+      when "release" =>
+         Ada_Switches := Full_Path_Error_Switches & ("-O3");
+   end case;
 
    for Languages use ("Ada", "C");
 
    for Source_Dirs use ("src");
-   for Object_Dir use "obj";
-   for Exec_Dir use "bin";
+   case Build_Mode is
+      when "development" =>
+         for Object_Dir use "development/obj";
+         for Exec_Dir use "development/bin";
+      when "release" =>
+         for Object_Dir use "release/obj";
+         for Exec_Dir use "release/bin";
+   end case;
 
    package Compiler is
       for Default_Switches ("Ada") use
@@ -39,6 +54,12 @@ project Tools is
       -- for Default_Switches ("Ada") use ("-E");
    end Binder;
    package Linker is
+      case Build_Mode is
+         when "development" =>
+            null;
+         when "release" =>
+            for Switches ("Ada") use ("-s");
+      end case;
    end Linker;
    package Install is
       for Prefix use External ("HOME") & "/local";

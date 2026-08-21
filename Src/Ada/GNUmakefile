@@ -2,4 +2,5 @@ tools:
 	gprbuild $(GPROPTS) -P tools
 
 install:
-	gprinstall --mode=usage --install-name=tools -f $(GPROPTS) -P tools
+	gprbuild $(GPROPTS) -P tools -XBUILD_MODE=release
+	gprinstall --mode=usage --install-name=tools -f $(GPROPTS) -P tools -XBUILD_MODE=release
