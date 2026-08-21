@@ -16,6 +16,12 @@ project Tools is
          null;
    end case;
 
+   Ada_Switches :=
+     ("-gnatef",              --  use full pathnames in error messages
+      "-gnatf",             --  full error messages
+      "-F"
+     );
+
    for Languages use ("Ada", "C");
 
    for Source_Dirs use ("src");
@@ -24,12 +30,11 @@ project Tools is
 
    package Compiler is
       for Default_Switches ("Ada") use
-        ("-gnatef",            --  use full pathnames in error messages
-         "-gnatf"              --  full error messages
-        );
+        Ada_Switches;
 
-      for Switches ("abfromunits.adb") use ("-gnat2022");
-      for Switches ("abtounits.adb") use ("-gnat2022");
+      for Switches ("abfromunits.adb") use Ada_Switches & ("-gnat2022");
+      for Switches ("abtounits.adb") use Ada_Switches & ("-gnat2022");
+      for switches ("anewver.adb") use Ada_Switches & ("-gnat2022");
    end Compiler;
    package Binder is
       -- for Default_Switches ("Ada") use ("-E");
@@ -46,6 +51,7 @@ project Tools is
       "afromunits",
       "atounits",
       "amodpath",
+      "anewver",
       "ruler"
      ) & Ada_2022_Sources;
 
