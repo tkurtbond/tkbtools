@@ -11,16 +11,14 @@ project Tools is
    Ada_2022_Switches := ();
    case OS is
       when "Linux" | "NetBSD" =>
-         Ada_2022_Sources := ("abfromunits", "abtounits");
+         Ada_2022_Sources := ("abfromunits", "abtounits", "anewver");
       when others =>
          null;
    end case;
 
-   Ada_Switches :=
-     ("-gnatef",              --  use full pathnames in error messages
-      "-gnatf",             --  full error messages
-      "-F"
-     );
+   Ada_Switches := ("-gnatef",            --  use full pathnames in error messages
+                    "-gnatf"              --  full error messages
+                   );
 
    for Languages use ("Ada", "C");
 
@@ -32,9 +30,9 @@ project Tools is
       for Default_Switches ("Ada") use
         Ada_Switches;
 
-      for Switches ("abfromunits.adb") use Ada_Switches & ("-gnat2022");
-      for Switches ("abtounits.adb") use Ada_Switches & ("-gnat2022");
-      for switches ("anewver.adb") use Ada_Switches & ("-gnat2022");
+      for Switches ("abfromunits.adb") use ("-gnat2022") & Ada_Switches;
+      for Switches ("abtounits.adb") use ("-gnat2022") & Ada_Switches;
+      for Switches ("anewver.adb") use ("-gnat2022") & Ada_Switches;
    end Compiler;
    package Binder is
       -- for Default_Switches ("Ada") use ("-E");
@@ -51,7 +49,6 @@ project Tools is
       "afromunits",
       "atounits",
       "amodpath",
-      "anewver",
       "ruler"
      ) & Ada_2022_Sources;
 
