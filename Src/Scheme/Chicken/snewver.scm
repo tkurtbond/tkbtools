@@ -48,7 +48,7 @@
     (lambda ()
       (print "snewver makes copies of files, with file.ext being copied to 
 file-YYYY-MM-DD.ext if that file doesn't exist, or with _<N> append after the
-date if that file existins, with N starting at 1 and increasing until no file
+date if that file exists, with N starting at 1 and increasing until no file
 with that name already exists.")
       (newline)
       (print "Usage: " (program-name) " [options...] [files...]")
