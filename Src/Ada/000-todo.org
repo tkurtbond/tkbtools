@@ -1,0 +1,2 @@
+* convert ruler to use unicode box drawing characters
+┌ ─ ┐ ┬  └ ┴ ┘
