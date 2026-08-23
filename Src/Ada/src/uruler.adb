@@ -5,8 +5,9 @@ with GNAT.Command_Line; use GNAT.Command_Line;
 with GNAT.Formatted_String; use GNAT.Formatted_String;
 
 with Termsize;
+procedure URuler is
 
-procedure Ruler is
+   type Location is (Bottom, Top);
 
    Rows, Columns : Natural;
 
@@ -24,11 +25,12 @@ procedure Ruler is
       end if ;
    end Callback;
 
-   procedure Extra_Line is
+   procedure Extra_Line (L : Location) is
+      S : String := (case L is when Top => "┬", when Bottom => "┴");
    begin
       if Extra then
          for I in 1..Ruler_Length loop
-            Put (if I mod 10 = 0 then '|' elsif I mod 5 = 0 then '+' else '-');
+            Put (if I mod 10 = 0 then s elsif I mod 5 = 0 then s else "─");
          end loop;
          New_Line;
       end if;
@@ -63,7 +65,7 @@ begin
       end;
    end loop;
 
-   Extra_Line;
+   Extra_Line (Top);
    Number_Of_Parts := Ruler_Length / 10;
    for I in 1..Number_Of_Parts loop
       Put (-(+"%10d" & I));
@@ -73,10 +75,10 @@ begin
       Put (-(+"%d" & I mod 10));
    end loop;
    New_Line;
-   Extra_Line;
+   Extra_Line (Bottom);
 
    OS_Exit (0);
 exception
    when EXIT_FROM_COMMAND_LINE =>
       OS_Exit (4);
-end Ruler;
+end URuler;

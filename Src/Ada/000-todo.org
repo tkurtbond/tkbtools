@@ -1,2 +1,3 @@
-* convert ruler to use unicode box drawing characters
-┌ ─ ┐ ┬  └ ┴ ┘
+* DONE convert ruler to use unicode box drawing characters
+Actually just made a separate uruler.adb.
+┌ ─ ┐ ┬  └ ┴ ┘ ┼

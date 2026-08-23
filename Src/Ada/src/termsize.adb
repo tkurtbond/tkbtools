@@ -3,7 +3,6 @@ with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 with Interfaces.C; use Interfaces.C;
 with Interfaces.C.Strings; use Interfaces.C.Strings;
 
-separate (Ruler)
 procedure Termsize (Rows : out Natural; Columns : out Natural) is
 
    type termsize is record
