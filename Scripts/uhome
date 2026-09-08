@@ -1,12 +1,20 @@
 #! /usr/bin/env bash
 
+if [[ "$1" == "serial" ]]; then
+    ((use_serial=1))
+fi
+
 function iterate {
     for profile in "$@"
     do
         if [[ -z "$DISPLAY" && -z "$WAYLAND_DISPLAY" ]]; then
             unison -ui text $profile
         else
-            unison $profile &
+            if ((use_serial)); then
+                unison $profile
+            else
+                unison $profile &
+            fi
         fi
     done
 }
