@@ -243,14 +243,14 @@ procedure AToUnits is
        Make_Set_Boolean_True_Option("Multiply the result by the appropriate Ronna",  'R', "ronna",  Mult_By_R'Unrestricted_Access),
        Make_Set_Boolean_True_Option("Multiply the result by the appropriate Quetta", 'Q', "quetta", Mult_By_Q'Unrestricted_Access));
 
-   AP : Argument_Parser :=
-     Make_Argument_Parser ("afromunits [options] [argument ...]", Process_Argument'Unrestricted_Access,
+   The_Parser : Parser :=
+     Make_Parser ("afromunits [options] [argument ...]", Process_Argument'Unrestricted_Access,
                            Options'Unrestricted_Access);
 
    function Print_Usage return Boolean is
       Default : String := (if Use_SI_Default then "SI" else "binary");
    begin
-      Usage (AP);
+      Usage (The_Parser);
       New_Line;
       Put_Line ("This program defaults to using the " & Default & " prefixes for units.");
       raise Exit_Program;
@@ -258,7 +258,7 @@ procedure AToUnits is
    end Print_Usage;
 
 begin
-   Parse_Arguments (AP);
+   Parse_Arguments (The_Parser);
 
    if Arguments_Seen < 1 then
       Process_Standard_Input;

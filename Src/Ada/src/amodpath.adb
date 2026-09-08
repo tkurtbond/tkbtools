@@ -484,14 +484,14 @@ procedure AModPath is
          ("Warn about missing environment variables instead of exiting with an error.",'w', "warnings",
           Warnings_Are_Fatal'Unrestricted_Access));
 
-   AP : Argument_Parser :=
-     Make_Argument_Parser (Program_Name & " [option | argument]...",
+   The_Parser : Parser :=
+     Make_Parser (Program_Name & " [option | argument]...",
                            Arg_Handler'Unrestricted_Access, Options'Unrestricted_Access);
 
    function Help return Boolean is
       Time_To_End_It_All : exception;
    begin
-      Usage (AP);
+      Usage (The_Parser);
       -- Once they ask for help it is too late to continue.
       raise Exit_Program;
       return False;
@@ -499,7 +499,7 @@ procedure AModPath is
 
 
 begin
-   Parse_Arguments (AP);
+   Parse_Arguments (The_Parser);
 
    declare
       Separator : String :=

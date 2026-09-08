@@ -99,17 +99,17 @@ procedure Anewver is
      "if that file doesn't exist,  or with _<N> appended after the date if that file exists, " & ASCII.LF &
      "with N starting at 1 and increasing until no file with that name already exists.";
 
-   AP : Argument_Parser := Make_Argument_Parser (Usage_Description, Arg_Handler'Unrestricted_Access, Options'Unrestricted_Access);
+   The_Parser : Parser := Make_Parser (Usage_Description, Arg_Handler'Unrestricted_Access, Options'Unrestricted_Access);
 
    function Do_Help return Boolean is
       End_Program : exception;
    begin
-      Arg_Parser.Usage (AP);
+      Arg_Parser.Usage (The_Parser);
       --  Once they ask for help it is too late to continue.
       raise End_Program;
       return False;
    end Do_Help;
 
 begin
-   Parse_Arguments (AP);
+   Parse_Arguments (The_Parser);
 end Anewver;
