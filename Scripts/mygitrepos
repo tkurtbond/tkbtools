@@ -31,7 +31,8 @@ REPOS=(
     55 y ~/Repos/RPG/Tools/aftermath-generator               git@github.com:tkurtbond/aftermath-generator.git
     55 y ~/current/RPG/Tools/Barrowmaze                      git@github.com:tkurtbond/barrowmaze-tools.git
     55 y ~/current/RPG/Tools/BESM                            git@github.com:tkurtbond/besm-tools.git
-    55 y ~/Repos/RPG/Tools/besm2_fmt                            git@github.com:tkurtbond/besm2_fmt.git
+    55 y ~/Repos/RPG/Tools/besm2_fmt                         git@github.com:tkurtbond/besm2_fmt.git
+    55 y ~/Repos/RPG/Tools/ova_fmt                           git@github.com:tkurtbond/ova_fmt.git
     55 y ~/current/RPG/Mini-Six/m6charcost                   git@github.com:tkurtbond/m6charcost.git
     55 y ~/current/RPG/Mini-Six/SRD                          git@github.com:tkurtbond/Minimal-OpenD6.git
     55 y ~/current/RPG/Kids/TFT/West-Marches/Euleron         git@github.com:tkurtbond/Refugees-in-Euleron.git
