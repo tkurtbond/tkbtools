@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+[ "$1" = "" ] && { echo "$0: requires at least one filename" 1>&2; exit 2; }
+
+pdfbook2 --paper=letterpaper --short-edge --no-crop "$@"

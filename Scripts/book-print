@@ -1,0 +1,9 @@
+#! /usr/bin/env bash
+
+[ "$1" = "" ] && { echo "$0: requires at least one filename" 1>&2; exit 2; }
+
+: "${LPDEST:=HP_OfficeJet_Pro_8710_0AEA5D}"
+
+lp -n 1 -o print-quality=5 -o sides=two-sided-long-edge -o media=Letter \
+   -d "$LPDEST" \
+   "$@"
