@@ -1,5 +1,43 @@
 #! /usr/bin/env bash
 
+outdir=""
+
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        --outdir)
+            outdir="$2"
+            shift 2
+            ;;
+        --outdir=*)
+            outdir="${1#--outdir=}"
+            shift
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
 [ "$1" = "" ] && { echo "$0: requires at least one filename" 1>&2; exit 2; }
 
+if [ -n "$outdir" ]; then
+    mkdir -p "$outdir" || exit 1
+fi
+
 pdfbook2 --paper=letterpaper --short-edge --no-crop "$@"
+
+if [ -n "$outdir" ]; then
+    for filename in "$@"; do
+        base="$(basename "$filename" .pdf)"
+        src="$(dirname "$filename")/$base-book.pdf"
+        if [ -f "$src" ]; then
+            mv "$src" "$outdir/"
+        else
+            echo "$0: warning: expected output '$src' not found" 1>&2
+        fi
+    done
+fi
