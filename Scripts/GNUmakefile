@@ -54,6 +54,8 @@ SCRIPTS= \
 	bldmyblog \
 	blogbot \
 	books-per-day \
+	book-print \
+	book-signatures \
 	check-eggs \
 	check-stuff \
 	code2pandoc \
