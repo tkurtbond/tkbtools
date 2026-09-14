@@ -20,6 +20,7 @@ REPOS=(
     70 y ~/Repos/microblog                                   git@github.com:tkurtbond/microblog.git
     65 y ~/Repos/scratch                                     git@github.com:tkurtbond/scratch.git
     65 y ~/Repos/h-m-m                                       git@github.com:tkurtbond/h-m-m.git
+    65 y ~/Repos/Ada/ada-cs                                  git@github.com:tkurtbond/ada-cs.git
     60 y ~/Repos/Ada/ada-experiments                         git@github.com:tkurtbond/ada-experiments.git
     60 y ~/Repos/Ada/questions-with-claude/                  git@github.com:tkurtbond/questions-with-claude.git
     60 y ~/Repos/Ada/ncurses_howto_in_ada                    git@github.com:tkurtbond/ncurses_howto_in_ada.git
