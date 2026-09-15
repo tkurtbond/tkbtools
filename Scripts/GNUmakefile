@@ -84,6 +84,8 @@ SCRIPTS= \
 	filetime \
 	fileurl \
 	find-rst-footnotes \
+	ftp-off \
+	ftp-on \
 	gensite.sh \
 	getremotemail.sh \
 	gfind-moddate \
