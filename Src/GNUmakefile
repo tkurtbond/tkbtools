@@ -89,7 +89,7 @@ EXES=	\
 	grepgroup$(EXE) \
 	increment$(EXE) \
 	iso8601$(EXE) \
-	llc$(EXE) \
+	cll$(EXE) \
 	md5tree$(EXE) \
 	nicepath$(EXE) \
 	nospaces$(EXE) \
