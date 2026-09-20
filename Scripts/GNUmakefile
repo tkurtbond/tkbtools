@@ -252,6 +252,7 @@ NETBSD_SCRIPTS=\
 	# Nothing here
 
 LINUX_SCRIPTS=\
+	Linux/linux-active-wifi \
 	Linux/linux-capabilities \
 	Linux/linux-loadkeys \
 	Linux/linux-light \
