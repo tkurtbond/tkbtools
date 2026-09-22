@@ -55,7 +55,7 @@ if [[ -t 0 ]]; then
     NC='\033[0m'                # No Color.
 fi
 
-[[ -n $DO_FGREP ]] && {
+((DO_FGREP)) && {
     FGREP_F_ARGS=
     for ((i = 0; i < $FGREP_COUNT; i++)) {
         ((i > 0)) && FGREP_F_ARGS+=" "
