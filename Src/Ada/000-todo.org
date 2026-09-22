@@ -1,3 +1,5 @@
+* TODO -X with an empty name crashes the amodpath
+* TODO A set-but-empty variable behaves differently from an unset one.
 * DONE convert ruler to use unicode box drawing characters
 Actually just made a separate uruler.adb.
 ┌ ─ ┐ ┬  └ ┴ ┘ ┼
