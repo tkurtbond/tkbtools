@@ -78,7 +78,13 @@ let set_sep s =
    given a string containing the path.  *)
 let set_path s =
   path := s;
-  path_list := (Str.split_delim (Str.regexp !in_path_sep) !path)
+  (* The separator is a literal string, not a regexp, and an empty one
+     can't split anything, so the path is one item; as a regexp it would
+     match between every pair of characters.  *)
+  path_list :=
+    if !path = "" then []
+    else if !in_path_sep = "" then [!path]
+    else Str.split_delim (Str.regexp_string !in_path_sep) !path
 
 (* Set path and path_list from path from value of environment
    variable.  It is a fatal error for the user to specify a
@@ -223,7 +229,9 @@ let delete item =
    there are any outstanding -after's or -before's.  *)
 let anonymous_arg item =
   let item =
-    if !relative_flag then item
+    (* An empty item stays empty; made absolute it would be the current
+       directory, which would make -empty the same as -current.  *)
+    if !relative_flag || item = "" then item
     else if Filename.is_relative item then Filename.concat (Sys.getcwd ()) item
     else item
   in

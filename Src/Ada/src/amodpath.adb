@@ -29,8 +29,13 @@ procedure AModPath is
    No_Warnings              : aliased Boolean          := False;
    Directories_Are_Relative : aliased Boolean          := False;
    Exists_Flag              : aliased Boolean          := False;
-   In_Path_Separator        : aliased Unbounded_String := Null_Unbounded_String;
+   --  An empty input separator splits nothing, so the path is one item.
+   In_Path_Separator        : aliased Unbounded_String :=
+     To_Unbounded_String (String'(1 => Path_Separator));
    Out_Path_Separator       : aliased Unbounded_String := Null_Unbounded_String;
+   --  Whether -o or -S was given, so that an empty output separator joins
+   --  the items with nothing instead of meaning the default.
+   Out_Path_Separator_Set   : Boolean                  := False;
 
    procedure Debug (Message : String) is
    begin
@@ -84,6 +89,12 @@ procedure AModPath is
       V         : Vector;
    begin
       if Length (S) = 0 then
+         return V;
+      end if;
+      --  An empty pattern can't split anything, and Index would raise
+      --  Pattern_Error for it.
+      if Pattern'Length = 0 then
+         Append (V, S);
          return V;
       end if;
       while Start <= Length (S) loop
@@ -159,19 +170,11 @@ procedure AModPath is
       end case;
    end Check_Todo;
 
-   function Get_Alternate_Path_Separator
-     (Alternate_Path_Separator : Unbounded_String;
-      Normal_Path_Separator    : String) return String is
-     (if Length (Alternate_Path_Separator) = 0 then Normal_Path_Separator
-      else To_String (Alternate_Path_Separator));
-
    type Output_Type is (Nice, Simple, Cmd, Csh, Sh, Quiet);
    Output : Output_Type := Sh;
 
    function Set_Path (Path : Unbounded_String) return Boolean is
-      Separator : String :=
-        Get_Alternate_Path_Separator
-          (In_Path_Separator, String'(1 => Path_Separator));
+      Separator : String := To_String (In_Path_Separator);
    begin
       Path_String := Path;
       Path_Vector := Split (Path, Separator);
@@ -182,9 +185,7 @@ procedure AModPath is
      (Variable : Unbounded_String) return Boolean
    is
       Path_Variable_String : String := To_String (Variable);
-      Separator            : String :=
-        Get_Alternate_Path_Separator
-          (In_Path_Separator, String'(1 => Path_Separator));
+      Separator            : String := To_String (In_Path_Separator);
    begin
       Path_String   := Null_Unbounded_String;
       Path_Vector   := Empty_Vector;
@@ -204,9 +205,7 @@ procedure AModPath is
      (Variable : Unbounded_String) return Boolean
    is
       Path_Variable_String : String := To_String (Variable);
-      Separator            : String :=
-        Get_Alternate_Path_Separator
-          (In_Path_Separator, String'(1 => Path_Separator));
+      Separator            : String := To_String (In_Path_Separator);
    begin
       Path_Variable := Variable;
       Path_String   := Null_Unbounded_String;
@@ -314,10 +313,23 @@ procedure AModPath is
 
    function Set_Separators (Separator : Unbounded_String) return Boolean is
    begin
-      In_Path_Separator  := Separator;
-      Out_Path_Separator := Separator;
+      In_Path_Separator      := Separator;
+      Out_Path_Separator     := Separator;
+      Out_Path_Separator_Set := True;
       return True;
    end Set_Separators;
+
+   function Set_Out_Separator (Separator : Unbounded_String) return Boolean is
+   begin
+      Out_Path_Separator     := Separator;
+      Out_Path_Separator_Set := True;
+      return True;
+   end Set_Out_Separator;
+
+   --  The output separator, or Default if -o or -S wasn't given.
+   function Get_Out_Separator (Default : String) return String is
+     (if Out_Path_Separator_Set then To_String (Out_Path_Separator)
+      else Default);
 
    function Make_Absolute (Part : String) return String is
    begin
@@ -459,8 +471,8 @@ procedure AModPath is
          ("Print the path out ""nicely"", one item per line.", 'N', "nice", Set_Nice_Output'Unrestricted_Access),
        Make_Set_Boolean_True_Option
          ("Don't output any warnings, and so don't error on warnings.", 'W', "no-warnings", No_Warnings'Unrestricted_Access),
-       Make_Set_Unbounded_String_Option
-         ("Set the output path separator.", 'o', "outsep", Out_Path_Separator'Unrestricted_Access),
+       Make_Unbounded_String_Option
+         ("Set the output path separator.", 'o', "outsep", Set_Out_Separator'Unrestricted_Access),
        Make_Unbounded_String_Option
          ("Set the value of path to work on.", 'p', "path", Set_Path'Unrestricted_Access),
        Make_Option
@@ -505,9 +517,7 @@ begin
    Parse_Arguments (The_Parser);
 
    declare
-      Separator : String :=
-        Get_Alternate_Path_Separator
-          (Out_Path_Separator, String'((1 => Path_Separator)));
+      Separator : String := Get_Out_Separator (String'(1 => Path_Separator));
    begin
       case Output is
          when Nice =>
@@ -522,8 +532,7 @@ begin
             end;
          when Cmd =>
             declare
-               Separator  : String :=
-                 Get_Alternate_Path_Separator (Out_Path_Separator, ":");
+               Separator  : String := Get_Out_Separator (":");
                Final_Path : String :=
                  "path '" & Join (Path_Vector, Separator) & "'";
             begin

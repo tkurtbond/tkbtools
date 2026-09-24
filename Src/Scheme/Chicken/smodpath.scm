@@ -51,9 +51,25 @@
 (define path-var "PATH")
 (define path "")
 (define path-list '())
+;; Split s at each occurrence of the whole string sep, keeping empty
+;; items, which mean the current directory in PATH.  string-split won't
+;; do: it drops empty items and splits at any one of the characters of
+;; sep.  An empty s is a path with nothing in it, not one empty item,
+;; and an empty sep can't split anything, so s is one item.
+(define (split-path s sep)
+  (cond ((string-null? s) '())
+	((string-null? sep) (list s))
+	(else
+	 (let loop ((start 0) (items '()))
+	   (let ((position (string-contains s sep start)))
+	     (if position
+		 (loop (+ position (string-length sep))
+		       (cons (substring s start position) items))
+		 (reverse (cons (substring s start) items))))))))
+
 (define (set-path newpath)
   (set! path newpath)
-  (set! path-list (string-split newpath in-path-sep)))
+  (set! path-list (split-path newpath in-path-sep)))
 (define (set-path-from-var var)
   (let ((path (get-environment-variable var)))
     (if path
@@ -146,8 +162,10 @@
 
 
 (define (anonymous-arg operand options operands)
-  (let ((operand (if relative-flag 
-		     operand 
+  ;; An empty operand stays empty; made absolute it would be the current
+  ;; directory, which would make --empty the same as --current.
+  (let ((operand (if (or relative-flag (string-null? operand))
+		     operand
 		     (if (absolute-pathname? operand)
 			 operand
 			 (make-absolute-pathname (current-directory)
@@ -260,7 +278,12 @@ replace with a space as well.")
       (format (current-error-port) "Current argv: ~s~%" (argv))))
   (exit 1))
 
-(set-path-from-var path-var)
+;; Only warn if PATH can't be gotten for the default path, since the user
+;; may be about to set another path with --path, --ivar or --var.
+(let ((default-path (get-environment-variable path-var)))
+  (if default-path
+      (set-path default-path)
+      (warn "unable to get value of ~A for default path.~%" path-var)))
 
 ;; out-nice out-simple out-cmd out-csh out-sh out-quiet
 (define output (match (software-type)
