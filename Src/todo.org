@@ -1,1 +1,11 @@
 * TODO Do modpath & smodpath put usage on stdout when --help & stderr otherwise?
+* DONE Make the modpaths agree on empty items, paths and separators
+amodpath, modpath, smodpath and omodpath now all:
+- treat an empty path, or an empty or unset PATH, as having nothing in it;
+- keep empty items in a path;
+- make -E/--empty add an empty item, not the current directory;
+- split at the whole input separator, taken literally;
+- take an empty --insep as splitting nothing, and join with nothing
+  for an empty --outsep;
+- treat a set-but-empty variable for --ivar and --var as an empty path.
+Tested in test/modpath.bats.
