@@ -3,14 +3,15 @@
 EXIT_ON_FAILURE=1
 MODPATH=''
 
-while getopts "aems" opt
+while getopts "aemos" opt
 do
     case "$opt" in
-        (\?) ((errors++)) ;;
-        (a) MODPATH=amodpath ;;
-        (e) EXIT_ON_FAILURE=0 ;;
-        (m) MODPATH=modpath ;;
-        (s) MODPATH=smodpath;;
+        (\?) ((errors++))       ;;
+        (a) MODPATH=amodpath    ;;
+        (e) EXIT_ON_FAILURE=0   ;;
+        (m) MODPATH=modpath     ;;
+        (o) MODPATH=omodpath    ;;
+        (s) MODPATH=smodpath    ;;
     esac
 done
 
