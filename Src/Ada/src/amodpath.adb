@@ -83,6 +83,9 @@ procedure AModPath is
       Num_Parts : Natural  := 0;
       V         : Vector;
    begin
+      if Length (S) = 0 then
+         return V;
+      end if;
       while Start <= Length (S) loop
          Position := Index (S, Pattern, Start);
          exit when Position = 0;

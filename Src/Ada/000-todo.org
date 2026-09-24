@@ -2,7 +2,7 @@
 $ amodpath --exists ''
 
 raised ADA.IO_EXCEPTIONS.NAME_ERROR : invalid path name ""
-* TODO A set-but-empty variable behaves differently from an unset one.
+* DONE A set-but-empty variable behaves differently from an unset one.
 * DONE convert ruler to use unicode box drawing characters
 Actually just made a separate uruler.adb.
 ┌ ─ ┐ ┬  └ ┴ ┘ ┼
