@@ -334,7 +334,7 @@ procedure AModPath is
       Item : String :=
         (if Directories_Are_Relative then Part else Make_Absolute (Part));
    begin
-      if not Exists_Flag or else Ada.Directories.Exists (Item) then
+      if not Exists_Flag or else (Item'Length > 0 and then Ada.Directories.Exists (Item)) then
          case Todo.Mode is
             when After =>
                Add_After (Todo.Part, +Item);

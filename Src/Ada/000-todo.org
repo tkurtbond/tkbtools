@@ -1,4 +1,4 @@
-* TODO -X with an empty name crashes the amodpath
+* DONE -X with an empty name crashes the amodpath
 $ amodpath --exists ''
 
 raised ADA.IO_EXCEPTIONS.NAME_ERROR : invalid path name ""
