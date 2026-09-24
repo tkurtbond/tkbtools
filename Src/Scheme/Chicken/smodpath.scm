@@ -21,6 +21,7 @@
 (import format)
 (import matchable)
 (import (srfi 13))
+(import srfi-37)
 (import (chicken base))
 (import (chicken file))
 (import (chicken pathname))
@@ -194,49 +195,70 @@
 (define (add-empty)
   (ignore (anonymous-arg "" '() '())))
 
+;; Like (args:make-option NAMES #:required DOCSTRING BODY), except that
+;; a missing argument is an error, instead of a message after which the
+;; option is ignored.  PROC is called with the argument.
+(define (required-option names docstring proc)
+  (make-args:option
+   (option (map (lambda (name)
+		  (let ((s (symbol->string name)))
+		    (if (= (string-length s) 1) (string-ref s 0) s)))
+		names)
+	   #t #f
+	   (lambda (opt name arg options operands)
+	     (if arg
+		 (proc arg)
+		 (usage-error "option ~A requires an argument" (dashify name)))
+	     (values options operands)))
+   "ARG" docstring))
+
+;; "-c" for #\c and "--cookie" for "cookie", as args:usage shows them.
+(define (dashify name)
+  (if (char? name) (string #\- name) (string-append "--" name)))
+
 (define +command-line-options+
   (list (args:make-option (A absolute) #:none "Non-absolute names are made absolute using the\n                          current directory."
 	  (set! relative-flag #f))
-        (args:make-option (a after) #:required "add next argument to path after ARG"
-	  (set-add-after-mode arg))
-	(args:make-option (b before) #:required "add next argument to path before ARG"
-	  (set-add-before-mode arg))
+        (required-option '(a after) "add next argument to path after ARG"
+	  (lambda (arg) (set-add-after-mode arg)))
+	(required-option '(b before) "add next argument to path before ARG"
+	  (lambda (arg) (set-add-before-mode arg)))
 	(args:make-option (cmd) #:none "Output NT cmd.exe command to set path"
 	  (set! output 'out-cmd))
 	(args:make-option (h help)      #:none     "Display this text"
-	  (usage))
+	  (usage (current-output-port) 0))
 	(args:make-option (csh) #:none "Output csh command to set the path"
 	  (set! output 'out-csh))
 	(args:make-option (c current) #:none "Add current directory to path"
 	  (add-current))
-	(args:make-option (d delete) #:required "delete all occurances of ARG in path"
-	  (delete-from-path arg))
+	(required-option '(d delete) "delete all occurances of ARG in path"
+	  (lambda (arg) (delete-from-path arg)))
 	(args:make-option (E empty) #:none "Add an empty element to the path"
 	  (add-empty))
 	(args:make-option (e end) #:none "Add next argument to the end of the path"
 	  (set-add-end-mode))
 	(args:make-option (exists) #:none "Add next item only if it exists"
 	  (set! exists-flag #t))
-	(args:make-option (i insep) #:required "Set the input path separator"
-	  (set! in-path-sep arg))
-	(args:make-option (I ivar) #:required "Set the path from environment variable ARG"
-	  (set-path-from-var arg))
+	(required-option '(i insep) "Set the input path separator"
+	  (lambda (arg) (set! in-path-sep arg)))
+	(required-option '(I ivar) "Set the path from environment variable ARG"
+	  (lambda (arg) (set-path-from-var arg)))
         (args:make-option (msys) #:none "Output in msys style"
           (die 1 "--msys not implemented\n"))
-	(args:make-option (n name) #:required "Name of path environment variable for output"
-	  (set! path-var arg))
+	(required-option '(n name) "Name of path environment variable for output"
+	  (lambda (arg) (set! path-var arg)))
 	(args:make-option (nice) #:none "Print the path out \"nicely\", one item per line"
 	  (set! output 'out-nice))
-	(args:make-option (o outsep) #:required "Set the output path separator"
-	  (set! out-path-sep arg))
-	(args:make-option (p path) #:required "Set the path to work on"
-	  (set-path arg))
+	(required-option '(o outsep) "Set the output path separator"
+	  (lambda (arg) (set! out-path-sep arg)))
+	(required-option '(p path) "Set the path to work on"
+	  (lambda (arg) (set-path arg)))
 	(args:make-option (quiet) #:none "Don't print out the path"
 	  (set! output 'out-quiet))
 	(args:make-option (R relative) #:none "Interpret non-absolute paths as relative to\n                          the current directory"
 	  (set! relative-flag #t))
-	(args:make-option (S sep) #:required "Set the input and output path separators"
-	  (set-sep arg))
+	(required-option '(S sep) "Set the input and output path separators"
+	  (lambda (arg) (set-sep arg)))
 	(args:make-option (sh) #:none "Output sh command to set the path"
 	  (set! output 'out-sh))
 	(args:make-option (simple) #:none "Output just the new value"
@@ -245,16 +267,19 @@
 	  (set-add-start-mode))
 	(args:make-option (u unique) #:none "Eliminate duplicate items"
 	  (unique))
-	(args:make-option (v var) #:required "Set the path from the enivornment variable ARG,\n                          and make ARG be the name of the output environment\n                          variable"
-	  (set-path-and-var-from-var arg))
+	(required-option '(v var) "Set the path from the enivornment variable ARG,\n                          and make ARG be the name of the output environment\n                          variable"
+	  (lambda (arg) (set-path-and-var-from-var arg)))
 	(args:make-option (w warnings) #:none "Warn about missing environment variables instead of\n                          exiting with an error"
 	  (set! warn-flag #t))
 	(args:make-option (V version) #:none "Print version info and exit"
 	  (print-version))))
 
 
-(define (usage)
-  (with-output-to-port (current-error-port)
+;; Print the usage message on PORT and exit with STATUS: on standard
+;; output with 0 for --help, and on standard error with 1 for a mistake
+;; on the command line.
+(define (usage port status)
+  (with-output-to-port port
     (lambda ()
       (print "Usage: " (program-name) " [[option...] [item...]]...")
       (newline)
@@ -274,9 +299,14 @@ Note that long option names beflow show the argument separated from the
 long option name by a an equals sign (\"=\").  The equals signs can be
 replace with a space as well.")
       (newline)
-      (print (args:usage +command-line-options+))
-      (format (current-error-port) "Current argv: ~s~%" (argv))))
-  (exit 1))
+      (print (args:usage +command-line-options+))))
+  (exit status))
+
+(define (usage-error . args)
+  (format (current-error-port) "~A: " (program-name))
+  (apply format (current-error-port) args)
+  (newline (current-error-port))
+  (usage (current-error-port) 1))
 
 ;; Only warn if PATH can't be gotten for the default path, since the user
 ;; may be about to set another path with --path, --ivar or --var.
@@ -294,7 +324,10 @@ replace with a space as well.")
   (receive (options operands)
       (args:parse (command-line-arguments)
 		  +command-line-options+
-		  operand-proc: anonymous-arg)
+		  operand-proc: anonymous-arg
+		  unrecognized-proc:
+		  (lambda (opt name arg options operands)
+		    (usage-error "unrecognized option: ~A" (dashify name))))
     (set! path (string-append "'" (string-intersperse path-list out-path-sep) 
 			      "'"))
     (match output 

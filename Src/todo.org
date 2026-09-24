@@ -1,4 +1,7 @@
-* TODO Do modpath & smodpath put usage on stdout when --help & stderr otherwise?
+* DONE Do modpath & smodpath put usage on stdout when --help & stderr otherwise?
+modpath did.  smodpath now does too: --help and -h print the usage on
+stdout and exit 0, and an unknown option or a missing option argument
+prints an error and the usage on stderr and exits 1.  (modpath exits 2.)
 * DONE Make the modpaths agree on empty items, paths and separators
 amodpath, modpath, smodpath and omodpath now all:
 - treat an empty path, or an empty or unset PATH, as having nothing in it;
