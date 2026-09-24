@@ -10,13 +10,13 @@ do
         (a) MODPATH=amodpath    ;;
         (e) EXIT_ON_FAILURE=0   ;;
         (m) MODPATH=modpath     ;;
-        (o) MODPATH=omodpath    ;;
+        (o) MODPATH=OModPath    ;;
         (s) MODPATH=smodpath    ;;
     esac
 done
 
 
-for i in Src/modpath Src/Scheme/Chicken/build/smodpath Src/Ada/bin/amodpath
+for i in Src/modpath Src/Scheme/Chicken/build/smodpath Src/Ada/development/bin/amodpath ~/Repos/Oberon/oberon-tools/OModPath
 do
     if [[ -n $MODPATH ]] && ! [[ $i =~ .*/$MODPATH ]]; then
         echo skipping variant $i
