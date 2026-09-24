@@ -101,7 +101,7 @@ let set_path_from_var var =
     if !warn_flag then 
       set_path ""
     else
-      exit 3
+      exit 1
 
 (* Set path and then set path_list from path, given the name of an environment
    variable.  It is a fatal error for the user to specify a non-existant
@@ -118,7 +118,7 @@ let set_path_and_var_from_var var =
     if !warn_flag then 
       set_path ""
     else
-      exit 3
+      exit 1
 
 
 (* Warn if there's a mode that hasn't been taken care of yet.  *)

@@ -412,6 +412,7 @@ export PATH"
         unset VAR_DOES_NOT_EXIST
         run $MODPATH --ivar VAR_DOES_NOT_EXIST
         assert_output "$MODPATH: error: unable to get path from environment variable VAR_DOES_NOT_EXIST"
+        assert_failure 1
     )
 }
 
@@ -420,6 +421,7 @@ export PATH"
         unset VAR_DOES_NOT_EXIST
         run $MODPATH -I VAR_DOES_NOT_EXIST
         assert_output "$MODPATH: error: unable to get path from environment variable VAR_DOES_NOT_EXIST"
+        assert_failure 1
     )
 }
 
@@ -594,6 +596,7 @@ export VAR"
         unset VAR_DOES_NOT_EXIST
         run $MODPATH --var VAR_DOES_NOT_EXIST
         assert_output "$MODPATH: error: unable to get path from environment variable VAR_DOES_NOT_EXIST"
+        assert_failure 1
     )
 }
 
@@ -602,6 +605,7 @@ export VAR"
         unset VAR_DOES_NOT_EXIST
         run $MODPATH -v VAR_DOES_NOT_EXIST
         assert_output "$MODPATH: error: unable to get path from environment variable VAR_DOES_NOT_EXIST"
+        assert_failure 1
     )
 }
 
@@ -633,3 +637,36 @@ export XXX"
 }
 
 # -V/--version don't don't give the same answers right now, so don't test them.
+
+# Exit statuses: 0 for success, --help and --version, 2 for a mistake on
+# the command line, and 1 for other errors.  The messages differ, so
+# only the statuses are checked.
+@test "Help exit status" {
+    run $MODPATH --help
+    assert_success
+}
+
+@test "Version exit status" {
+    run $MODPATH --version
+    assert_success
+}
+
+@test "Long unknown option exit status" {
+    run $MODPATH --no-such-option
+    assert_failure 2
+}
+
+@test "Short unknown option exit status" {
+    run $MODPATH -Z
+    assert_failure 2
+}
+
+@test "Long missing argument exit status" {
+    run $MODPATH --delete
+    assert_failure 2
+}
+
+@test "Short missing argument exit status" {
+    run $MODPATH -d
+    assert_failure 2
+}

@@ -32,9 +32,9 @@
 
 (import tkurtbond)
 
-(define (print-version)         ; Not a fatal error, so don't use die.
-  (format (current-error-port) "version 1.1 2019-11-01~%")
-  (exit 1))
+(define (print-version)
+  (format #t "version 1.1 2019-11-01~%")
+  (exit 0))
 
 (define exists-flag #f)
 (define relative-flag #f)
@@ -79,7 +79,7 @@
 	    (begin 
 	      (warn "unable to get path from environment variable ~A~%" var)
 	      (set-path ""))
-	    (die 3 "error: unable to get path from environment variable ~A~%" var)))))
+	    (die 1 "error: unable to get path from environment variable ~A~%" var)))))
 (define (set-path-and-var-from-var var)
   (set! path-var var)
   (set-path-from-var var))
@@ -276,8 +276,8 @@
 
 
 ;; Print the usage message on PORT and exit with STATUS: on standard
-;; output with 0 for --help, and on standard error with 1 for a mistake
-;; on the command line.
+;; output with 0 for --help, and on standard error with 2 for a mistake
+;; on the command line.  (Other errors exit with 1.)
 (define (usage port status)
   (with-output-to-port port
     (lambda ()
@@ -306,7 +306,7 @@ replace with a space as well.")
   (format (current-error-port) "~A: " (program-name))
   (apply format (current-error-port) args)
   (newline (current-error-port))
-  (usage (current-error-port) 1))
+  (usage (current-error-port) 2))
 
 ;; Only warn if PATH can't be gotten for the default path, since the user
 ;; may be about to set another path with --path, --ivar or --var.

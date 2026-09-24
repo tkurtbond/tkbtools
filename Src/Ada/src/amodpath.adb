@@ -559,4 +559,12 @@ begin
             null;
       end case;
    end;
+exception
+   --  Help has printed the usage.
+   when Exit_Program =>
+      Set_Exit_Status (Success);
+   --  Parse_Arguments has printed the error and the usage.
+   when Unknown_Option | Unknown_Argument | Argument_Required
+      | Invalid_Option_Argument =>
+      Set_Exit_Status (2);
 end AModPath;
