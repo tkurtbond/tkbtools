@@ -78,6 +78,7 @@ SCRIPTS= \
 	ebook \
 	embed-fonts \
 	endsound \
+	etags-oberon \
 	export-tools \
 	fg-backup-campaigns \
 	filedate \
