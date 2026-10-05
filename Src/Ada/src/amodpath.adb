@@ -448,9 +448,9 @@ procedure AModPath is
        Make_Option
          ("Add current directory to path.", 'c', "current", Add_Current'Unrestricted_Access),
        Make_Unbounded_String_Option
-         ("Delete all occurances of ARG in path.", 'd', "delete", Delete_Item'Unrestricted_Access),
+         ("Delete all occurrences of ARG in path.", 'd', "delete", Delete_Item'Unrestricted_Access),
        Make_Option
-         ("An an empty element to the path", 'E', "empty", Add_Empty'Unrestricted_Access),
+         ("Add an empty element to the path", 'E', "empty", Add_Empty'Unrestricted_Access),
        Make_Option
          ("Add next argument to the end of the path", 'e', "end", Set_Add_End'Unrestricted_Access),
        Make_Set_Boolean_True_Option
@@ -489,7 +489,7 @@ procedure AModPath is
        Make_Option
          ("Add the next argument to the start of the path", 's', "start", Set_Add_Start'Unrestricted_Access),
        Make_Option
-         ("Elimanate duplicate items AT THIS POINT IN PROCESSING", 'u', "unique", Unique'Unrestricted_Access),
+         ("Eliminate duplicate items AT THIS POINT IN PROCESSING", 'u', "unique", Unique'Unrestricted_Access),
        Make_Unbounded_String_Option
          ("Set the path from the environment variable ARG, and make ARG be the name of the output environment variable.",
           'v', "var", Set_Path_And_Variable_From_Variable'Unrestricted_Access),
