@@ -28,6 +28,7 @@ REPOS=(
     60 y ~/Repos/Oberon/Ropes                                git@github.com:tkurtbond/oberon-ropes.git
     60 y ~/Repos/Oberon/olibfyaml                            git@github.com:tkurtbond/oblifyaml.git
     60 y ~/Repos/Oberon/polibfyaml                           git@github.com:tkurtbond/polibfyaml.git
+    50 y ~/Repos/Oberon/ofltk                                git@github.com:tkurtbond/ofltk.git
     60 y ~/Repos/Ada/ncurses_howto_in_ada                    git@github.com:tkurtbond/ncurses_howto_in_ada.git
     60 y ~/Repos/a68-experiments                             git@github.com:tkurtbond/a68-experiments.git
     50 y ~/Repos/Oberon/Peaseblossom                         git@github.com:tkurtbond/peaseblossom.git
