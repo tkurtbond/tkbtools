@@ -12,7 +12,7 @@ REPOS=(
     94 y ~/lib/emacs/arrows                                  git@github.com:tkurtbond/arrow-macros-for-emacs.git
     93 y ~/lib/emacs/old-ada-mode                            git@github.com:tkurtbond/old-ada-mode.git
     92 y ~/Repos/Ada/arg_parser                              git@github.com:tkurtbond/arg_parser.git
-    91 y ~/Repos/Ada/alibfyaml                                  git@github.com:tkurtbond/alibfyaml.git
+    91 y ~/Repos/Ada/alibfyaml                               git@github.com:tkurtbond/alibfyaml.git
     90 y ~/comp/tkbtools                                     git@github.com:tkurtbond/tkbtools.git
     80 y ~/Repos/tkb-notes                                   git@gitlab.com:t-kurt-bond/tkb-notes.git
     75 y ~/Notes                                             git@github.com:tkurtbond/general-notes.git
@@ -28,7 +28,7 @@ REPOS=(
     60 y ~/Repos/Oberon/Ropes                                git@github.com:tkurtbond/oberon-ropes.git
     60 y ~/Repos/Oberon/olibfyaml                            git@github.com:tkurtbond/oblifyaml.git
     60 y ~/Repos/Oberon/polibfyaml                           git@github.com:tkurtbond/polibfyaml.git
-    50 y ~/Repos/Oberon/ofltk                                git@github.com:tkurtbond/ofltk.git
+    50 y ~/Repos/Oberon/pofltk                               git@github.com:tkurtbond/pofltk.git
     60 y ~/Repos/Ada/ncurses_howto_in_ada                    git@github.com:tkurtbond/ncurses_howto_in_ada.git
     60 y ~/Repos/a68-experiments                             git@github.com:tkurtbond/a68-experiments.git
     50 y ~/Repos/Oberon/Peaseblossom                         git@github.com:tkurtbond/peaseblossom.git
