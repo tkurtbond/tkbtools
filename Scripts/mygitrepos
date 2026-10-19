@@ -71,6 +71,7 @@ REPOS=(
     42 y ~/Repos/tkbvmslib                                   git@github.com:tkurtbond/tkbvmslib.git
     40 y ~/Repos/VTIL-pictures                               git@github.com:tkurtbond/VTIL-pictures.git
     40 y ~/Repos/VTIL                                        git@github.com:tkurtbond/VTIL.git
+    40 y ~/Repos/vforth                                      git@github.com:tkurtbond/vforth.git
     38 y ~/Repos/pstk-tutorial                               git@github.com:tkurtbond/pstk-tutorial.git
     30 y ~/current/RPG/Campaigns/Alusia/Partyhist-xml        git@github.com:tkurtbond/partyhist.git
     20 y ~/job/MPL/Processes                                 git@github.com:tkurtbond/MPL-processes.git 
