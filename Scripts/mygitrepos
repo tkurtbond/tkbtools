@@ -33,6 +33,7 @@ REPOS=(
     60 y ~/Repos/a68-experiments                             git@github.com:tkurtbond/a68-experiments.git
     50 y ~/Repos/Oberon/Peaseblossom                         git@github.com:tkurtbond/peaseblossom.git
     50 y ~/Repos/Oberon/oPOISE-DMS                           git@github.com:tkurtbond/oPOISE-DMS.git
+    50 y ~/Repos/Oberon/odmsfields                           git@github.com:tkurtbond/odmsfields.git
     50 y ~/Repos/Oberon/opp                                  git@github.com:tkurtbond/opp.git
     50 y ~/Repos/Oberon/vishap-bugs/                         git@github.com:tkurtbond/vishap-bugs.git
     50 y ~/Repos/Oberon/oberon-tools                         git@github.com:tkurtbond/oberon-tools.git
