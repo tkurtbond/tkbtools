@@ -35,6 +35,7 @@ REPOS=(
     50 y ~/Repos/Oberon/oPOISE-DMS                           git@github.com:tkurtbond/oPOISE-DMS.git
     50 y ~/Repos/Oberon/odmsfields                           git@github.com:tkurtbond/odmsfields.git
     50 y ~/Repos/Oberon/opp                                  git@github.com:tkurtbond/opp.git
+    50 y ~/Repos/Oberon/poDB                                 git@github.com:tkurtbond/poDB.git
     50 y ~/Repos/Oberon/vishap-bugs/                         git@github.com:tkurtbond/vishap-bugs.git
     50 y ~/Repos/Oberon/oberon-tools                         git@github.com:tkurtbond/oberon-tools.git
     50 y ~/Repos/Scheme/Chicken/5/slibfyaml                  git@github.com:tkurtbond/slibfyaml.git
