@@ -9,6 +9,7 @@ REP_OFF=3                       # Repository
 NUMCOLUMNS=4
 REPOS=(
     95 y ~/lib/emacs/emacs-config                            git@github.com:tkurtbond/emacs-config.git
+    94 y ~/Repos/Emacs/oberon-mode-tweaks                    git@github.com:tkurtbond/oberon-mode-tweaks.git
     94 y ~/lib/emacs/arrows                                  git@github.com:tkurtbond/arrow-macros-for-emacs.git
     93 y ~/lib/emacs/old-ada-mode                            git@github.com:tkurtbond/old-ada-mode.git
     92 y ~/Repos/Ada/arg_parser                              git@github.com:tkurtbond/arg_parser.git
@@ -24,16 +25,17 @@ REPOS=(
     60 y ~/Repos/Ada/ada-experiments                         git@github.com:tkurtbond/ada-experiments.git
     60 y ~/Repos/Ada/questions-with-claude/                  git@github.com:tkurtbond/questions-with-claude.git
     60 y ~/Repos/Ada/Ropes                                   git@github.com:tkurtbond/ada-ropes.git
-    60 y ~/Repos/Oberon/ArgParser                            git@github.com:tkurtbond/oberon-argparser.git
-    60 y ~/Repos/Oberon/Ropes                                git@github.com:tkurtbond/oberon-ropes.git
-    60 y ~/Repos/Oberon/olibfyaml                            git@github.com:tkurtbond/oblifyaml.git
-    60 y ~/Repos/Oberon/polibfyaml                           git@github.com:tkurtbond/polibfyaml.git
-    50 y ~/Repos/Oberon/pofltk                               git@github.com:tkurtbond/pofltk.git
     60 y ~/Repos/Ada/ncurses_howto_in_ada                    git@github.com:tkurtbond/ncurses_howto_in_ada.git
     60 y ~/Repos/a68-experiments                             git@github.com:tkurtbond/a68-experiments.git
-    50 y ~/Repos/Oberon/Peaseblossom                         git@github.com:tkurtbond/peaseblossom.git
-    50 y ~/Repos/Oberon/oPOISE-DMS                           git@github.com:tkurtbond/oPOISE-DMS.git
+    55 y ~/Repos/Oberon/Peaseblossom                         git@github.com:tkurtbond/peaseblossom.git
+    50 y ~/Repos/Oberon/ArgParser                            git@github.com:tkurtbond/oberon-argparser.git
+    50 y ~/Repos/Oberon/Ropes                                git@github.com:tkurtbond/oberon-ropes.git
+    50 y ~/Repos/Oberon/olibfyaml                            git@github.com:tkurtbond/oblifyaml.git
+    50 y ~/Repos/Oberon/polibfyaml                           git@github.com:tkurtbond/polibfyaml.git
+    50 y ~/Repos/Oberon/pofltk                               git@github.com:tkurtbond/pofltk.git
+    50 y ~/Repos/Oberon/poPOISE-DMS                          git@github.com:tkurtbond/poPOISE-DMS.git
     50 y ~/Repos/Oberon/odmsfields                           git@github.com:tkurtbond/odmsfields.git
+    50 y ~/Repos/Oberon/poDateTime                           git@github.com:tkurtbond/poDateTime.git
     50 y ~/Repos/Oberon/opp                                  git@github.com:tkurtbond/opp.git
     50 y ~/Repos/Oberon/poDB                                 git@github.com:tkurtbond/poDB.git
     50 y ~/Repos/Oberon/vishap-bugs/                         git@github.com:tkurtbond/vishap-bugs.git
