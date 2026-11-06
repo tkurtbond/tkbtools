@@ -52,6 +52,7 @@ REPOS=(
     55 y ~/Repos/RPG/Tools/obesm2_fmt                        git@github.com:tkurtbond/obesm2_fmt.git
     55 y ~/Repos/RPG/Tools/obesm2_fmt2                       git@github.com:tkurtbond/obesm2_fmt2.git
     55 y ~/Repos/RPG/Tools/pobesm2_fmt2                      git@github.com:tkurtbond/pobesm2_fmt2.git
+    55 y ~/Repos/RPG/Tools/besm2_cg_po                       git@github.com:tkurtbond/besm2_cg_po.git
     55 y ~/Repos/RPG/Tools/ova_fmt                           git@github.com:tkurtbond/ova_fmt.git
     55 y ~/Repos/RPG/Tools/ova_cg_go                         git@github.com:tkurtbond/ova_cg_go.git
     55 y ~/Repos/RPG/Tools/ova_cg_po                         git@github.com:tkurtbond/ova_cg_po.git
