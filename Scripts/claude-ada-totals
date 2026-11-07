@@ -1,0 +1,14 @@
+#! /usr/bin/env bash
+total=$(scc --format json \
+            ~/Repos/Ada/alibfyaml ~/Repos/Ada/Ropes /usr/local/sw/src/tkb/fltkada \
+            | jq '[.[].Code] | add')
+oldfltkada=$(scc --format json \
+                 /usr/local/sw/src/lang/Ada/fltkada-upstream/ \
+                 | jq '[.[].Code] | add')
+
+echo total: $total
+echo oldfltada: $oldfltkada
+echo
+cat | bc <<EOF
+$total - $oldfltkada
+EOF
