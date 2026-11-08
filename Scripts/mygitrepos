@@ -57,6 +57,7 @@ REPOS=(
     55 y ~/Repos/RPG/Tools/ova_cg_go                         git@github.com:tkurtbond/ova_cg_go.git
     55 y ~/Repos/RPG/Tools/ova_cg_po                         git@github.com:tkurtbond/ova_cg_po.git
     55 y ~/Repos/RPG/Tools/ova_cg_ada                        git@github.com:tkurtbond/ova_cg_ada.git
+    55 y ~/Repos/RPG/Tools/ova_cg_web                        git@github.com:tkurtbond/ova_cg_web.git
     55 y ~/Repos/RPG/Tools/ova_fmt_po                        git@github.com:tkurtbond/ova_fmt_po.git
     55 y ~/Repos/RPG/Tools/Cepheus-Universal                 git@github.com:tkurtbond/cepheus-universal-tools.git
     55 y ~/Repos/RPG/hex-describe-tft                        git@github.com:tkurtbond/hex-describe-tft.git
