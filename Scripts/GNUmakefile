@@ -50,6 +50,7 @@ $(BINDIR)/% : Linux/%
 SCRIPTS= \
 	accumulate \
 	apply-to \
+	atla-VMs \
 	blank-swayidle \
 	bldmyblog \
 	blogbot \
