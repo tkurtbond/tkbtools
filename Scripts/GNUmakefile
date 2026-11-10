@@ -211,6 +211,7 @@ SCRIPTS= \
 	tkb-sync \
 	tkbgprinstall \
 	tkbput.sh \
+	totext \
 	touch-stuff \
 	troff-depends \
 	uhome \
