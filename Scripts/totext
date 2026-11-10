@@ -1,0 +1,15 @@
+#! /usr/bin/env bash
+
+[[ -n "$1" ]] || { echo 1>&2 "$0: At least one file to process must be specified!"; exit 1; }
+
+for fn in "$@"
+do
+    dn=$(dirname $fn)
+    bn=$(basename $fn .pdf)
+    layout=$dn/$bn-layout.text
+    nolayout=$dn/$bn-nolayout.text
+    echo "layout:   $layout"
+    pdftotext -layout $fn $layout
+    echo "nolayout: $nolayout"
+    pdftotext $fn $nolayout
+done
