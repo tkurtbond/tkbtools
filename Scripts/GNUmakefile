@@ -153,6 +153,7 @@ SCRIPTS= \
 	osinfo \
 	pbook \
 	pddigest \
+	pinentry-auto \
 	prefix \
 	print_vars.sh \
 	printduplex-landscape-longedge \
