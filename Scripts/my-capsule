@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
 
 # Then point a Gemini client at gemini://localhost/
+# Add -listen localhost
 pogemini -host localhost -root ~/Repos/microblog/gmi -port 1965
