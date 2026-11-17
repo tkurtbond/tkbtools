@@ -89,6 +89,8 @@ REPOS=(
     40 y ~/Repos/vforth                                      git@github.com:tkurtbond/vforth.git
     38 y ~/Repos/pstk-tutorial                               git@github.com:tkurtbond/pstk-tutorial.git
     30 y ~/current/RPG/Campaigns/Alusia/Partyhist-xml        git@github.com:tkurtbond/partyhist.git
+    25 y /usr/local/sw/src/tkb/cm3                           git@github.com:tkurtbond/cm3.git
+    25 y /usr/local/sw/src/tkb/oo2c                          git@github.com:tkurtbond/oo2c.git
     20 y ~/job/MPL/Processes                                 git@github.com:tkurtbond/MPL-processes.git 
     20 y ~/job/MPL/MHST/sis-export                           git@github.com:tkurtbond/sis-export.git
     20 y ~/job/MPL/MHST/dmstosqldb                           git@github.com:tkurtbond/dmstosqldb.git
