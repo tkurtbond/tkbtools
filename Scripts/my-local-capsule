@@ -3,4 +3,4 @@
 # Then point a Gemini client at gemini://localhost/
 # Add -listen localhost
 # Add -listings for directory listings
-pogemini -host localhost -root ~/Repos/microblog/gmi -port 1965 -listings
+pogemini -host localhost -listen localhost -root ~/Repos/microblog/gmi -port 1965

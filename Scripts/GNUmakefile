@@ -137,6 +137,7 @@ SCRIPTS= \
 	mplnas-vaxtapes \
 	mrp \
 	music-report \
+	my-local-capsule \
 	mygitrepos \
 	mzr \
 	nikola-categories \
@@ -227,6 +228,7 @@ SCRIPTS= \
 	usatime \
 	uwork \
 	vms-size \
+	vtape-check \
 	waybell \
 	winbox-in-wine \
 	worldographer \
