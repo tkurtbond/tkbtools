@@ -182,6 +182,7 @@ SCRIPTS= \
 	run-rmc-era \
 	run-spotify \
 	run-ytdn \
+	save-consp-capsule \
 	scream \
 	search-sway-workspaces \
 	setup-gerbil \

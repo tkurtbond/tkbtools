@@ -1,0 +1,8 @@
+#! /usr/bin/env bash
+
+# Don't use bzip2: the large files are images, which are already compressed.
+#CAPSULEFILE=consp.org-capsule-$(date '+%Y-%m-%d').tar.bz2 
+CAPSULEFILE=consp.org-capsule-$(date '+%Y-%m-%d').tar.gz
+
+ssh germinal@consp.org "tar -czf ~/$CAPSULEFILE consp.org" &&
+    scp germinal@consp.org:$CAPSULEFILE ~/current/consp.org/
