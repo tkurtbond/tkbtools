@@ -37,6 +37,7 @@ REPOS=(
     50 y ~/Repos/Oberon/poDMSFIELDS                          git@github.com:tkurtbond/poDMSFIELDS.git
     50 y ~/Repos/Oberon/poDateTime                           git@github.com:tkurtbond/poDateTime.git
     50 y ~/Repos/Oberon/opp                                  git@github.com:tkurtbond/opp.git
+    50 y ~/Repos/Oberon/podoc                                git@github.com:tkurtbond/podoc.git
     50 y ~/Repos/Oberon/poDB                                 git@github.com:tkurtbond/poDB.git
     50 y ~/Repos/Oberon/posockets                            git@github.com:tkurtbond/posockets.git
     50 y ~/Repos/Oberon/polibtls                             git@github.com:tkurtbond/polibtls.git
