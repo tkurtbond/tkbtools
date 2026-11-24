@@ -41,6 +41,8 @@ REPOS=(
     50 y ~/Repos/Oberon/poDB                                 git@github.com:tkurtbond/poDB.git
     50 y ~/Repos/Oberon/posockets                            git@github.com:tkurtbond/posockets.git
     50 y ~/Repos/Oberon/polibtls                             git@github.com:tkurtbond/polibtls.git
+    50 y ~/Repos/Oberon/polibz                               git@github.com:tkurtbond/polibz.git
+    50 y ~/Repos/Oberon/pomermaid                            git@github.com:tkurtbond/pomermaid.git
     50 y ~/Repos/Oberon/pogemini                             git@github.com:tkurtbond/pogemini.git
     50 y ~/Repos/Oberon/pogeminilib                          git@github.com:tkurtbond/pogeminilib.git
     50 y ~/Repos/Oberon/pounix                               git@github.com:tkurtbond/pounix.git
