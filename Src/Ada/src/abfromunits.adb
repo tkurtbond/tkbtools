@@ -188,13 +188,13 @@ procedure ABFromUnits is
       Make_Set_Unbounded_String_Option
         ("Set the units to use.", 'u', "units", Units'Unrestricted_access));
 
-   AP : Argument_Parser :=
-     Make_Argument_Parser ("afromunits [options] [argument ...]", Process_Argument'Unrestricted_Access,
+   The_Parser : Parser :=
+     Make_Parser ("afromunits [options] [argument ...]", Process_Argument'Unrestricted_Access,
                            Options'Unrestricted_Access);
    function Print_Usage return Boolean is
       Default : String := (if Use_SI_Default then "SI" else "binary");
    begin
-      Usage (AP);
+      Usage (The_Parser);
       New_Line;
       Put_Line ("This program defaults to using the " & Default'Image & " prefixes for units.");
       raise Exit_Program;
@@ -202,7 +202,7 @@ procedure ABFromUnits is
    end Print_Usage;
 
 begin
-   Parse_Arguments (AP);
+   Parse_Arguments (The_Parser);
 
    if Arguments_Seen < 1 then
       Process_Standard_Input;

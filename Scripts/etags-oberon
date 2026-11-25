@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# etags-oberon.sh -- Build an Emacs TAGS file for Oberon-2 sources.
+#
+# Usage: etags-oberon.sh [-o TAGFILE] [FILE-OR-DIR ...]
+#
+# With no FILE-OR-DIR arguments, searches the current directory.
+# Directories are searched recursively for *.Mod, *.mod, *.ob2, and *.Ob2.
+# The TAGS file is written to ./TAGS unless -o is given.
+#
+# Tags are made for:
+#   MODULE Name;
+#   PROCEDURE Name ...             (ordinary procedures, exported or not)
+#   PROCEDURE (r: T) Name ...      (type-bound procedures)
+#   PROCEDURE- / PROCEDURE* Name   (voc code procedures, interrupt handlers)
+#   Name = ...                     (TYPE and CONST declarations)
+# Forward declarations (PROCEDURE ^Name) are skipped so that M-. goes to
+# the real definition.
+
+set -euo pipefail
+
+tagfile=TAGS
+while getopts ':o:h' opt; do
+    case $opt in
+        o) tagfile=$OPTARG ;;
+        h) sed -n '2,/^$/s/^# \{0,1\}//p' "$0"; exit 0 ;;
+        *) echo "usage: $0 [-o TAGFILE] [FILE-OR-DIR ...]" >&2; exit 2 ;;
+    esac
+done
+shift $((OPTIND - 1))
+(($# > 0)) || set -- .
+
+ident='[A-Za-z][A-Za-z0-9_]*'
+
+find "$@" -path '*/.git' -prune -o -type f \
+     \( -name '*.Mod' -o -name '*.mod' -o -name '*.ob2' -o -name '*.Ob2' \) \
+     -print |
+    etags -o "$tagfile" --language=none \
+          --regex="/[ \t]*MODULE[ \t]+\($ident\)/\1/" \
+          --regex="/[ \t]*PROCEDURE[ \t*-]*\(([^)]*)[ \t]*\)?\($ident\)/\2/" \
+          --regex="/[ \t]*\(TYPE[ \t]+\|CONST[ \t]+\)?\($ident\)[ \t]*[*-]?[ \t]*=[^=]/\2/" \
+          -

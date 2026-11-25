@@ -4,6 +4,9 @@ setup() {
     load 'test_helper/bats-assert/load'
 }
 
+# For run --separate-stderr.
+bats_require_minimum_version 1.5.0
+
 @test "Modpath exists" {
     $MODPATH
 }
@@ -209,6 +212,18 @@ current_after () (
     assert_output "'a:b::c'"
 }
 
+# An empty item isn't made absolute, which would make it the current
+# directory.
+@test "Long Empty not relative" {
+    run $MODPATH --simple --path a:b:c --empty
+    assert_output "'a:b:c:'"
+}
+
+@test "Short Empty not relative" {
+    run $MODPATH --simple --path a:b:c -E
+    assert_output "'a:b:c:'"
+}
+
 @test "Long end" {
     run $MODPATH --simple --relative --path a:b:c --end x
     assert_output "'a:b:c:x'"
@@ -329,9 +344,43 @@ exists_actually_exists_absolute () (
     )
 }
 
+@test "Exists Empty" {
+    run $MODPATH --simple --path a:b:c --exists --empty
+    assert_output "$MODPATH: warning: pathname does not exist: 
+'a:b:c'"
+}
+
 @test "Input Separator" {
     run $MODPATH --simple --relative --insep ';' --path 'a;b;c'
     assert_output "'a:b:c'"
+}
+
+@test "Input Separator multiple characters" {
+    run $MODPATH --nice --relative --insep '::' --path 'a::b:c'
+    assert_output "a
+b:c"
+}
+
+@test "Input Separator is not a regexp" {
+    run $MODPATH --nice --relative --insep '.' --path 'a.b'
+    assert_output "a
+b"
+}
+
+# An empty input separator splits nothing, so the path is one item.
+@test "Input Separator empty" {
+    run $MODPATH --simple --relative --insep '' --path a:b --delete a:b x
+    assert_output "'x'"
+}
+
+@test "Output Separator empty" {
+    run $MODPATH --simple --relative --outsep '' --path a:b:c
+    assert_output "'abc'"
+}
+
+@test "Separator empty" {
+    run $MODPATH --simple --relative --sep '' --path a:b x
+    assert_output "'a:bx'"
 }
 
 #@test "msys" {
@@ -363,6 +412,7 @@ export PATH"
         unset VAR_DOES_NOT_EXIST
         run $MODPATH --ivar VAR_DOES_NOT_EXIST
         assert_output "$MODPATH: error: unable to get path from environment variable VAR_DOES_NOT_EXIST"
+        assert_failure 1
     )
 }
 
@@ -371,6 +421,7 @@ export PATH"
         unset VAR_DOES_NOT_EXIST
         run $MODPATH -I VAR_DOES_NOT_EXIST
         assert_output "$MODPATH: error: unable to get path from environment variable VAR_DOES_NOT_EXIST"
+        assert_failure 1
     )
 }
 
@@ -392,6 +443,11 @@ export PATH"
 PATH=''
 export PATH"
     )
+}
+
+@test "ivar empty" {
+    run env XXX= $MODPATH --simple --relative --ivar XXX x
+    assert_output "'x'"
 }
 
 @test "Long name" {
@@ -433,6 +489,30 @@ export PATH"
 @test "Short Path" {
     run $MODPATH --simple --relative -p a:b:c
     assert_output "'a:b:c'"
+}
+
+# An empty path has nothing in it, not one empty item.
+@test "Path empty" {
+    run $MODPATH --simple --relative --path '' x
+    assert_output "'x'"
+}
+
+@test "Path with empty items" {
+    run $MODPATH --simple --relative --path :a::b: x
+    assert_output "':a::b::x'"
+}
+
+@test "PATH empty" {
+    run env PATH= $MODPATH --simple --relative x
+    assert_output "'x'"
+}
+
+# Only some versions warn when PATH is unset, so only standard output is
+# checked.
+@test "PATH unset" {
+    run --separate-stderr env -u PATH $MODPATH --simple --relative x
+    assert_success
+    assert_output "'x'"
 }
 
 @test "Quiet" {
@@ -516,6 +596,7 @@ export VAR"
         unset VAR_DOES_NOT_EXIST
         run $MODPATH --var VAR_DOES_NOT_EXIST
         assert_output "$MODPATH: error: unable to get path from environment variable VAR_DOES_NOT_EXIST"
+        assert_failure 1
     )
 }
 
@@ -524,6 +605,7 @@ export VAR"
         unset VAR_DOES_NOT_EXIST
         run $MODPATH -v VAR_DOES_NOT_EXIST
         assert_output "$MODPATH: error: unable to get path from environment variable VAR_DOES_NOT_EXIST"
+        assert_failure 1
     )
 }
 
@@ -548,4 +630,43 @@ export VAR_DOES_NOT_EXIST"
     )
 }
 
+@test "var empty" {
+    run env XXX= $MODPATH --relative --var XXX x
+    assert_output "XXX='x'
+export XXX"
+}
+
 # -V/--version don't don't give the same answers right now, so don't test them.
+
+# Exit statuses: 0 for success, --help and --version, 2 for a mistake on
+# the command line, and 1 for other errors.  The messages differ, so
+# only the statuses are checked.
+@test "Help exit status" {
+    run $MODPATH --help
+    assert_success
+}
+
+@test "Version exit status" {
+    run $MODPATH --version
+    assert_success
+}
+
+@test "Long unknown option exit status" {
+    run $MODPATH --no-such-option
+    assert_failure 2
+}
+
+@test "Short unknown option exit status" {
+    run $MODPATH -Z
+    assert_failure 2
+}
+
+@test "Long missing argument exit status" {
+    run $MODPATH --delete
+    assert_failure 2
+}
+
+@test "Short missing argument exit status" {
+    run $MODPATH -d
+    assert_failure 2
+}

@@ -1,0 +1,10 @@
+#! /usr/bin/env bash
+
+[[ -d "$1" ]] || {
+    echo "$1 is not a directory; exiting."
+    exit 1
+}
+
+setfacl -R -m u:tkb:rX "$1"
+setfacl -R -d -m u:tkb:rX "$1"
+getfacl "$1"

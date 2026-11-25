@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+#
+# vtape-check
+# Verify a compressed VAX virtual-tape image against its SHA-512 checksum.
+#
+# Usage: vtape-check PATH/NAME.vtape [...]
+#
+# For each NAME.vtape given:
+#   - finds the compressed file NAME.vtape.xz (or .bz2 / .gz)
+#   - finds the checksum file NAME.vtape.sha512sum* (e.g. .sha512sum.WinSvr2008-VAX),
+#     which holds the SHA-512 of the UNCOMPRESSED image
+#   - decompresses to NAME.vtape, leaving the compressed file untouched
+#   - checks the SHA-512 and announces PASS or FAIL
+#   - on PASS deletes NAME.vtape; on FAIL keeps it for inspection
+#
+# Exit status: 0 if every image passed, 1 if any failed, 2 on usage/setup errors.
+
+set -uo pipefail
+
+prog=${0##*/}
+
+usage() {
+    echo "Usage: $prog PATH/NAME.vtape [PATH/NAME.vtape ...]" >&2
+    exit 2
+}
+
+[[ $# -ge 1 ]] || usage
+
+partial=""
+cleanup() {
+    if [[ -n $partial && -e $partial ]]; then
+        echo "Interrupted: removing partial file $partial" >&2
+        rm -f -- "$partial"
+    fi
+}
+trap 'cleanup; exit 130' INT TERM HUP
+
+check_one() {
+    local base=$1 comp="" cmd="" sumfile expected actual f
+    local -a sums
+
+    # Accept NAME.vtape.xz etc. too, by stripping the compression suffix.
+    case $base in
+        *.vtape.xz|*.vtape.bz2|*.vtape.bz|*.vtape.gz) base=${base%.*} ;;
+    esac
+    if [[ $base != *.vtape ]]; then
+        echo "$prog: '$base' doesn't end in .vtape" >&2
+        return 2
+    fi
+
+    for f in "$base.xz:xz -dc" "$base.bz2:bzip2 -dc" "$base.bz:bzip2 -dc" "$base.gz:gzip -dc"; do
+        if [[ -f ${f%%:*} ]]; then
+            comp=${f%%:*}
+            cmd=${f#*:}
+            break
+        fi
+    done
+    if [[ -z $comp ]]; then
+        echo "$prog: no compressed file found for $base (.xz, .bz2, .bz or .gz)" >&2
+        return 2
+    fi
+
+    shopt -s nullglob
+    sums=("$base".sha512sum*)
+    shopt -u nullglob
+    if [[ ${#sums[@]} -ne 1 ]]; then
+        echo "$prog: expected exactly one checksum file $base.sha512sum*, found ${#sums[@]}" >&2
+        return 2
+    fi
+    sumfile=${sums[0]}
+
+    # First field of the first line; tolerate CRLF and the GNU leading '\' escape.
+    expected=$(head -n 1 -- "$sumfile" | tr -d '\r' | awk '{print $1}')
+    expected=${expected#\\}
+    expected=${expected,,}
+    if [[ ! $expected =~ ^[0-9a-f]{128}$ ]]; then
+        echo "$prog: no SHA-512 hash found in $sumfile" >&2
+        return 2
+    fi
+
+    if [[ -e $base ]]; then
+        echo "$prog: $base already exists; not overwriting it" >&2
+        return 2
+    fi
+
+    echo "==> $base"
+    echo "    Decompressing $comp ..."
+    partial=$base
+    if ! $cmd -- "$comp" > "$base"; then
+        echo "    FAIL: decompression of $comp failed" >&2
+        rm -f -- "$base"
+        partial=""
+        return 1
+    fi
+    partial=""
+
+    echo "    Computing SHA-512 ..."
+    actual=$(sha512sum -- "$base" | awk '{print $1}')
+    actual=${actual#\\}
+
+    if [[ $actual == "$expected" ]]; then
+        echo "    PASS: $base matches $sumfile"
+        rm -f -- "$base"
+        echo "    Deleted uncompressed $base"
+        return 0
+    else
+        echo "    FAIL: $base does NOT match $sumfile" >&2
+        echo "      expected $expected" >&2
+        echo "      actual   $actual" >&2
+        echo "    Kept uncompressed $base for inspection" >&2
+        return 1
+    fi
+}
+
+status=0
+for arg in "$@"; do
+    check_one "$arg"
+    rc=$?
+    (( rc > status )) && status=$rc
+done
+exit $status

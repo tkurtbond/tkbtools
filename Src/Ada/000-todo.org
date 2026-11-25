@@ -1,0 +1,8 @@
+* DONE -X with an empty name crashes the amodpath
+$ amodpath --exists ''
+
+raised ADA.IO_EXCEPTIONS.NAME_ERROR : invalid path name ""
+* DONE A set-but-empty variable behaves differently from an unset one.
+* DONE convert ruler to use unicode box drawing characters
+Actually just made a separate uruler.adb.
+┌ ─ ┐ ┬  └ ┴ ┘ ┼

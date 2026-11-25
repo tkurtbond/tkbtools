@@ -3,9 +3,10 @@ with GNAT.OS_LIb; use Gnat.OS_Lib;
 with GNAT.Strings; use GNAT.Strings;
 with GNAT.Command_Line; use GNAT.Command_Line;
 with GNAT.Formatted_String; use GNAT.Formatted_String;
-procedure Ruler is
 
-   procedure Termsize (Rows : out Natural; Columns : out Natural) is separate;
+with Termsize;
+
+procedure Ruler is
 
    Rows, Columns : Natural;
 

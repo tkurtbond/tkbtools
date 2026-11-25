@@ -1,0 +1,22 @@
+#!/bin/sh
+# Print the org headings nested under the "VMs on atla:" heading
+# in names.org.  Stops at the next heading at the same or a higher level.
+# Usage: atla-vms.sh [file]
+
+file=${1:-$HOME/Repos/tkb-notes/Computer/names.org}
+
+awk '
+/^\*+ / {
+    match($0, /^\*+/)
+    level = RLENGTH
+    if (in_section) {
+        if (level <= section_level) exit
+        print
+        next
+    }
+    if ($0 ~ /^\*+ VMs on atla:/) {
+        in_section = 1
+        section_level = level
+    }
+}
+' "$file"

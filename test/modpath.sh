@@ -3,19 +3,20 @@
 EXIT_ON_FAILURE=1
 MODPATH=''
 
-while getopts "aems" opt
+while getopts "aemos" opt
 do
     case "$opt" in
-        (\?) ((errors++)) ;;
-        (a) MODPATH=amodpath ;;
-        (e) EXIT_ON_FAILURE=0 ;;
-        (m) MODPATH=modpath ;;
-        (s) MODPATH=smodpath;;
+        (\?) ((errors++))       ;;
+        (a) MODPATH=amodpath    ;;
+        (e) EXIT_ON_FAILURE=0   ;;
+        (m) MODPATH=modpath     ;;
+        (o) MODPATH=OModPath    ;;
+        (s) MODPATH=smodpath    ;;
     esac
 done
 
 
-for i in Src/modpath Src/Scheme/Chicken/build/smodpath Src/Ada/bin/amodpath
+for i in Src/modpath Src/Scheme/Chicken/build/smodpath Src/Ada/development/bin/amodpath ~/Repos/Oberon/oberon-tools/OModPath
 do
     if [[ -n $MODPATH ]] && ! [[ $i =~ .*/$MODPATH ]]; then
         echo skipping variant $i

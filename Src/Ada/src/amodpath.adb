@@ -1,12 +1,12 @@
-with Ada.Exceptions;            use Ada.Exceptions;
-with Ada.Containers;            use Ada.Containers;
+with Ada.Exceptions;             use Ada.Exceptions;
+with Ada.Containers;             use Ada.Containers;
 with Ada.Containers.Vectors;
-with Ada.Environment_Variables; use Ada.Environment_Variables;
-with Ada.Command_Line;          use Ada.Command_Line;
-with Ada.Directories;           use Ada.Directories;
-with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
-with Ada.Text_IO;               use Ada.Text_IO;
-with GNAT.OS_Lib;               use GNAT.OS_Lib;
+with Ada.Environment_Variables;  use Ada.Environment_Variables;
+with Ada.Command_Line;           use Ada.Command_Line;
+with Ada.Directories;            use Ada.Directories;
+with Ada.Strings.Unbounded;      use Ada.Strings.Unbounded;
+with Ada.Text_IO;                use Ada.Text_IO;
+with GNAT.OS_Lib;                use GNAT.OS_Lib;
 
 with Arg_Parser; use Arg_Parser;
 
@@ -29,8 +29,13 @@ procedure AModPath is
    No_Warnings              : aliased Boolean          := False;
    Directories_Are_Relative : aliased Boolean          := False;
    Exists_Flag              : aliased Boolean          := False;
-   In_Path_Separator        : aliased Unbounded_String := Null_Unbounded_String;
+   --  An empty input separator splits nothing, so the path is one item.
+   In_Path_Separator        : aliased Unbounded_String :=
+     To_Unbounded_String (String'(1 => Path_Separator));
    Out_Path_Separator       : aliased Unbounded_String := Null_Unbounded_String;
+   --  Whether -o or -S was given, so that an empty output separator joins
+   --  the items with nothing instead of meaning the default.
+   Out_Path_Separator_Set   : Boolean                  := False;
 
    procedure Debug (Message : String) is
    begin
@@ -83,6 +88,15 @@ procedure AModPath is
       Num_Parts : Natural  := 0;
       V         : Vector;
    begin
+      if Length (S) = 0 then
+         return V;
+      end if;
+      --  An empty pattern can't split anything, and Index would raise
+      --  Pattern_Error for it.
+      if Pattern'Length = 0 then
+         Append (V, S);
+         return V;
+      end if;
       while Start <= Length (S) loop
          Position := Index (S, Pattern, Start);
          exit when Position = 0;
@@ -156,19 +170,11 @@ procedure AModPath is
       end case;
    end Check_Todo;
 
-   function Get_Alternate_Path_Separator
-     (Alternate_Path_Separator : Unbounded_String;
-      Normal_Path_Separator    : String) return String is
-     (if Length (Alternate_Path_Separator) = 0 then Normal_Path_Separator
-      else To_String (Alternate_Path_Separator));
-
    type Output_Type is (Nice, Simple, Cmd, Csh, Sh, Quiet);
    Output : Output_Type := Sh;
 
    function Set_Path (Path : Unbounded_String) return Boolean is
-      Separator : String :=
-        Get_Alternate_Path_Separator
-          (In_Path_Separator, String'(1 => Path_Separator));
+      Separator : String := To_String (In_Path_Separator);
    begin
       Path_String := Path;
       Path_Vector := Split (Path, Separator);
@@ -179,9 +185,7 @@ procedure AModPath is
      (Variable : Unbounded_String) return Boolean
    is
       Path_Variable_String : String := To_String (Variable);
-      Separator            : String :=
-        Get_Alternate_Path_Separator
-          (In_Path_Separator, String'(1 => Path_Separator));
+      Separator            : String := To_String (In_Path_Separator);
    begin
       Path_String   := Null_Unbounded_String;
       Path_Vector   := Empty_Vector;
@@ -201,9 +205,7 @@ procedure AModPath is
      (Variable : Unbounded_String) return Boolean
    is
       Path_Variable_String : String := To_String (Variable);
-      Separator            : String :=
-        Get_Alternate_Path_Separator
-          (In_Path_Separator, String'(1 => Path_Separator));
+      Separator            : String := To_String (In_Path_Separator);
    begin
       Path_Variable := Variable;
       Path_String   := Null_Unbounded_String;
@@ -311,10 +313,23 @@ procedure AModPath is
 
    function Set_Separators (Separator : Unbounded_String) return Boolean is
    begin
-      In_Path_Separator  := Separator;
-      Out_Path_Separator := Separator;
+      In_Path_Separator      := Separator;
+      Out_Path_Separator     := Separator;
+      Out_Path_Separator_Set := True;
       return True;
    end Set_Separators;
+
+   function Set_Out_Separator (Separator : Unbounded_String) return Boolean is
+   begin
+      Out_Path_Separator     := Separator;
+      Out_Path_Separator_Set := True;
+      return True;
+   end Set_Out_Separator;
+
+   --  The output separator, or Default if -o or -S wasn't given.
+   function Get_Out_Separator (Default : String) return String is
+     (if Out_Path_Separator_Set then To_String (Out_Path_Separator)
+      else Default);
 
    function Make_Absolute (Part : String) return String is
    begin
@@ -334,7 +349,7 @@ procedure AModPath is
       Item : String :=
         (if Directories_Are_Relative then Part else Make_Absolute (Part));
    begin
-      if not Exists_Flag or else Ada.Directories.Exists (Item) then
+      if not Exists_Flag or else (Item'Length > 0 and then Ada.Directories.Exists (Item)) then
          case Todo.Mode is
             when After =>
                Add_After (Todo.Part, +Item);
@@ -433,9 +448,9 @@ procedure AModPath is
        Make_Option
          ("Add current directory to path.", 'c', "current", Add_Current'Unrestricted_Access),
        Make_Unbounded_String_Option
-         ("Delete all occurances of ARG in path.", 'd', "delete", Delete_Item'Unrestricted_Access),
+         ("Delete all occurrences of ARG in path.", 'd', "delete", Delete_Item'Unrestricted_Access),
        Make_Option
-         ("An an empty element to the path", 'E', "empty", Add_Empty'Unrestricted_Access),
+         ("Add an empty element to the path", 'E', "empty", Add_Empty'Unrestricted_Access),
        Make_Option
          ("Add next argument to the end of the path", 'e', "end", Set_Add_End'Unrestricted_Access),
        Make_Set_Boolean_True_Option
@@ -456,8 +471,8 @@ procedure AModPath is
          ("Print the path out ""nicely"", one item per line.", 'N', "nice", Set_Nice_Output'Unrestricted_Access),
        Make_Set_Boolean_True_Option
          ("Don't output any warnings, and so don't error on warnings.", 'W', "no-warnings", No_Warnings'Unrestricted_Access),
-       Make_Set_Unbounded_String_Option
-         ("Set the output path separator.", 'o', "outsep", Out_Path_Separator'Unrestricted_Access),
+       Make_Unbounded_String_Option
+         ("Set the output path separator.", 'o', "outsep", Set_Out_Separator'Unrestricted_Access),
        Make_Unbounded_String_Option
          ("Set the value of path to work on.", 'p', "path", Set_Path'Unrestricted_Access),
        Make_Option
@@ -474,7 +489,7 @@ procedure AModPath is
        Make_Option
          ("Add the next argument to the start of the path", 's', "start", Set_Add_Start'Unrestricted_Access),
        Make_Option
-         ("Elimanate duplicate items AT THIS POINT IN PROCESSING", 'u', "unique", Unique'Unrestricted_Access),
+         ("Eliminate duplicate items AT THIS POINT IN PROCESSING", 'u', "unique", Unique'Unrestricted_Access),
        Make_Unbounded_String_Option
          ("Set the path from the environment variable ARG, and make ARG be the name of the output environment variable.",
           'v', "var", Set_Path_And_Variable_From_Variable'Unrestricted_Access),
@@ -484,14 +499,14 @@ procedure AModPath is
          ("Warn about missing environment variables instead of exiting with an error.",'w', "warnings",
           Warnings_Are_Fatal'Unrestricted_Access));
 
-   AP : Argument_Parser :=
-     Make_Argument_Parser (Program_Name & " [option | argument]...",
+   The_Parser : Parser :=
+     Make_Parser (Program_Name & " [option | argument]...",
                            Arg_Handler'Unrestricted_Access, Options'Unrestricted_Access);
 
    function Help return Boolean is
       Time_To_End_It_All : exception;
    begin
-      Usage (AP);
+      Usage (The_Parser);
       -- Once they ask for help it is too late to continue.
       raise Exit_Program;
       return False;
@@ -499,12 +514,10 @@ procedure AModPath is
 
 
 begin
-   Parse_Arguments (AP);
+   Parse_Arguments (The_Parser);
 
    declare
-      Separator : String :=
-        Get_Alternate_Path_Separator
-          (Out_Path_Separator, String'((1 => Path_Separator)));
+      Separator : String := Get_Out_Separator (String'(1 => Path_Separator));
    begin
       case Output is
          when Nice =>
@@ -519,8 +532,7 @@ begin
             end;
          when Cmd =>
             declare
-               Separator  : String :=
-                 Get_Alternate_Path_Separator (Out_Path_Separator, ":");
+               Separator  : String := Get_Out_Separator (":");
                Final_Path : String :=
                  "path '" & Join (Path_Vector, Separator) & "'";
             begin
@@ -547,4 +559,12 @@ begin
             null;
       end case;
    end;
+exception
+   --  Help has printed the usage.
+   when Exit_Program =>
+      Set_Exit_Status (Success);
+   --  Parse_Arguments has printed the error and the usage.
+   when Unknown_Option | Unknown_Argument | Argument_Required
+      | Invalid_Option_Argument =>
+      Set_Exit_Status (2);
 end AModPath;

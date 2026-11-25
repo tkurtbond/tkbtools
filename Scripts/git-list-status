@@ -1,0 +1,126 @@
+#! /usr/bin/env bash
+
+### NOTE: use -C or git-setup-repos to set up the repos!
+
+errors=0
+
+DO_FGREP=0
+declare -a FGREPS
+FGREP_COUNT=0
+
+while getopts "cf:hp:x" opt
+do
+    case "$opt" in
+        (\?) ((errors++)) ;;
+        (c) DO_CLEAR=1 ;;
+        (f) DO_FGREP=1
+            FGREPS[$FGREP_COUNT]=$OPTARG
+            ((FGREP_COUNT++))
+            ;;
+        (h) DO_HELP=1 ;;
+        (p) LOWEST_PRIO="$OPTARG" ;;
+        (x) DO_TRACE=1 ;;
+    esac
+done
+
+((DO_TRACE)) && set -x
+
+((DO_HELP)) && HELPOUT=/dev/stdout || HELPOUT=/dev/stderr
+((DO_HELP || errors)) && {
+    cat >$HELPOUT <<EOF
+usage: $0 [-chiu]
+
+Options
+-C      Asks the user if they want to create missing repos.
+-c      Clears the screen.
+-f ARG  Uses grep -F to find a specific repo.  May appear more than once.
+-h	Displays this message.
+-i      Asks the user first when updating repos.
+-pP     Number P is lowest priority to pull.
+-u      Update repos that need pulled.
+-x      Trace (bash's "set -x").
+EOF
+    exit
+}
+
+shift $((OPTIND-1))
+
+((DO_CLEAR)) && clear
+
+if [[ -t 0 ]]; then
+    MAGENTA='\033[1;35m'        # Repo doesn't exist or is not a git repo.
+    CYAN='\033[1;36m'           # Repo name (and prefix).
+    YELLOW='\033[1;33m'         # Repo may need pushed.
+    GREEN='\033[1;32m'          # Repo ok.
+    RED='\033[1;31m'            # Repo may need checkin.
+    BLUE='\033[1;34m'           # Repo needs to pull.
+    BRIGHTBLUE='\u001b[34;1m'   # Repo needs to push.
+    BRIGHTRED='\u001b[31;1m'    # 
+    BRIGHTWHITE='\u001b[37;1m'  # Status didn't match.
+    BRIGHTYELLOW='\u001b[33;1m' # Repo diverged.
+    INVERSE='\u001b[7m'         # Inverse.
+    NC='\033[0m'                # No Color.
+fi
+
+((DO_FGREP)) && {
+    FGREP_F_ARGS=
+    for ((i = 0; i < $FGREP_COUNT; i++)) {
+        ((i > 0)) && FGREP_F_ARGS+=" "
+        FGREP_F_ARGS+="-e ${FGREPS[$i]}"
+        }
+    export FGREP_CMD="grep $FGREP_F_ARGS"
+}|| export FGREP_CMD=cat
+
+NUM_REPOS=0
+time (printf "Start: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')" "$(hostname)"
+      mygitrepos --all-columns | $FGREP_CMD | while read PRIO INCL DIR REPO
+      do
+          [[ -n "$LOWEST_PRIO" ]] && (($PRIO < $LOWEST_PRIO)) && {
+              echo 1>&2 "*** Quitting after priority $LOWEST_PRIO"
+              break
+          }
+          ((NUM_REPOS++))
+          NEED_TO_PULL=0
+          NEED_TO_PUSH=0
+          NEED_TO_CREATE=0
+          MAY_NEED_CHECKIN=0
+          [[ -d $DIR ]] || {
+              printf "===> n:%3d p:%3d ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" $NUM_REPOS $PRIO "Does not exist!"
+              continue
+          }
+          [[ -d $DIR/.git ]] || {
+              printf "===> n:%3d p:%3d ${MAGENTA}%20s ${CYAN}Repo $DIR$NC\n" $NUM_REPOS  $PRIO "Not a git repo!"
+              continue
+          }
+          STATUS=$(cd $DIR && git-uptodate)
+          case "$STATUS" in
+              "Up to date")
+                  STATCOLOR="$GREEN"
+                  ;;
+              "Need to pull")
+                  STATCOLOR="$BLUE"
+                  NEED_TO_PULL=1
+                  # echo NEED_TO_PULL: $NEED_TO_PULL
+                  ;;
+              "Need to push")
+                  STATCOLOR="$BRIGHTBLUE"
+                  NEED_TO_PUSH=1
+                  ;;
+              "Diverged")
+                  STATCOLOR="$BRIGHTYELLOW"
+                  ;;
+              *)
+                  STATCOLOR="$BRIGHTWHITE"
+                  ;;
+          esac
+          printf "===> n:%3d p:%3d $STATCOLOR%20s ${CYAN}Repo $DIR$NC\n" $NUM_REPOS $PRIO "$STATUS"
+
+          STATUS=$(cd $DIR && git status --short)
+          [[ -n "$STATUS" ]] && {
+              printf "===> n:%3d p:%3d ${RED}%20s ${CYAN}Repo $DIR $NC\n" $NUM_REPOS $PRIO "May need checkin!"
+              MAY_NEED_CHECKIN=1
+          }
+      done
+
+      printf "Stop: %s on ${GREEN}${INVERSE}%s${NC}\n" "$(date +'%F %H:%M:%S')" "$(hostname)"
+     )

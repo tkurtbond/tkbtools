@@ -50,10 +50,13 @@ $(BINDIR)/% : Linux/%
 SCRIPTS= \
 	accumulate \
 	apply-to \
+	atla-VMs \
 	blank-swayidle \
 	bldmyblog \
 	blogbot \
 	books-per-day \
+	book-print \
+	book-signatures \
 	check-eggs \
 	check-stuff \
 	code2pandoc \
@@ -76,12 +79,15 @@ SCRIPTS= \
 	ebook \
 	embed-fonts \
 	endsound \
+	etags-oberon \
 	export-tools \
 	fg-backup-campaigns \
 	filedate \
 	filetime \
 	fileurl \
 	find-rst-footnotes \
+	ftp-off \
+	ftp-on \
 	gensite.sh \
 	getremotemail.sh \
 	gfind-moddate \
@@ -131,6 +137,7 @@ SCRIPTS= \
 	mplnas-vaxtapes \
 	mrp \
 	music-report \
+	my-local-capsule \
 	mygitrepos \
 	mzr \
 	nikola-categories \
@@ -147,6 +154,7 @@ SCRIPTS= \
 	osinfo \
 	pbook \
 	pddigest \
+	pinentry-auto \
 	prefix \
 	print_vars.sh \
 	printduplex-landscape-longedge \
@@ -175,6 +183,7 @@ SCRIPTS= \
 	run-rmc-era \
 	run-spotify \
 	run-ytdn \
+	save-consp-capsule \
 	scream \
 	search-sway-workspaces \
 	setup-gerbil \
@@ -205,6 +214,7 @@ SCRIPTS= \
 	tkb-sync \
 	tkbgprinstall \
 	tkbput.sh \
+	totext \
 	touch-stuff \
 	troff-depends \
 	uhome \
@@ -218,6 +228,7 @@ SCRIPTS= \
 	usatime \
 	uwork \
 	vms-size \
+	vtape-check \
 	waybell \
 	winbox-in-wine \
 	worldographer \
@@ -248,6 +259,7 @@ NETBSD_SCRIPTS=\
 	# Nothing here
 
 LINUX_SCRIPTS=\
+	Linux/linux-active-wifi \
 	Linux/linux-capabilities \
 	Linux/linux-loadkeys \
 	Linux/linux-light \

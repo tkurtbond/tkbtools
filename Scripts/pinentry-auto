@@ -1,0 +1,4 @@
+#!/bin/sh
+# curses when the shell asks for it (over ssh), Fedora's choice otherwise
+[ "$PINENTRY_USER_DATA" = tty ] && exec /usr/bin/pinentry-curses "$@"
+exec /usr/bin/pinentry "$@"

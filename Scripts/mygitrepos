@@ -9,9 +9,11 @@ REP_OFF=3                       # Repository
 NUMCOLUMNS=4
 REPOS=(
     95 y ~/lib/emacs/emacs-config                            git@github.com:tkurtbond/emacs-config.git
+    94 y ~/Repos/Emacs/oberon-mode-tweaks                    git@github.com:tkurtbond/oberon-mode-tweaks.git
     94 y ~/lib/emacs/arrows                                  git@github.com:tkurtbond/arrow-macros-for-emacs.git
     93 y ~/lib/emacs/old-ada-mode                            git@github.com:tkurtbond/old-ada-mode.git
     92 y ~/Repos/Ada/arg_parser                              git@github.com:tkurtbond/arg_parser.git
+    91 y ~/Repos/Ada/alibfyaml                               git@github.com:tkurtbond/alibfyaml.git
     90 y ~/comp/tkbtools                                     git@github.com:tkurtbond/tkbtools.git
     80 y ~/Repos/tkb-notes                                   git@gitlab.com:t-kurt-bond/tkb-notes.git
     75 y ~/Notes                                             git@github.com:tkurtbond/general-notes.git
@@ -19,16 +21,58 @@ REPOS=(
     70 y ~/Repos/microblog                                   git@github.com:tkurtbond/microblog.git
     65 y ~/Repos/scratch                                     git@github.com:tkurtbond/scratch.git
     65 y ~/Repos/h-m-m                                       git@github.com:tkurtbond/h-m-m.git
+    65 y ~/Repos/Ada/ada-cs                                  git@github.com:tkurtbond/ada-cs.git
     60 y ~/Repos/Ada/ada-experiments                         git@github.com:tkurtbond/ada-experiments.git
+    60 y ~/Repos/Ada/questions-with-claude/                  git@github.com:tkurtbond/questions-with-claude.git
+    60 y ~/Repos/Ada/Ropes                                   git@github.com:tkurtbond/ada-ropes.git
     60 y ~/Repos/Ada/ncurses_howto_in_ada                    git@github.com:tkurtbond/ncurses_howto_in_ada.git
     60 y ~/Repos/a68-experiments                             git@github.com:tkurtbond/a68-experiments.git
+    55 y ~/Repos/Oberon/Peaseblossom                         git@github.com:tkurtbond/peaseblossom.git
+    50 y ~/Repos/Oberon/ArgParser                            git@github.com:tkurtbond/oberon-argparser.git
+    50 y ~/Repos/Oberon/Ropes                                git@github.com:tkurtbond/oberon-ropes.git
+    50 y ~/Repos/Oberon/olibfyaml                            git@github.com:tkurtbond/olibfyaml.git
+    50 y ~/Repos/Oberon/polibfyaml                           git@github.com:tkurtbond/polibfyaml.git
+    50 y ~/Repos/Oberon/pofltk                               git@github.com:tkurtbond/pofltk.git
+    50 y ~/Repos/Oberon/poPOISE-DMS                          git@github.com:tkurtbond/poPOISE-DMS.git
+    50 y ~/Repos/Oberon/poDMSFIELDS                          git@github.com:tkurtbond/poDMSFIELDS.git
+    50 y ~/Repos/Oberon/poDateTime                           git@github.com:tkurtbond/poDateTime.git
+    50 y ~/Repos/Oberon/opp                                  git@github.com:tkurtbond/opp.git
+    50 y ~/Repos/Oberon/podoc                                git@github.com:tkurtbond/podoc.git
+    50 y ~/Repos/Oberon/poDB                                 git@github.com:tkurtbond/poDB.git
+    50 y ~/Repos/Oberon/posockets                            git@github.com:tkurtbond/posockets.git
+    50 y ~/Repos/Oberon/polibtls                             git@github.com:tkurtbond/polibtls.git
+    50 y ~/Repos/Oberon/polibz                               git@github.com:tkurtbond/polibz.git
+    50 y ~/Repos/Oberon/pomermaid                            git@github.com:tkurtbond/pomermaid.git
+    50 y ~/Repos/Oberon/pogemini                             git@github.com:tkurtbond/pogemini.git
+    50 y ~/Repos/Oberon/pogeminilib                          git@github.com:tkurtbond/pogeminilib.git
+    50 y ~/Repos/Oberon/pounix                               git@github.com:tkurtbond/pounix.git
+    50 y ~/Repos/Oberon/pounicode                            git@github.com:tkurtbond/pounicode.git
+    50 y ~/Repos/Oberon/vishap-bugs/                         git@github.com:tkurtbond/vishap-bugs.git
+    50 y ~/Repos/Oberon/oberon-tools                         git@github.com:tkurtbond/oberon-tools.git
+    50 y ~/Repos/Oberon/general                              git@github.com:tkurtbond/oberon-general.git
+    50 y ~/Repos/Scheme/Chicken/5/slibfyaml                  git@github.com:tkurtbond/slibfyaml.git
     55 y ~/Repos/RPG/Misc-RPG                                git@github.com:tkurtbond/Misc-RPG.git
+    55 y ~/Repos/RPG/TFT/QuickQuests                         git@github.com:tkurtbond/QuickQuests.git
     55 y ~/current/RPG/Tools/TFT                             git@github.com:tkurtbond/TFT-tools.git
     55 y ~/current/RPG/Tools/OVA                             git@github.com:tkurtbond/ova-tools.git
     55 y ~/current/RPG/Tools/Generators                      git@github.com:tkurtbond/Generators.git
     55 y ~/Repos/RPG/Tools/aftermath-generator               git@github.com:tkurtbond/aftermath-generator.git
     55 y ~/current/RPG/Tools/Barrowmaze                      git@github.com:tkurtbond/barrowmaze-tools.git
     55 y ~/current/RPG/Tools/BESM                            git@github.com:tkurtbond/besm-tools.git
+    55 y ~/Repos/RPG/Tools/besm2_fmt                         git@github.com:tkurtbond/besm2_fmt.git
+    55 y ~/Repos/RPG/Tools/obesm2_fmt                        git@github.com:tkurtbond/obesm2_fmt.git
+    55 y ~/Repos/RPG/Tools/obesm2_fmt2                       git@github.com:tkurtbond/obesm2_fmt2.git
+    55 y ~/Repos/RPG/Tools/pobesm2_fmt2                      git@github.com:tkurtbond/pobesm2_fmt2.git
+    55 y ~/Repos/RPG/Tools/besm2_cg_po                       git@github.com:tkurtbond/besm2_cg_po.git
+    55 y ~/Repos/RPG/Tools/besm2_cg_web                      git@github.com:tkurtbond/besm2_cg_web.git
+    55 y ~/Repos/RPG/Tools/ova_fmt                           git@github.com:tkurtbond/ova_fmt.git
+    55 y ~/Repos/RPG/Tools/ova_cg_go                         git@github.com:tkurtbond/ova_cg_go.git
+    55 y ~/Repos/RPG/Tools/ova_cg_po                         git@github.com:tkurtbond/ova_cg_po.git
+    55 y ~/Repos/RPG/Tools/ova_cg_ada                        git@github.com:tkurtbond/ova_cg_ada.git
+    55 y ~/Repos/RPG/Tools/ova_cg_web                        git@github.com:tkurtbond/ova_cg_web.git
+    55 y ~/Repos/RPG/Tools/ova_fmt_po                        git@github.com:tkurtbond/ova_fmt_po.git
+    55 y ~/Repos/RPG/Tools/Cepheus-Universal                 git@github.com:tkurtbond/cepheus-universal-tools.git
+    55 y ~/Repos/RPG/hex-describe-tft                        git@github.com:tkurtbond/hex-describe-tft.git
     55 y ~/current/RPG/Mini-Six/m6charcost                   git@github.com:tkurtbond/m6charcost.git
     55 y ~/current/RPG/Mini-Six/SRD                          git@github.com:tkurtbond/Minimal-OpenD6.git
     55 y ~/current/RPG/Kids/TFT/West-Marches/Euleron         git@github.com:tkurtbond/Refugees-in-Euleron.git
@@ -38,17 +82,22 @@ REPOS=(
     55 y ~/Repos/RPG/Red-Planet-Blue-Helmets                 git@github.com:tkurtbond/Red-Planet-Blue-Helmets.git
     55 y ~/Repos/RPG/Galactic-Bounty-Hunters/                git@github.com:tkurtbond/Galactic-Bounty-Hunters.git
     55 y ~/Repos/RPG/Lost-Worlds                             git@github.com:tkurtbond/Lost-Worlds.git
+    55 y ~/Repos/RPG/OVA-Farscape                            git@github.com:tkurtbond/OVA-Farscape.git
     55 y ~/Repos/RPG/Centauri-Knights-4E                     git@github.com:tkurtbond/Centauri-Knights-4E.git
     55 y ~/Repos/RPG/Centauri-Knights-2E                     git@github.com:tkurtbond/Centauri-Knights-2E.git
     53 y ~/Repos/RPG/The-Mecha-Hack                          git@github.com:tkurtbond/The-Mecha-Hack.git
     50 y ~/Repos/CPB/initiative-tracker                      git@github.com:cpaulbond/initiative-tracker.git
-    50 y ~/Repos/tpa                                         git@github.com:tkurtbond/tpa.git
-    43 y ~/Repos/learn-htmx/                                 git@github.com:tkurtbond/learn-htmx.git
+    45 y ~/Repos/Oberon/oberon-experiments/                  git@github.com:tkurtbond/oberon-experiments.git
+    43 y ~/Repos/tpa                                         git@github.com:tkurtbond/tpa.git
+    42 y ~/Repos/learn-htmx/                                 git@github.com:tkurtbond/learn-htmx.git
     42 y ~/Repos/tkbvmslib                                   git@github.com:tkurtbond/tkbvmslib.git
     40 y ~/Repos/VTIL-pictures                               git@github.com:tkurtbond/VTIL-pictures.git
     40 y ~/Repos/VTIL                                        git@github.com:tkurtbond/VTIL.git
+    40 y ~/Repos/vforth                                      git@github.com:tkurtbond/vforth.git
     38 y ~/Repos/pstk-tutorial                               git@github.com:tkurtbond/pstk-tutorial.git
     30 y ~/current/RPG/Campaigns/Alusia/Partyhist-xml        git@github.com:tkurtbond/partyhist.git
+    25 y /usr/local/sw/src/tkb/cm3                           git@github.com:tkurtbond/cm3.git
+    25 y /usr/local/sw/src/tkb/oo2c                          git@github.com:tkurtbond/oo2c.git
     20 y ~/job/MPL/Processes                                 git@github.com:tkurtbond/MPL-processes.git 
     20 y ~/job/MPL/MHST/sis-export                           git@github.com:tkurtbond/sis-export.git
     20 y ~/job/MPL/MHST/dmstosqldb                           git@github.com:tkurtbond/dmstosqldb.git
@@ -59,6 +108,7 @@ REPOS=(
     20 y ~/Repos/sstg                                        git@github.com:tkurtbond/sstg.git
     20 y ~/Repos/sdcl                                        git@github.com:tkurtbond/sdcl.git
     20 y ~/Repos/filetap                                     git@github.com:tkurtbond/filetap.git
+    15 y /usr/local/sw/src/tkb/fltkada                       git@github.com:tkurtbond/fltkada.git
     10 y ~/current/computer/lang/tnolang                     git@github.com:tkurtbond/tnolang.git
     00 y ~/Repos/exceptions                                  git@github.com:tkurtbond/exceptions.git
     00 n /usr/local/sw/src/lang/Oberon/tkb/vishap/voc        git@github.com:tkurtbond/vishap-compiler.git

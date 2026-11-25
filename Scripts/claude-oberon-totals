@@ -1,0 +1,8 @@
+#! /usr/bin/env bash
+scc --count-as mod:Pascal --count-as Mod:Pascal --format json \
+    ~/Repos/Oberon/ArgParser/ ~/Repos/Oberon/oberon-tools/ ~/Repos/Oberon/olibfyaml/ ~/Repos/Oberon/opp/ \
+    ~/Repos/Oberon/Peaseblossom/ ~/Repos/Oberon/poDateTime/ ~/Repos/Oberon/poDB/ ~/Repos/Oberon/poDMSFIELDS/ \
+    ~/Repos/Oberon/pofltk/ ~/Repos/Oberon/polibfyaml/ ~/Repos/Oberon/poPOISE-DMS/ ~/Repos/Oberon/Ropes/ \
+    ~/Repos/RPG/Tools/besm2_cg_po/ ~/Repos/RPG/Tools/obesm2_fmt ~/Repos/RPG/Tools/obesm2_fmt2/ \
+    ~/Repos/RPG/Tools/ova_cg_po/ ~/Repos/RPG/Tools/ova_fmt_po/ ~/Repos/RPG/Tools/pobesm2_fmt2/ \
+    | jq '[.[].Code] | add'

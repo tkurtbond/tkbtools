@@ -7,34 +7,59 @@ project Tools is
    --  A typed variable, set from external variable OS.
    OS : OS_Type := external ("OS", "Linux");
 
+   type Build_Mode_Type is ("development", "release");
+   Build_Mode : Build_Mode_Type := external ("BUILD_MODE", "development");
+
    Ada_2022_Sources := ();
-   Ada_2022_Switches := ();
+   Ada_2022_Switches := ("-gnat2022");
    case OS is
       when "Linux" | "NetBSD" =>
-         Ada_2022_Sources := ("abfromunits", "abtounits");
+         Ada_2022_Sources := ("abfromunits", "abtounits", "anewver");
       when others =>
          null;
+   end case;
+
+   Full_Path_Error_Switches := ("-gnatef", -- use full pathnames in error messages
+                                "-gnatf",  -- full error messages
+                                "-F");
+   Ada_Switches := ();
+   case Build_Mode is
+      when "development" =>
+         Ada_Switches := Full_Path_Error_Switches;
+      when "release" =>
+         Ada_Switches := Full_Path_Error_Switches & ("-O3");
    end case;
 
    for Languages use ("Ada", "C");
 
    for Source_Dirs use ("src");
-   for Object_Dir use "obj";
-   for Exec_Dir use "bin";
+   case Build_Mode is
+      when "development" =>
+         for Object_Dir use "development/obj";
+         for Exec_Dir use "development/bin";
+      when "release" =>
+         for Object_Dir use "release/obj";
+         for Exec_Dir use "release/bin";
+   end case;
 
    package Compiler is
       for Default_Switches ("Ada") use
-        ("-gnatef",            --  use full pathnames in error messages
-         "-gnatf"              --  full error messages
-        );
+        Ada_Switches;
 
-      for Switches ("abfromunits.adb") use ("-gnat2022");
-      for Switches ("abtounits.adb") use ("-gnat2022");
+      for Switches ("abfromunits.adb") use Ada_2022_Switches & Ada_Switches;
+      for Switches ("abtounits.adb") use Ada_2022_Switches & Ada_Switches;
+      for Switches ("anewver.adb") use Ada_2022_Switches & Ada_Switches;
    end Compiler;
    package Binder is
       -- for Default_Switches ("Ada") use ("-E");
    end Binder;
    package Linker is
+      case Build_Mode is
+         when "development" =>
+            null;
+         when "release" =>
+            for Switches ("Ada") use ("-s");
+      end case;
    end Linker;
    package Install is
       for Prefix use External ("HOME") & "/local";
@@ -42,11 +67,25 @@ project Tools is
 
    for Main use
      (
+      "achopext",
       "afromunits",
       "atounits",
       "amodpath",
-      "ruler"
+      "ruler",
+      "uruler"
      ) & Ada_2022_Sources;
+
+   -- See https://forum.ada-lang.io/t/automatic-styling-of-ada-code/3886
+   -- and https://docs.adacore.com/live/wave/gnatformat/html/user-guide/user-guide/configuration.html#the-project-file-attributes
+   package Format is
+      for Width ("Ada") use "132"; -- Max char per line
+      for Charset ("Ada") use "utf-8"; -- default encoding
+   end Format;
+
+   -- See https://docs.adacore.com/gnat_ugn-docs/html/gnat_ugn/gnat_ugn/gnat_utility_programs.html#the-gnat-pretty-printer-gnatpp
+   package Pretty_Printer is
+      for Default_Switches ("Ada") use ("--max-line-length=132");
+   end Pretty_Printer;
 
 end Tools;
 -- Local Variables:

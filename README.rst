@@ -9,6 +9,8 @@ relevant, others are abandoned or outdated.
 If you don't ``git clone ${URL} --recursive`` this repo, you'll need
 to do ``git submodule update --init`` to get `bats
 <https://github.com/bats-core/bats-core>`_ (Bash Automated Testing
-System), which is used for testing the tree different implementations
-of **modpath**, which is done by running ``test/modpath.sh" in the
-root directory of this repository.
+System), which is used for testing the three different implementations
+of **modpath**, which is done by running ``test/modpath.sh`` in the
+root directory of this repository, and for testing **vtape-check**,
+which is done by running ``test/vtape-check.sh`` in the root directory
+of this repository.
